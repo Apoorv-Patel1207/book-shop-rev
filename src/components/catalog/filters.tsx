@@ -6,35 +6,41 @@ import {
   Slider,
   Typography,
   Box,
+  FormControl,
+  InputLabel,
+  SelectChangeEvent,
 } from "@mui/material";
 
 interface BookFilterProps {
   searchQuery: string;
   filterGenre: string;
-  priceRange: [number, number];
+  priceValue: number[];
   setSearchQuery: (query: string) => void;
   setFilterGenre: (genre: string) => void;
-  setPriceRange: (range: [number, number]) => void;
+  setPriceValue: (priceValue: number[]) => void;
 }
 
 const BookFilter: React.FC<BookFilterProps> = ({
   searchQuery,
   filterGenre,
-  priceRange,
+  priceValue,
   setSearchQuery,
   setFilterGenre,
-  setPriceRange,
+  setPriceValue,
 }) => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value.toLowerCase());
   };
 
-  const handleGenreFilter = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleGenreFilter = (event: SelectChangeEvent) => {
     setFilterGenre(event.target.value as string);
   };
 
-  const handlePriceRangeChange = (event: Event, newValue: number[]) => {
-    setPriceRange(newValue as [number, number]);
+  const handleChangePriceFilter = (
+    event: Event,
+    newValue: number | number[]
+  ) => {
+    setPriceValue(newValue as number[]);
   };
 
   return (
@@ -56,34 +62,35 @@ const BookFilter: React.FC<BookFilterProps> = ({
         fullWidth
         sx={{ flex: { md: "0 0 33%" } }}
       />
-      {/* <Select
-        value={filterGenre}
-        onChange={handleGenreFilter}
-        displayEmpty
-        fullWidth
-        sx={{ flex: { md: "0 0 25%" } }}
-      >
-        <MenuItem value="">
-          <em>Filter by Genre</em>
-        </MenuItem>
-        <MenuItem value="All">All Genres</MenuItem>
-        <MenuItem value="Classic">Classic</MenuItem>
-        <MenuItem value="Dystopian">Dystopian</MenuItem>
-      </Select> */}
+
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel>Genre</InputLabel>
+          <Select
+            value={filterGenre}
+            label="Filter Genre"
+            onChange={handleGenreFilter}
+          >
+            <MenuItem value="All">All Genres</MenuItem>
+            <MenuItem value="Classic">Classic</MenuItem>
+            <MenuItem value="Dystopian">Dystopian</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
       <Box sx={{ flex: { md: "0 0 33%" }, width: "100%" }}>
         <Typography variant="subtitle2" gutterBottom>
           Price
         </Typography>
 
-        {/* <Slider
-          value={priceRange}
-          onChange={handlePriceRangeChange}
+        <Slider
+          getAriaLabel={() => "Temperature range"}
+          value={priceValue}
+          onChange={handleChangePriceFilter}
           valueLabelDisplay="auto"
-          min={0}
-          max={50}
-          step={1}
-          aria-labelledby="price-range-slider"
-        /> */}
+          max={100}
+        />
+
         <Box
           sx={{
             display: "flex",
@@ -91,8 +98,8 @@ const BookFilter: React.FC<BookFilterProps> = ({
             textAlign: "center",
           }}
         >
-          <Typography variant="body2">Min: {priceRange[0]}</Typography>
-          <Typography variant="body2">Max: {priceRange[1]}</Typography>
+          <Typography variant="body2">Min: {priceValue[0]}</Typography>
+          <Typography variant="body2">Max: {priceValue[1]}</Typography>
         </Box>
       </Box>
     </Box>

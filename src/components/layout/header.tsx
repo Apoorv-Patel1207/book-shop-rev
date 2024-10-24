@@ -4,20 +4,35 @@ import Search from "./search";
 
 const Header = () => {
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "grey.800" }}>
-      <Toolbar>
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: "#1F2937",
+        paddingX: 8,
+      }}
+    >
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Typography
           variant="h6"
           component={Link}
           to="/"
-          sx={{ color: "white", textDecoration: "none" }}
+          sx={{
+            color: "white",
+            textDecoration: "none",
+          }}
         >
           Online Bookstore
         </Typography>
 
         <Search />
 
-        <Box sx={{ flexGrow: 1 }} />
+        <Box />
 
         <nav>
           <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>

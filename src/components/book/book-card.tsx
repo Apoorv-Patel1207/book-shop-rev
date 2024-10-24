@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -35,52 +36,74 @@ const BookCard = (props: BookCardProps) => {
         position: "relative",
         transition: "0.3s",
         "&:hover": {
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+          boxShadow: "0 8px 30px rgba(0, 0, 0, 0.3)",
+          transform: "translateY(-5px)",
         },
         overflow: "hidden",
+        maxWidth: 300,
+        margin: 2,
+        "&:hover .add-to-cart-btn": {
+          opacity: 1,
+          transform: "translateY(0)",
+        },
       }}
       onClick={handleCardClick}
     >
-      <CardMedia
-        component="img"
-        height="200"
-        image={book.coverImage}
-        alt={book.title}
-        sx={{
-          transition: "transform 0.3s",
-          "&:hover": {
-            transform: "scale(1.05)",
-          },
-        }}
-      />
+      <Box paddingX={4} paddingTop={4} paddingBottom={2}>
+        <CardMedia
+          component="img"
+          height="200"
+          image={book.coverImage}
+          alt={book.title}
+          sx={{
+            transition: "transform 0.3s",
+            "&:hover": {
+              transform: "scale(1.1)",
+            },
+          }}
+        />
+      </Box>
+
       <CardContent>
-        <Typography variant="h6" component="div" fontWeight="bold">
+        <Typography component="div" fontWeight="bold" color="#1F2937">
           {book.title}
         </Typography>
-        <Typography variant="body2" color="textSecondary">
+        <Typography variant="body2" color="text.secondary">
           by {book.author}
         </Typography>
-        <Typography variant="body2" color="textSecondary">
+        <Typography variant="body2" color="text.secondary">
           Genre: {book.genre}
         </Typography>
-        <Typography variant="h6" color="green">
+        <Typography color="success.main" fontWeight="bold">
           Rs {book.price.toFixed(2)}
         </Typography>
       </CardContent>
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}>
-        <Button
-          variant="contained"
-          size="small"
-          color="primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            addToCart(book);
-          }}
-          sx={{ width: "100%" }}
-        >
-          Add to Cart
-        </Button>
-      </div>
+
+      {/* Add to Cart button */}
+      <Button
+        variant="contained"
+        size="small"
+        color="primary"
+        onClick={(e) => {
+          e.stopPropagation();
+          addToCart(book);
+        }}
+        className="add-to-cart-btn"
+        sx={{
+          position: "absolute",
+          bottom: 10,
+          right: 10,
+          backgroundColor: "#1F2937",
+          opacity: 0,
+          transform: "translateY(20px)", // Move down a bit initially
+          transition: "0.3s ease", // Smooth transition
+          "&:hover": {
+            backgroundColor: "secondary.dark",
+          },
+        }}
+      >
+        Add to Cart
+      </Button>
     </Card>
   );
 };

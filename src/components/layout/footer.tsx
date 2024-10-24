@@ -5,10 +5,9 @@ const Footer = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "grey.800",
+        backgroundColor: "#1F2937",
         color: "white",
-        padding: 2,
-        marginTop: 4,
+        paddingY: 2,
       }}
       component="footer"
     >
