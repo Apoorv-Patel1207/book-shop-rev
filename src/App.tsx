@@ -9,17 +9,17 @@ import Learning from "./pages/learning";
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/catalog" element={<Catalog />} />
-        <Route path="/order-history" element={<OrderHistoryPage />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/book-details/:id" element={<BookDetails />} />
-        <Route path="/add-book" element={<AdminPanel />} />
-        <Route path="/learning" element={<Learning />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/order-history" element={<OrderHistoryPage />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/book-details/:id" element={<BookDetails />} />
+          <Route path="/add-book" element={<AdminPanel />} />
+          <Route path="/learning" element={<Learning />} />
+        </Routes>
+      </Router>
   );
 };
 

@@ -7,6 +7,7 @@ const Footer = () => {
         backgroundColor: "#1F2937",
         color: "white",
         paddingY: 3,
+        marginTop: 4,
       }}
       component="footer"
     >

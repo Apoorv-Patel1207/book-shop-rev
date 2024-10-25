@@ -1,0 +1,19 @@
+/* App.css */
+
+/* CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ensures consistent box model */
+}
+
+body {
+  /* font-family: Arial, sans-serif;  */
+  line-height: 1.6; /* Improves readability */
+  background-color: #f4f4f4; /* Optional: Set a background color */
+}
+
+a {
+  text-decoration: none; /* Remove underline from links */
+  color: inherit; /* Ensure links inherit the color from their parent */
+}

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import booksData from "../constant/books.json";
+// import booksData from "../constant/books.json";
 import Layout from "../components/layout/layout";
 import BookCard from "../components/book/book-card";
 import Filters from "../components/catalog/filters";
-import { Typography, Container, Paper } from "@mui/material";
+import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-// import axios from "axios";
+import axios from "axios";
 
 interface Book {
   id: number;
@@ -22,18 +22,18 @@ const Catalog: React.FC = () => {
   const [filterGenre, setFilterGenre] = useState("All");
   const [priceValue, setPriceValue] = useState<number[]>([0, 100]);
 
-  useEffect(() => {
-    setBooks(booksData);
-  }, []);
-
   // useEffect(() => {
-  //   const fetchBooks = async () => {
-  //     const response = await axios.get("http://localhost:5000/api/books");
-  //     setBooks(response.data);
-  //   };
-
-  //   fetchBooks();
+  //   setBooks(booksData);
   // }, []);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const response = await axios.get("http://localhost:5000/books");
+      setBooks(response.data);
+    };
+
+    fetchBooks();
+  }, []);
 
   const filteredBooks = books.filter((book) => {
     const matchesSearch =
@@ -47,13 +47,21 @@ const Catalog: React.FC = () => {
 
   const [cart, setCart] = useState<Book[]>([]);
 
+  console.log("cart: ", cart);
+
   const addToCart = (book: Book) => {
     setCart((prevCart) => [...prevCart, book]);
   };
 
+  // const [refresh, setRefresh] = useState(false);
+
+  const handleDelete = async (id: string) => {
+    await axios.delete(`http://localhost:5000/books/${id}`);
+    //  setRefresh((prev) => !prev); // Trigger re-fetch of books
+  };
+
   return (
     <Layout>
-      {/* <Container> */}
       <Typography
         variant="h4"
         component="h1"
@@ -79,7 +87,12 @@ const Catalog: React.FC = () => {
         {filteredBooks.length > 0 ? (
           filteredBooks.map((book) => (
             <Grid key={book.id} size={{ xs: 2, sm: 4, md: 4, lg: 2.4 }}>
-              <BookCard book={book} addToCart={addToCart} />
+              <BookCard
+                book={book}
+                addToCart={addToCart}
+                handleDelete={handleDelete}
+                // key={refresh}
+              />
             </Grid>
           ))
         ) : (
@@ -95,7 +108,6 @@ const Catalog: React.FC = () => {
           </Grid>
         )}
       </Grid>
-      {/* </Container> */}
     </Layout>
   );
 };
