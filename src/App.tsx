@@ -5,6 +5,7 @@ import Catalog from "./pages/catalog";
 import BookDetails from "./pages/book-details";
 import OrderHistoryPage from "./pages/order-history";
 import AdminPanel from "./pages/add-book";
+import Learning from "./pages/learning";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/book-details/:id" element={<BookDetails />} />
         <Route path="/add-book" element={<AdminPanel />} />
+        <Route path="/learning" element={<Learning />} />
       </Routes>
     </Router>
   );

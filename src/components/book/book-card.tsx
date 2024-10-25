@@ -79,7 +79,6 @@ const BookCard = (props: BookCardProps) => {
         </Typography>
       </CardContent>
 
-      {/* Add to Cart button */}
       <Button
         variant="contained"
         size="small"

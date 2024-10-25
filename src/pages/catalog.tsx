@@ -5,6 +5,7 @@ import BookCard from "../components/book/book-card";
 import Filters from "../components/catalog/filters";
 import { Typography, Container, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+// import axios from "axios";
 
 interface Book {
   id: number;
@@ -24,6 +25,15 @@ const Catalog: React.FC = () => {
   useEffect(() => {
     setBooks(booksData);
   }, []);
+
+  // useEffect(() => {
+  //   const fetchBooks = async () => {
+  //     const response = await axios.get("http://localhost:5000/api/books");
+  //     setBooks(response.data);
+  //   };
+
+  //   fetchBooks();
+  // }, []);
 
   const filteredBooks = books.filter((book) => {
     const matchesSearch =

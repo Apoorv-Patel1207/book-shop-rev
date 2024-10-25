@@ -1,5 +1,4 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Link, Typography, Stack } from "@mui/material";
 
 const Footer = () => {
   return (
@@ -7,13 +6,28 @@ const Footer = () => {
       sx={{
         backgroundColor: "#1F2937",
         color: "white",
-        paddingY: 2,
+        paddingY: 3,
       }}
       component="footer"
     >
-      <Typography variant="body2" align="center">
-        &copy; 2024 Online Bookstore. All rights reserved.
-      </Typography>
+      <Stack direction="column" alignItems="center" spacing={1}>
+        <Typography variant="body2" align="center">
+          &copy; 2024 Online Bookstore. All rights reserved.
+        </Typography>
+
+        <Typography variant="body2" align="center" sx={{ color: "grey.400" }}>
+          <Link
+            href="/learning"
+            sx={{
+              color: "white",
+              textDecoration: "none",
+              "&:hover": { color: "grey.400" },
+            }}
+          >
+            Explore Apoorv's journey and challenges in building this bookstore
+          </Link>
+        </Typography>
+      </Stack>
     </Box>
   );
 };
