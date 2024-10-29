@@ -114,13 +114,39 @@ const BookCard = (props: BookCardProps) => {
         </Box>
 
         <CardContent>
-          <Typography component="div" fontWeight="bold" color="#1F2937">
+          <Typography
+            fontWeight="bold"
+            color="#1F2937"
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {book.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             by {book.author}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             Genre: {book.genre}
           </Typography>
           <Typography color="success.main" fontWeight="bold">

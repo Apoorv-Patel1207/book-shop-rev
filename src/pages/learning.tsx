@@ -32,6 +32,10 @@ function Learning() {
    
   ];
 
+  // Debouncing, infinite scroll, use memo, callback,  
+  // react - intersection - observer, react hook form, lazy loading
+  // 
+
   return (
     <Layout>
       <Box sx={{ padding: 4 }}>

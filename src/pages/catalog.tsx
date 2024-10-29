@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-// import booksData from "../constant/books.json";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { useInView } from "react-intersection-observer";
 import Layout from "../components/layout/layout";
 import BookCard from "../components/book/book-card";
 import Filters from "../components/catalog/filters";
@@ -22,32 +22,45 @@ const Catalog: React.FC = () => {
   const [filterGenre, setFilterGenre] = useState("All");
   const [priceValue, setPriceValue] = useState<number[]>([0, 100]);
 
-  // useEffect(() => {
-  //   setBooks(booksData);
-  // }, []);
+  const [cart, setCart] = useState<Book[]>([]);
+  console.log("cart: ", cart);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const { ref, inView } = useInView(); 
 
-  const fetchBooks = async () => {
-    const response = await axios.get("http://localhost:5000/books");
-    setBooks(response.data);
-  };
+  const fetchBooks = useCallback(async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/books", {
+        params: { page, limit: 10 },
+      });
+      if (response.data.length < 10) setHasMore(false);
+      setBooks((prevBooks) => [...prevBooks, ...response.data]);
+    } catch (error) {
+      console.error("Error fetching books:", error);
+    }
+  }, [page]);
+
+  useEffect(() => {
+    if (inView && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [inView, hasMore]);
 
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [fetchBooks]);
 
-  const filteredBooks = books.filter((book) => {
-    const matchesSearch =
-      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesGenre = filterGenre === "All" || book.genre === filterGenre;
-    const matchesPrice =
-      book.price >= priceValue[0] && book.price <= priceValue[1];
-    return matchesSearch && matchesGenre && matchesPrice;
-  });
-
-  const [cart, setCart] = useState<Book[]>([]);
-
-  console.log("cart: ", cart);
+  const filteredBooks = useMemo(() => {
+    return books.filter((book) => {
+      const matchesSearch =
+        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesGenre = filterGenre === "All" || book.genre === filterGenre;
+      const matchesPrice =
+        book.price >= priceValue[0] && book.price <= priceValue[1];
+      return matchesSearch && matchesGenre && matchesPrice;
+    });
+  }, [books, searchQuery, filterGenre, priceValue]);
 
   const addToCart = (book: Book) => {
     setCart((prevCart) => [...prevCart, book]);
@@ -89,7 +102,6 @@ const Catalog: React.FC = () => {
                 book={book}
                 addToCart={addToCart}
                 handleDelete={handleDelete}
-                // key={refresh}
               />
             </Grid>
           ))
@@ -106,6 +118,10 @@ const Catalog: React.FC = () => {
           </Grid>
         )}
       </Grid>
+
+      {hasMore && (
+        <div ref={ref} style={{ height: "1px" }} /> 
+      )}
     </Layout>
   );
 };
