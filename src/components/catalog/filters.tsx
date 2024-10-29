@@ -8,66 +8,66 @@ import {
   Box,
   FormControl,
   InputLabel,
-  SelectChangeEvent,
+  Button,
 } from "@mui/material";
+import { SelectChangeEvent } from "@mui/material/Select";
 
 interface BookFilterProps {
-  searchQuery: string;
-  filterGenre: string;
-  priceValue: number[];
-  setSearchQuery: (query: string) => void;
-  setFilterGenre: (genre: string) => void;
-  setPriceValue: (priceValue: number[]) => void;
+  tempSearchQuery: string;
+  tempFilterGenre: string;
+  tempPriceValue: number[];
+  setTempSearchQuery: (query: string) => void;
+  setTempFilterGenre: (genre: string) => void;
+  setTempPriceValue: (tempPriceValue: number[]) => void;
+  handleApplyFilters: () => void; 
+  handleResetFilters: () => void; 
 }
 
 const BookFilter: React.FC<BookFilterProps> = ({
-  searchQuery,
-  filterGenre,
-  priceValue,
-  setSearchQuery,
-  setFilterGenre,
-  setPriceValue,
+  tempSearchQuery,
+  tempFilterGenre,
+  tempPriceValue,
+  setTempSearchQuery,
+  setTempFilterGenre,
+  setTempPriceValue,
+  handleApplyFilters,
+  handleResetFilters, 
 }) => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value.toLowerCase());
+    setTempSearchQuery(event.target.value.toLowerCase());
   };
 
-  const handleGenreFilter = (event: SelectChangeEvent) => {
-    setFilterGenre(event.target.value as string);
+  const handleGenreFilter = (event: SelectChangeEvent<string>) => {
+    setTempFilterGenre(event.target.value);
   };
 
   const handleChangePriceFilter = (
     event: Event,
     newValue: number | number[]
   ) => {
-    setPriceValue(newValue as number[]);
+    setTempPriceValue(newValue as number[]);
   };
 
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 2,
-        mb: 4,
+        padding: 2,
+        width: 300, 
       }}
     >
       <TextField
         variant="outlined"
         placeholder="Search by title or author"
-        value={searchQuery}
+        value={tempSearchQuery}
         onChange={handleSearch}
         fullWidth
-        sx={{ flex: { md: "0 0 33%" } }}
       />
 
-      <Box sx={{ minWidth: 120 }}>
+      <Box sx={{ minWidth: 120, marginTop: 2 }}>
         <FormControl fullWidth>
           <InputLabel>Genre</InputLabel>
           <Select
-            value={filterGenre}
+            value={tempFilterGenre}
             label="Filter Genre"
             onChange={handleGenreFilter}
           >
@@ -78,14 +78,13 @@ const BookFilter: React.FC<BookFilterProps> = ({
         </FormControl>
       </Box>
 
-      <Box sx={{ flex: { md: "0 0 33%" }, width: "100%" }}>
+      <Box sx={{ marginTop: 2 }}>
         <Typography variant="subtitle2" gutterBottom>
           Price
         </Typography>
 
         <Slider
-          getAriaLabel={() => "Temperature range"}
-          value={priceValue}
+          value={tempPriceValue}
           onChange={handleChangePriceFilter}
           valueLabelDisplay="auto"
           max={100}
@@ -98,12 +97,31 @@ const BookFilter: React.FC<BookFilterProps> = ({
             textAlign: "center",
           }}
         >
-          <Typography variant="body2">Min: {priceValue[0]}</Typography>
-          <Typography variant="body2">Max: {priceValue[1]}</Typography>
+          <Typography variant="body2">Min: {tempPriceValue[0]}</Typography>
+          <Typography variant="body2">Max: {tempPriceValue[1]}</Typography>
         </Box>
+      </Box>
+
+      <Box sx={{ display: "flex", gap: 1, marginTop: 2 }}>
+        <Button
+          variant="contained"
+          onClick={handleApplyFilters} 
+          sx={{ flex: 1 }}
+        >
+          Apply
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={handleResetFilters} 
+          sx={{ flex: 1 }}
+        >
+          Reset
+        </Button>
       </Box>
     </Box>
   );
 };
 
 export default BookFilter;
+
+
