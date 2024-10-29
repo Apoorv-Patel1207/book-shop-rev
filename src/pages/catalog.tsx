@@ -26,12 +26,12 @@ const Catalog: React.FC = () => {
   //   setBooks(booksData);
   // }, []);
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      const response = await axios.get("http://localhost:5000/books");
-      setBooks(response.data);
-    };
+  const fetchBooks = async () => {
+    const response = await axios.get("http://localhost:5000/books");
+    setBooks(response.data);
+  };
 
+  useEffect(() => {
     fetchBooks();
   }, []);
 
@@ -53,11 +53,9 @@ const Catalog: React.FC = () => {
     setCart((prevCart) => [...prevCart, book]);
   };
 
-  // const [refresh, setRefresh] = useState(false);
-
   const handleDelete = async (id: string) => {
     await axios.delete(`http://localhost:5000/books/${id}`);
-    //  setRefresh((prev) => !prev); // Trigger re-fetch of books
+    fetchBooks();
   };
 
   return (
