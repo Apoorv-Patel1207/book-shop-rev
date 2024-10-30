@@ -166,7 +166,7 @@ const Catalog: React.FC = () => {
           ? filteredBooks.map((book, index) => (
               <Grid
                 key={book.id + index}
-                size={{ xs: 2, sm: 4, md: 4, lg: 2.4 }}
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}
               >
                 <BookCard
                   book={book}
@@ -175,7 +175,7 @@ const Catalog: React.FC = () => {
                 />
               </Grid>
             ))
-          : !isLoading && ( 
+          : !isLoading && (
               <Grid>
                 <Typography
                   variant="h6"
@@ -190,9 +190,7 @@ const Catalog: React.FC = () => {
       </Grid>
 
       {isFetchingMore && (
-        // <Box display="flex" justifyContent="center" my={4}>
-        //   <CircularProgress />
-        // </Box>
+     
 
         <Box sx={{ width: "100%" }}>
           <LinearProgress />

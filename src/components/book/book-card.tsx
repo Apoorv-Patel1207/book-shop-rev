@@ -150,7 +150,7 @@ const BookCard = (props: BookCardProps) => {
             Genre: {book.genre}
           </Typography>
           <Typography color="success.main" fontWeight="bold">
-            Rs {book.price.toFixed(2)}
+            ₹ {book.price.toFixed(2)}
           </Typography>
         </CardContent>
 

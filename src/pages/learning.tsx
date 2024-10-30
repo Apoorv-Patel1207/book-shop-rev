@@ -28,13 +28,14 @@ function Learning() {
       description:
         "Setting up the backend with Node.js and PostgreSQL, designing database schemas, and integrating the frontend with the API for book data and orders provided valuable experience in full-stack development.",
     },
-   
-   
   ];
 
-  // Debouncing, infinite scroll, use memo, callback,  
+  // price slider
+
+  // To Do : Database connectivity, Debouncing, Skelton UI
+  // Features : Price Slider, Responsive, Search, filters,
+  // Concepts:  Infinite scroll, use memo, callback,
   // react - intersection - observer, react hook form, lazy loading
-  // 
 
   return (
     <Layout>
