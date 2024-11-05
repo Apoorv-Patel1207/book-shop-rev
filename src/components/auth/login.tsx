@@ -27,12 +27,13 @@ const LoginButton = () => {
           <AccountCircleIcon sx={{ width: 30, height: 30, ml: 2 }} />
           <Typography fontSize={14}>{user?.given_name}</Typography>
 
-          <IconButton color="inherit">
-            <LogoutIcon
-              onClick={() =>
-                logout({ logoutParams: { returnTo: window.location.origin } })
-              }
-            />
+          <IconButton
+            color="inherit"
+            onClick={() =>
+              logout({ logoutParams: { returnTo: window.location.origin } })
+            }
+          >
+            <LogoutIcon />
           </IconButton>
         </>
       ) : (
