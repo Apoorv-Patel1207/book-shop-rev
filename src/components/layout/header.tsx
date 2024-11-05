@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -30,6 +30,8 @@ const Header = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const location = useLocation();
 
   return (
     <AppBar
@@ -71,6 +73,7 @@ const Header = () => {
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
           {navLinks.map((link) => (
             <Button
+              key={link.path}
               component={Link}
               to={link.path}
               sx={{
@@ -97,23 +100,35 @@ const Header = () => {
 
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
           <Box
-            sx={{ width: 250 }}
+            sx={{
+              width: 200,
+              height: "100vh",
+              backgroundColor: "#1F2937",
+            }}
             onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
+            display="flex"
+            flexDirection="column"
+            pt={7}
           >
-            <ul>
-              {navLinks.map((link) => (
-                <li>
-                  <Button
-                    component={Link}
-                    to={link.path}
-                    sx={{ color: "black", "&:hover": { color: "grey.400" } }}
-                  >
-                    {link.label}
-                  </Button>
-                </li>
-              ))}
-            </ul>
+            {navLinks.map((link) => (
+              <Button
+                key={link.path}
+                component={Link}
+                to={link.path}
+                sx={{
+                  fontWeight: "semibold",
+                  color: location.pathname === link.path ? "black" : "white", // Active color
+
+                  bgcolor: location.pathname === link.path ? "white" : "none", // Active color
+                  textTransform: "none",
+                  mb: 1,
+                  borderRadius: 0,
+                }}
+              >
+                {link.label}
+              </Button>
+            ))}
           </Box>
         </Drawer>
       </Toolbar>
