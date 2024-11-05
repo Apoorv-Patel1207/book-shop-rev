@@ -29,17 +29,17 @@ interface Book {
 
 interface BookCardProps {
   book: Book;
-  addToCart: (book: Book) => void;
+  handleAddToCart: any;
   handleDelete: (id: string) => void;
 }
 
 const BookCard = (props: BookCardProps) => {
-  const { book, addToCart, handleDelete } = props;
+  const { book, handleAddToCart, handleDelete } = props;
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleCardClick = () => {
     navigate(`/book-details/${book.id}`);
@@ -171,7 +171,7 @@ const BookCard = (props: BookCardProps) => {
           color="primary"
           onClick={(e) => {
             e.stopPropagation();
-            addToCart(book);
+            handleAddToCart(book);
           }}
           className="add-to-cart-btn"
           sx={{

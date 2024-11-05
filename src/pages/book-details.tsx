@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/layout/layout";
-import booksData from "../constant/books.json";
 import {
   Button,
   Card,
@@ -10,14 +9,36 @@ import {
   Typography,
   TextField,
   Grid,
+  CircularProgress,
 } from "@mui/material";
+import { Book } from "../types/book";
 
-const BookDetails: React.FC = () => {
+const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const book = booksData.find((b) => b.id === parseInt(id ?? "", 10));
-
+  const [book, setBook] = useState<Book | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBookDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/books/${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch book details");
+        }
+        const data: Book = await response.json();
+        setBook(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookDetails();
+  }, [id]);
 
   const handleAddToCart = () => {
     console.log(`Added ${quantity} of ${book?.title} to the cart.`);
@@ -28,6 +49,28 @@ const BookDetails: React.FC = () => {
     console.log(`Buying ${quantity} of ${book?.title} now.`);
     navigate("/checkout"); // Redirect to checkout page
   };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="container mx-auto my-10 text-center">
+          <CircularProgress />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="container mx-auto my-10 text-center">
+          <Typography variant="h4" fontWeight="bold">
+            {error}
+          </Typography>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!book) {
     return (
@@ -52,6 +95,7 @@ const BookDetails: React.FC = () => {
                 alt={book.title}
                 height="300"
                 image={book.coverImage}
+                sx={{ objectFit: "cover" }}
               />
             </Grid>
             <Grid item xs={12} md={8}>
@@ -59,33 +103,32 @@ const BookDetails: React.FC = () => {
                 <Typography variant="h4" fontWeight="bold">
                   {book.title}
                 </Typography>
-                <Typography variant="h6" color="textSecondary">
+                <Typography variant="h6" color="text.secondary">
                   by {book.author}
                 </Typography>
-                <Typography variant="body2" color="textSecondary">
+                <Typography variant="body2" color="text.secondary">
                   Genre: {book.genre}
                 </Typography>
                 <Typography variant="h6" fontWeight="bold" marginTop={2}>
                   Description
                 </Typography>
-                <Typography variant="body1" color="textSecondary">
+                <Typography variant="body1" color="text.secondary">
                   {book.description}
                 </Typography>
                 <Typography variant="h5" fontWeight="bold" marginTop={2}>
-                  Price: ${book.price.toFixed(2)}
+                  Price: ₹ {book.price.toFixed(2)}
                 </Typography>
-                <div style={{ marginTop: "16px" }}>
-                  <TextField
-                    id="quantity"
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-                    label="Quantity"
-                    inputProps={{ min: 1 }}
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
+                <TextField
+                  id="quantity"
+                  type="number"
+                  value={quantity}
+                  onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+                  label="Quantity"
+                  inputProps={{ min: 1 }}
+                  variant="outlined"
+                  size="small"
+                  sx={{ marginTop: 2 }}
+                />
               </CardContent>
             </Grid>
           </Grid>

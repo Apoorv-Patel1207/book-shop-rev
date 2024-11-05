@@ -43,6 +43,7 @@ function Learning() {
   // Doubts
   // Search Functionality backend?
   // Role base authentication?
+  // Checkout process, cart local storage
 
   return (
     <Layout>

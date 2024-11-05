@@ -1,5 +1,3 @@
-
-
 import Layout from "../components/layout/layout";
 import { Container, TextField, Button, Typography } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -20,6 +18,7 @@ const validationSchema = Yup.object().shape({
   language: Yup.string().optional(),
   pages: Yup.number().min(1, "Pages must be at least 1").optional(),
   publisher: Yup.string().optional(),
+  ISBN: Yup.string().optional(),
 });
 
 const AdminPanel = () => {
@@ -31,23 +30,21 @@ const AdminPanel = () => {
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      // title: "Default Title",
-      // author: "Default Author",
-      // genre: "Fiction",
       price: 0,
       coverImage:
         "https://media.istockphoto.com/id/1460007178/photo/library-books-on-table-and-background-for-studying-learning-and-research-in-education-school.jpg?s=1024x1024&w=is&k=20&c=cuzIXmvKHLpoGxGIft9zCiTw-jeL0Gjp7UNZau0MNkk=",
       description: "",
-      publicationDate: new Date().toISOString().split("T")[0], // Set default as string in YYYY-MM-DD format
+      publicationDate: new Date().toISOString().split("T")[0],
       language: "English",
-      pages: 100,
+      pages: 0,
       publisher: "Unknown",
+      ISBN: "",
     },
   });
 
   const onSubmit: SubmitHandler<any> = async (data) => {
     try {
-      const response = await fetch("http://localhost:5000/books", {
+      const response = await fetch("http://localhost:5000/api/books", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -173,6 +170,16 @@ const AdminPanel = () => {
                 fullWidth
                 label="Publisher"
                 {...register("publisher")}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                fullWidth
+                label="ISBN"
+                {...register("ISBN")}
+                error={!!errors.ISBN}
+                helperText={errors.ISBN?.message}
               />
             </Grid>
 
