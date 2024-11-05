@@ -19,8 +19,8 @@ interface BookFilterProps {
   setTempSearchQuery: (query: string) => void;
   setTempFilterGenre: (genre: string) => void;
   setTempPriceValue: (tempPriceValue: number[]) => void;
-  handleApplyFilters: () => void; 
-  handleResetFilters: () => void; 
+  handleApplyFilters: () => void;
+  handleResetFilters: () => void;
 }
 
 const BookFilter: React.FC<BookFilterProps> = ({
@@ -31,7 +31,7 @@ const BookFilter: React.FC<BookFilterProps> = ({
   setTempFilterGenre,
   setTempPriceValue,
   handleApplyFilters,
-  handleResetFilters, 
+  handleResetFilters,
 }) => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTempSearchQuery(event.target.value.toLowerCase());
@@ -52,7 +52,7 @@ const BookFilter: React.FC<BookFilterProps> = ({
     <Box
       sx={{
         padding: 2,
-        width: 300, 
+        width: 300,
       }}
     >
       <TextField
@@ -78,7 +78,7 @@ const BookFilter: React.FC<BookFilterProps> = ({
         </FormControl>
       </Box>
 
-      <Box sx={{ marginTop: 2 }}>
+      <Box sx={{ marginTop: 2, px: 1 }}>
         <Typography variant="subtitle2" gutterBottom>
           Price
         </Typography>
@@ -105,14 +105,14 @@ const BookFilter: React.FC<BookFilterProps> = ({
       <Box sx={{ display: "flex", gap: 1, marginTop: 2 }}>
         <Button
           variant="contained"
-          onClick={handleApplyFilters} 
+          onClick={handleApplyFilters}
           sx={{ flex: 1 }}
         >
           Apply
         </Button>
         <Button
           variant="outlined"
-          onClick={handleResetFilters} 
+          onClick={handleResetFilters}
           sx={{ flex: 1 }}
         >
           Reset
@@ -123,5 +123,3 @@ const BookFilter: React.FC<BookFilterProps> = ({
 };
 
 export default BookFilter;
-
-

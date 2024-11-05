@@ -8,15 +8,18 @@ import {
   Button,
   Drawer,
   IconButton,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Search from "./search";
+import SearchIcon from "@mui/icons-material/Search";
+import Login from "../auth/login";
 
 const navLinks = [
   { label: "Catalog", path: "/catalog" },
-  { label: "Order History", path: "/order-history" },
+  { label: "Orders", path: "/order-history" },
   { label: "Cart", path: "/cart" },
-  { label: "Login", path: "/login" },
   { label: "Add Book", path: "/add-book" },
 ];
 
@@ -25,8 +28,17 @@ const Header = () => {
 
   const toggleDrawer = (open: boolean) => () => setDrawerOpen(open);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "#1F2937", paddingX: 8 }}>
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: "#1F2937",
+        paddingX: { xs: 1, sm: 4, md: 8, lg: 10, xl: 12 },
+      }}
+    >
       <Toolbar
         sx={{
           display: "flex",
@@ -35,28 +47,44 @@ const Header = () => {
         }}
       >
         <Typography
-          variant="h6"
           component={Link}
           to="/"
-          sx={{ color: "white", textDecoration: "none" }}
+          sx={{
+            color: "white",
+            textDecoration: "none",
+            fontSize: { xs: "20px", md: "24px" },
+          }}
         >
-          Online Bookstore
+          Readify
         </Typography>
 
-        <Search />
+        {isMobile ? (
+          <Box display="flex" justifyContent="end">
+            <IconButton color="inherit">
+              <SearchIcon />
+            </IconButton>
+          </Box>
+        ) : (
+          <Search />
+        )}
 
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
           {navLinks.map((link) => (
-
             <Button
               component={Link}
               to={link.path}
-              sx={{ color: "white", "&:hover": { color: "grey.400" } }}
+              sx={{
+                color: "white",
+                textTransform: "none",
+                "&:hover": { color: "grey.400" },
+              }}
             >
               {link.label}
             </Button>
           ))}
         </Box>
+
+        <Login />
 
         <IconButton
           color="inherit"

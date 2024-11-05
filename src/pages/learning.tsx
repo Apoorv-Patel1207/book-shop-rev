@@ -1,5 +1,6 @@
 import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
 import Layout from "../components/layout/layout";
+import ThemeDemo from "../components/theme-demo";
 
 function Learning() {
   const challenges = [
@@ -34,8 +35,10 @@ function Learning() {
 
   // To Do : Database connectivity, Debouncing, Skelton UI
   // Features : Price Slider, Responsive, Search, filters,
-  // Concepts:  Infinite scroll, use memo, callback,
-  // react - intersection - observer, react hook form, lazy loading
+  // Concepts:  Infinite scroll,  lazy loading, use memo, callback,
+  // Tech and liberaries : react router DOM, react intersection observer, react hook form,
+  // Handle the hover effect in mobile
+  // integrated auth 0 authentication
 
   return (
     <Layout>
@@ -61,6 +64,8 @@ function Learning() {
             </ListItem>
           ))}
         </List>
+
+        <ThemeDemo />
       </Box>
     </Layout>
   );

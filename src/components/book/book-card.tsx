@@ -13,6 +13,8 @@ import {
   DialogTitle,
   IconButton,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 
@@ -35,6 +37,9 @@ const BookCard = (props: BookCardProps) => {
   const { book, addToCart, handleDelete } = props;
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleCardClick = () => {
     navigate(`/book-details/${book.id}`);
@@ -65,7 +70,7 @@ const BookCard = (props: BookCardProps) => {
             transform: "translateY(-5px)",
           },
           overflow: "hidden",
-          maxWidth: 300,
+          maxWidth: isMobile ? "100%" : 300,
           margin: 2,
           "&:hover .add-to-cart-btn": {
             opacity: 1,
@@ -87,8 +92,11 @@ const BookCard = (props: BookCardProps) => {
             top: 8,
             right: 8,
             backgroundColor: "rgba(255, 255, 255, 0.8)",
-            opacity: 0,
-            transform: "translateY(-20px)",
+            opacity: isMobile ? 1 : 0, // Always visible on mobile
+            transform: isMobile ? "translateY(0)" : "translateY(-20px)", // Default position for mobile
+
+            // opacity: 0,
+            // transform: "translateY(-20px)",
             transition: "0.3s ease",
             "&:hover": {
               backgroundColor: "rgba(255, 255, 255, 1)",
@@ -121,6 +129,7 @@ const BookCard = (props: BookCardProps) => {
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
+              fontSize: isMobile ? "1rem" : "1.1rem",
             }}
           >
             {book.title}
@@ -133,6 +142,7 @@ const BookCard = (props: BookCardProps) => {
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
+              fontSize: isMobile ? "0.875rem" : "1rem",
             }}
           >
             by {book.author}
@@ -145,6 +155,7 @@ const BookCard = (props: BookCardProps) => {
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
+              fontSize: isMobile ? "0.875rem" : "1rem",
             }}
           >
             Genre: {book.genre}
@@ -168,8 +179,10 @@ const BookCard = (props: BookCardProps) => {
             bottom: 10,
             right: 10,
             backgroundColor: "#1F2937",
-            opacity: 0,
-            transform: "translateY(20px)",
+
+            opacity: isMobile ? 1 : 0,
+            transform: isMobile ? "translateY(0)" : "translateY(20px)",
+
             transition: "0.3s ease",
             "&:hover": {
               backgroundColor: "secondary.dark",

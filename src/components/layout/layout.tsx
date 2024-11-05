@@ -14,13 +14,18 @@ const Layout = ({ children }: LayoutProps) => {
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-        padding: 0,
-        margin: 0,
-        border: "solid black 2px",
       }}
     >
       <Header />
-      <Box sx={{ flex: 1, marginTop: 12, paddingX: 8 }}>{children}</Box>
+      <Box
+        sx={{
+          flex: 1,
+          marginTop: 12,
+          paddingX: { xs: 1, sm: 4, md: 8, lg: 10, xl: 12 },
+        }}
+      >
+        {children}
+      </Box>
       <Footer />
     </Box>
   );
