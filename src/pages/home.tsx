@@ -16,7 +16,7 @@ const Home: React.FC = () => {
           variant="contained"
           color="primary"
           href="/catalog"
-          sx={{ marginTop: 2 }}
+          sx={{ marginTop: 2, bgcolor: "#001F3F" }}
         >
           Browse Books
         </Button>

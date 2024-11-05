@@ -8,6 +8,7 @@ const Footer = () => {
         color: "white",
         paddingY: 3,
         marginTop: 4,
+        paddingX: { xs: 1, sm: 4, md: 8, lg: 10, xl: 12 },
       }}
       component="footer"
     >

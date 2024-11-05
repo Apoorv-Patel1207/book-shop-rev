@@ -5,14 +5,15 @@ import BookCard from "../components/book/book-card";
 import Filters from "../components/catalog/filters";
 import {
   Box,
-  Button,
   CircularProgress,
   Drawer,
+  IconButton,
   LinearProgress,
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import axios from "axios";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
 interface Book {
   id: number;
@@ -73,11 +74,15 @@ const Catalog: React.FC = () => {
   const filteredBooks = useMemo(() => {
     return books.filter((book) => {
       const matchesSearch =
-        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchQuery.toLowerCase());
+        (book.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          book.author?.toLowerCase().includes(searchQuery.toLowerCase())) ??
+        false;
+
       const matchesGenre = filterGenre === "All" || book.genre === filterGenre;
+
       const matchesPrice =
         book.price >= priceValue[0] && book.price <= priceValue[1];
+
       return matchesSearch && matchesGenre && matchesPrice;
     });
   }, [books, searchQuery, filterGenre, priceValue]);
@@ -125,21 +130,29 @@ const Catalog: React.FC = () => {
   return (
     <Layout>
       <Typography
-        variant="h4"
-        component="h1"
-        gutterBottom
         textAlign="center"
         color="#1F2937"
         fontWeight="bold"
-        mb={4}
+        sx={{ mb: { xs: 2, md: 4 } }}
+        fontSize={{ xs: 20, md: 26 }}
       >
         "Discover Your Next Read"
       </Typography>
 
       <Box display="flex" justifyContent="end">
-        <Button variant="contained" onClick={toggleDrawer(true)}>
-          Filter
-        </Button>
+        <IconButton
+          onClick={toggleDrawer(true)}
+          sx={{
+            bgcolor: "#1F2937",
+            color: "white",
+            mr: 2,
+            "&:hover": {
+              color: "black",
+            },
+          }}
+        >
+          <FilterListIcon />
+        </IconButton>
       </Box>
 
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
@@ -161,7 +174,11 @@ const Catalog: React.FC = () => {
         </Box>
       )}
 
-      <Grid container spacing={2} sx={{ marginTop: 2 }}>
+      <Grid
+        container
+        // spacing={2}
+        sx={{ marginTop: { md: 2 } }}
+      >
         {filteredBooks.length > 0
           ? filteredBooks.map((book, index) => (
               <Grid
@@ -190,8 +207,6 @@ const Catalog: React.FC = () => {
       </Grid>
 
       {isFetchingMore && (
-     
-
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
         </Box>

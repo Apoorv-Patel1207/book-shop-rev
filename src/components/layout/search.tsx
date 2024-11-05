@@ -18,12 +18,6 @@ const Search: React.FC = () => {
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const navigate = useNavigate();
 
-  // const books: Book[] = [
-  //   { id: "1", title: "The Great Gatsby", author: "F. Scott Fitzgerald" },
-  //   { id: "2", title: "1984", author: "George Orwell" },
-  //   { id: "3", title: "To Kill a Mockingbird", author: "Harper Lee" },
-  // ];
-
   useEffect(() => {
     if (searchQuery) {
       const filtered = booksData.filter(
@@ -52,7 +46,17 @@ const Search: React.FC = () => {
         placeholder="Search by title or author"
         value={searchQuery}
         onChange={handleSearchChange}
-        sx={{ backgroundColor: "white", width: "500px", borderRadius: 2 }}
+        sx={{
+          backgroundColor: "white",
+          width: { md: "250px", lg: "500px" },
+          borderRadius: 2,
+          "& .MuiOutlinedInput-root": {
+            height: "40px",
+            "& input": {
+              padding: "8px",
+            },
+          },
+        }}
       />
       {filteredBooks.length > 0 && (
         <Paper style={{ position: "absolute", width: "500px", zIndex: 10 }}>

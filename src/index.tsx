@@ -1,12 +1,29 @@
-import React from "react";
 import ReactDOM from "react-dom/client"; // React 18+ uses react-dom/client
 import App from "./App";
-import "./App.css";
+// import "./App.css";
+import theme from "./theme";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 const rootElement = document.getElementById("root");
 if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
-  root.render(<App />);
+ 
+  root.render(
+    <Auth0Provider
+      domain="dev-sd7w6s5507kp55cz.us.auth0.com"
+      clientId="7yTDOOG1oolu6EaSijcWHtChqM4VDnqH"
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+      }}
+    >
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </Auth0Provider>
+  );
 } else {
   console.error("Root element not found");
 }
