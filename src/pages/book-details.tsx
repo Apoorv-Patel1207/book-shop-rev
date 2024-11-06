@@ -10,8 +10,16 @@ import {
   TextField,
   Grid,
   CircularProgress,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
 } from "@mui/material";
-import { Book } from "../types/book";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { Book, CartItem } from "../types/book";
+import { addToCart } from "../service/cart-service";
 
 const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,6 +27,7 @@ const BookDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,14 +49,36 @@ const BookDetails = () => {
     fetchBookDetails();
   }, [id]);
 
-  const handleAddToCart = () => {
-    console.log(`Added ${quantity} of ${book?.title} to the cart.`);
-    navigate("/cart"); // Redirect to the cart page after adding
+  const handleBuyNow = () => {
+    setIsModalOpen(true); 
   };
 
-  const handleBuyNow = () => {
+  const handleConfirmBuy = () => {
     console.log(`Buying ${quantity} of ${book?.title} now.`);
-    navigate("/checkout"); // Redirect to checkout page
+    setIsModalOpen(false);
+    navigate("/checkout");
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); 
+  };
+
+  const handleAddToCart = async () => {
+    if (!book) return;
+
+    const item: CartItem = {
+      ...book,
+      quantity,
+    };
+
+    try {
+      await addToCart(item);
+      console.log("Item added to cart:", item);
+      navigate("/cart");
+    } catch (err) {
+      setError((err as Error).message);
+      console.error("Error adding item to cart:", err);
+    }
   };
 
   if (loading) {
@@ -143,7 +174,7 @@ const BookDetails = () => {
               <Button variant="outlined" onClick={() => navigate("/catalog")}>
                 Back to Books
               </Button>
-              <div style={{ display: "flex", gap: "8px" }}>
+              <Box style={{ display: "flex", gap: "8px" }}>
                 <Button variant="contained" onClick={handleAddToCart}>
                   Add to Cart
                 </Button>
@@ -154,10 +185,63 @@ const BookDetails = () => {
                 >
                   Buy Now
                 </Button>
-              </div>
+              </Box>
             </div>
           </CardContent>
         </Card>
+
+        {/* Buy Now Confirmation Modal */}
+        <Dialog
+          open={isModalOpen}
+          onClose={handleCloseModal}
+          maxWidth="xs"
+          fullWidth
+        >
+          <DialogTitle sx={{ display: "flex", alignItems: "center" }}>
+            <CheckCircleOutlineIcon
+              color="success"
+              sx={{ marginRight: 1, fontSize: 30 }}
+            />
+            Confirm Purchase
+          </DialogTitle>
+          <DialogContent>
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <CardMedia
+                component="img"
+                alt={book.title}
+                height="150"
+                image={book.coverImage}
+                sx={{ objectFit: "cover", borderRadius: 2, mb: 2 }}
+              />
+              <Typography variant="h6" fontWeight="bold">
+                {book.title}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary">
+                by {book.author}
+              </Typography>
+              <Divider sx={{ my: 2, width: "100%" }} />
+              <Typography variant="body1">
+                <strong>Quantity:</strong> {quantity}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>Total:</strong> ₹ {(book.price * quantity).toFixed(2)}
+              </Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: "center", mb: 2 }}>
+            <Button onClick={handleCloseModal} variant="outlined" color="error">
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmBuy}
+              variant="contained"
+              color="primary"
+              sx={{ ml: 1 }}
+            >
+              Confirm Buy
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </Layout>
   );

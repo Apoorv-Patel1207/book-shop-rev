@@ -29,12 +29,11 @@ interface Book {
 
 interface BookCardProps {
   book: Book;
-  handleAddToCart: any;
   handleDelete: (id: string) => void;
 }
 
 const BookCard = (props: BookCardProps) => {
-  const { book, handleAddToCart, handleDelete } = props;
+  const { book, handleDelete } = props;
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -164,33 +163,6 @@ const BookCard = (props: BookCardProps) => {
             ₹ {book.price.toFixed(2)}
           </Typography>
         </CardContent>
-
-        <Button
-          variant="contained"
-          size="small"
-          color="primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleAddToCart(book);
-          }}
-          className="add-to-cart-btn"
-          sx={{
-            position: "absolute",
-            bottom: 10,
-            right: 10,
-            backgroundColor: "#1F2937",
-
-            opacity: isMobile ? 1 : 0,
-            transform: isMobile ? "translateY(0)" : "translateY(20px)",
-
-            transition: "0.3s ease",
-            "&:hover": {
-              backgroundColor: "secondary.dark",
-            },
-          }}
-        >
-          Add to Cart
-        </Button>
       </Card>
 
       <Dialog

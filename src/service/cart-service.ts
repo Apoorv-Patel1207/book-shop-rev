@@ -46,3 +46,22 @@ export const clearCart = async (): Promise<void> => {
     throw new Error("Failed to clear cart");
   }
 };
+
+export const updateCartQuantityService = async (
+  id: number,
+  quantity: number
+): Promise<CartItem> => {
+  const response = await fetch(`${API_URL}/update/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ quantity }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update cart item quantity");
+  }
+
+  return response.json();
+};

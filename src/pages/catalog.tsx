@@ -14,8 +14,6 @@ import {
 import Grid from "@mui/material/Grid2";
 import axios from "axios";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { addToCart } from "../service/cart-service";
-import { CartItem } from "../types/book";
 
 interface Book {
   id: number;
@@ -89,10 +87,6 @@ const Catalog: React.FC = () => {
     });
   }, [books, searchQuery, filterGenre, priceValue]);
 
-  // const addToCart = (book: Book) => {
-  //   setCart((prevCart) => [...prevCart, book]);
-  // };
-
   const handleDelete = async (id: string) => {
     try {
       await axios.delete(`http://localhost:5000/api/books/${id}`);
@@ -129,18 +123,7 @@ const Catalog: React.FC = () => {
     setDrawerOpen(false);
   };
 
-  const [error, setError] = useState<string | null>(null);
 
-  const handleAddToCart = async (item: CartItem) => {
-    try {
-      await addToCart(item);
-      // Optionally, you can perform further actions here, like showing a success message or updating the cart state
-      console.log("Item added to cart:", item);
-    } catch (err) {
-      setError((err as Error).message);
-      console.error("Error adding item to cart:", err);
-    }
-  };
 
   return (
     <Layout>
@@ -198,7 +181,6 @@ const Catalog: React.FC = () => {
               >
                 <BookCard
                   book={book}
-                  handleAddToCart={handleAddToCart}
                   handleDelete={handleDelete}
                 />
               </Grid>
