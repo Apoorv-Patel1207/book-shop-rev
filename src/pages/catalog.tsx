@@ -24,18 +24,14 @@ interface Book {
   coverImage: string;
 }
 
-const Catalog: React.FC = () => {
+const Catalog = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterGenre, setFilterGenre] = useState("All");
   const [priceValue, setPriceValue] = useState<number[]>([0, 100]);
-
   const [tempSearchQuery, setTempSearchQuery] = useState("");
   const [tempFilterGenre, setTempFilterGenre] = useState("All");
   const [tempPriceValue, setTempPriceValue] = useState<number[]>([0, 100]);
-
-  const [cart, setCart] = useState<Book[]>([]);
-  console.log("cart: ", cart);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const { ref, inView } = useInView();
@@ -47,7 +43,7 @@ const Catalog: React.FC = () => {
   const fetchBooks = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/books", {
+      const response = await axios.get("http://localhost:5000/api/books", {
         params: { page, limit: 10 },
       });
       if (response.data.length < 10) setHasMore(false);
@@ -87,13 +83,9 @@ const Catalog: React.FC = () => {
     });
   }, [books, searchQuery, filterGenre, priceValue]);
 
-  const addToCart = (book: Book) => {
-    setCart((prevCart) => [...prevCart, book]);
-  };
-
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/books/${id}`);
+      await axios.delete(`http://localhost:5000/api/books/${id}`);
 
       setBooks((prevBooks) =>
         prevBooks.filter((book) => book.id.toString() !== id)
@@ -174,11 +166,7 @@ const Catalog: React.FC = () => {
         </Box>
       )}
 
-      <Grid
-        container
-        // spacing={2}
-        sx={{ marginTop: { md: 2 } }}
-      >
+      <Grid container sx={{ marginTop: { md: 2 } }}>
         {filteredBooks.length > 0
           ? filteredBooks.map((book, index) => (
               <Grid
@@ -187,7 +175,6 @@ const Catalog: React.FC = () => {
               >
                 <BookCard
                   book={book}
-                  addToCart={addToCart}
                   handleDelete={handleDelete}
                 />
               </Grid>

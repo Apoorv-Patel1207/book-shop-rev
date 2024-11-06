@@ -36,7 +36,7 @@ const Search: React.FC = () => {
   };
 
   const handleBookClick = (bookId: string) => {
-    navigate(`/book-details/${bookId}`);
+    navigate(`/api/book-details/${bookId}`);
   };
 
   return (

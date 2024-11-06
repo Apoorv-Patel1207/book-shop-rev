@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/layout/layout";
-import booksData from "../constant/books.json";
 import {
   Button,
   Card,
@@ -10,24 +9,99 @@ import {
   Typography,
   TextField,
   Grid,
+  CircularProgress,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
 } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { Book, CartItem } from "../types/book-data-types";
+import { addToCart } from "../service/cart-service";
 
-const BookDetails: React.FC = () => {
+const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const book = booksData.find((b) => b.id === parseInt(id ?? "", 10));
-
+  const [book, setBook] = useState<Book | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const handleAddToCart = () => {
-    console.log(`Added ${quantity} of ${book?.title} to the cart.`);
-    navigate("/cart"); // Redirect to the cart page after adding
-  };
+  useEffect(() => {
+    const fetchBookDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/books/${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch book details");
+        }
+        const data: Book = await response.json();
+        setBook(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookDetails();
+  }, [id]);
 
   const handleBuyNow = () => {
-    console.log(`Buying ${quantity} of ${book?.title} now.`);
-    navigate("/checkout"); // Redirect to checkout page
+    setIsModalOpen(true);
   };
+
+  const handleConfirmBuy = () => {
+    console.log(`Buying ${quantity} of ${book?.title} now.`);
+    setIsModalOpen(false);
+    navigate("/checkout");
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleAddToCart = async () => {
+    if (!book) return;
+
+    const item: CartItem = {
+      ...book,
+      quantity,
+    };
+
+    try {
+      await addToCart(item);
+      console.log("Item added to cart:", item);
+      navigate("/cart");
+    } catch (err) {
+      setError((err as Error).message);
+      console.error("Error adding item to cart:", err);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="container mx-auto my-10 text-center">
+          <CircularProgress />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="container mx-auto my-10 text-center">
+          <Typography variant="h4" fontWeight="bold">
+            {error}
+          </Typography>
+        </div>
+      </Layout>
+    );
+  }
 
   if (!book) {
     return (
@@ -52,6 +126,7 @@ const BookDetails: React.FC = () => {
                 alt={book.title}
                 height="300"
                 image={book.coverImage}
+                sx={{ objectFit: "cover" }}
               />
             </Grid>
             <Grid item xs={12} md={8}>
@@ -59,33 +134,32 @@ const BookDetails: React.FC = () => {
                 <Typography variant="h4" fontWeight="bold">
                   {book.title}
                 </Typography>
-                <Typography variant="h6" color="textSecondary">
+                <Typography variant="h6" color="text.secondary">
                   by {book.author}
                 </Typography>
-                <Typography variant="body2" color="textSecondary">
+                <Typography variant="body2" color="text.secondary">
                   Genre: {book.genre}
                 </Typography>
                 <Typography variant="h6" fontWeight="bold" marginTop={2}>
                   Description
                 </Typography>
-                <Typography variant="body1" color="textSecondary">
+                <Typography variant="body1" color="text.secondary">
                   {book.description}
                 </Typography>
                 <Typography variant="h5" fontWeight="bold" marginTop={2}>
-                  Price: ${book.price.toFixed(2)}
+                  Price: ₹ {book.price.toFixed(2)}
                 </Typography>
-                <div style={{ marginTop: "16px" }}>
-                  <TextField
-                    id="quantity"
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-                    label="Quantity"
-                    inputProps={{ min: 1 }}
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
+                <TextField
+                  id="quantity"
+                  type="number"
+                  value={quantity}
+                  onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+                  label="Quantity"
+                  inputProps={{ min: 1 }}
+                  variant="outlined"
+                  size="small"
+                  sx={{ marginTop: 2 }}
+                />
               </CardContent>
             </Grid>
           </Grid>
@@ -100,7 +174,7 @@ const BookDetails: React.FC = () => {
               <Button variant="outlined" onClick={() => navigate("/catalog")}>
                 Back to Books
               </Button>
-              <div style={{ display: "flex", gap: "8px" }}>
+              <Box style={{ display: "flex", gap: "8px" }}>
                 <Button variant="contained" onClick={handleAddToCart}>
                   Add to Cart
                 </Button>
@@ -111,10 +185,63 @@ const BookDetails: React.FC = () => {
                 >
                   Buy Now
                 </Button>
-              </div>
+              </Box>
             </div>
           </CardContent>
         </Card>
+
+        {/* Buy Now Confirmation Modal */}
+        <Dialog
+          open={isModalOpen}
+          onClose={handleCloseModal}
+          maxWidth="xs"
+          fullWidth
+        >
+          <DialogTitle sx={{ display: "flex", alignItems: "center" }}>
+            <CheckCircleOutlineIcon
+              color="success"
+              sx={{ marginRight: 1, fontSize: 30 }}
+            />
+            Confirm Purchase
+          </DialogTitle>
+          <DialogContent>
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <CardMedia
+                component="img"
+                alt={book.title}
+                height="150"
+                image={book.coverImage}
+                sx={{ objectFit: "cover", borderRadius: 2, mb: 2 }}
+              />
+              <Typography variant="h6" fontWeight="bold">
+                {book.title}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary">
+                by {book.author}
+              </Typography>
+              <Divider sx={{ my: 2, width: "100%" }} />
+              <Typography variant="body1">
+                <strong>Quantity:</strong> {quantity}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>Total:</strong> ₹ {(book.price * quantity).toFixed(2)}
+              </Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: "center", mb: 2 }}>
+            <Button onClick={handleCloseModal} variant="outlined" color="error">
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmBuy}
+              variant="contained"
+              color="primary"
+              sx={{ ml: 1 }}
+            >
+              Confirm Buy
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </Layout>
   );

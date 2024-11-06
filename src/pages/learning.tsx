@@ -34,6 +34,7 @@ function Learning() {
   // price slider
 
   // To Do : Database connectivity, Debouncing, Skelton UI, Icons on drawer links, user data on drawer nav, add book api, dropbox for image
+  // Fix the input field at the cart, 
   // Features : Price Slider, Responsive, Search, filters,
   // Concepts:  Infinite scroll,  lazy loading, use memo, callback,
   // Tech and liberaries : react router DOM, react intersection observer, react hook form,
@@ -43,6 +44,7 @@ function Learning() {
   // Doubts
   // Search Functionality backend?
   // Role base authentication?
+  // Checkout process, cart local storage
 
   return (
     <Layout>
