@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from "react";
 import CartItem from "../components/cart/cart-item";
 import Layout from "../components/layout/layout";
@@ -13,7 +11,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { CartItem as CartItemType } from "../types/book";
+import { CartItem as CartItemType } from "../types/book-data-types";
 import {
   fetchCartItems,
   removeFromCart,

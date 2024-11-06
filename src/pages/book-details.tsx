@@ -18,7 +18,7 @@ import {
   Divider,
 } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { Book, CartItem } from "../types/book";
+import { Book, CartItem } from "../types/book-data-types";
 import { addToCart } from "../service/cart-service";
 
 const BookDetails = () => {
@@ -50,7 +50,7 @@ const BookDetails = () => {
   }, [id]);
 
   const handleBuyNow = () => {
-    setIsModalOpen(true); 
+    setIsModalOpen(true);
   };
 
   const handleConfirmBuy = () => {
@@ -60,7 +60,7 @@ const BookDetails = () => {
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); 
+    setIsModalOpen(false);
   };
 
   const handleAddToCart = async () => {

@@ -24,18 +24,14 @@ interface Book {
   coverImage: string;
 }
 
-const Catalog: React.FC = () => {
+const Catalog = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterGenre, setFilterGenre] = useState("All");
   const [priceValue, setPriceValue] = useState<number[]>([0, 100]);
-
   const [tempSearchQuery, setTempSearchQuery] = useState("");
   const [tempFilterGenre, setTempFilterGenre] = useState("All");
   const [tempPriceValue, setTempPriceValue] = useState<number[]>([0, 100]);
-
-  const [cart, setCart] = useState<Book[]>([]);
-  console.log("cart: ", cart);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const { ref, inView } = useInView();
@@ -122,8 +118,6 @@ const Catalog: React.FC = () => {
     setTempPriceValue([0, 100]);
     setDrawerOpen(false);
   };
-
-
 
   return (
     <Layout>

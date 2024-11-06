@@ -1,5 +1,4 @@
-import React from "react";
-import OrderHistory from "../constant/order-history.json";
+import { useEffect, useState } from "react";
 import Layout from "../components/layout/layout";
 import {
   Container,
@@ -9,17 +8,33 @@ import {
   List,
   ListItem,
   ListItemText,
-  Box,
 } from "@mui/material";
+import { Order } from "../types/book-data-types";
+import { fetchOrders } from "../service/order-service";
 
 const OrderHistoryPage = () => {
+  const [orders, setOrders] = useState<Order[]>([]);
+  console.log("orders: ", orders);
+
+  useEffect(() => {
+    const loadOrders = async () => {
+      try {
+        const fetchedOrders = await fetchOrders();
+        setOrders(fetchedOrders);
+      } catch (error) {
+        console.error("Failed to load orders", error);
+      }
+    };
+    loadOrders();
+  }, []);
+
   return (
     <Layout>
       <Container maxWidth="lg">
         <Typography variant="h4" component="h1" gutterBottom>
           Order History
         </Typography>
-        {OrderHistory.map((order) => (
+        {orders.map((order) => (
           <Card key={order.orderId} variant="outlined" sx={{ mb: 3 }}>
             <CardContent>
               <Typography variant="h6" component="h2">
@@ -35,8 +50,8 @@ const OrderHistoryPage = () => {
                 Books Ordered:
               </Typography>
               <List>
-                {order.books.map((book) => (
-                  <ListItem key={book.bookId}>
+                {order.items.map((book) => (
+                  <ListItem key={book.id}>
                     <ListItemText
                       primary={<strong>{book.title}</strong>}
                       secondary={`by ${book.author} - Rs ${book.price.toFixed(

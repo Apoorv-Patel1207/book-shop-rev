@@ -1,4 +1,4 @@
-import { CartItem } from "../types/book";
+import { CartItem } from "../types/book-data-types";
 
 const API_URL = "http://localhost:5000/api/cart";
 
