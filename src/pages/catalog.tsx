@@ -199,7 +199,7 @@ const Catalog = () => {
         </Box>
       )}
 
-      {hasMore && <div ref={ref} style={{ height: "1px" }} />}
+      {hasMore && <Box ref={ref} style={{ height: "1px" }} />}
     </Layout>
   );
 };

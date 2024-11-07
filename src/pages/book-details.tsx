@@ -123,9 +123,9 @@ const BookDetails = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="container mx-auto my-10 text-center">
+        <Box className="container mx-auto my-10 text-center">
           <CircularProgress />
-        </div>
+        </Box>
       </Layout>
     );
   }
@@ -133,11 +133,11 @@ const BookDetails = () => {
   if (error) {
     return (
       <Layout>
-        <div className="container mx-auto my-10 text-center">
+        <Box className="container mx-auto my-10 text-center">
           <Typography variant="h4" fontWeight="bold">
             {error}
           </Typography>
-        </div>
+        </Box>
       </Layout>
     );
   }
@@ -145,18 +145,18 @@ const BookDetails = () => {
   if (!book) {
     return (
       <Layout>
-        <div className="container mx-auto my-10 text-center">
+        <Box className="container mx-auto my-10 text-center">
           <Typography variant="h4" fontWeight="bold">
             Book not found
           </Typography>
-        </div>
+        </Box>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <div className="container mx-auto my-10 p-4">
+      <Box className="container mx-auto my-10 p-4">
         <Card variant="outlined">
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
@@ -192,7 +192,9 @@ const BookDetails = () => {
                   id="quantity"
                   type="number"
                   value={quantity}
-                  onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+                  onChange={(e: { target: { value: string } }) =>
+                    setQuantity(parseInt(e.target.value, 10))
+                  }
                   label="Quantity"
                   inputProps={{ min: 1 }}
                   variant="outlined"
@@ -203,7 +205,7 @@ const BookDetails = () => {
             </Grid>
           </Grid>
           <CardContent>
-            <div
+            <Box
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -225,7 +227,7 @@ const BookDetails = () => {
                   Buy Now
                 </Button>
               </Box>
-            </div>
+            </Box>
           </CardContent>
         </Card>
 
@@ -259,11 +261,9 @@ const BookDetails = () => {
                 by {book.author}
               </Typography>
               <Divider sx={{ my: 2, width: "100%" }} />
-              <Typography variant="body1">
-                <strong>Quantity:</strong> {quantity}
-              </Typography>
+              <Typography variant="body1">Quantity: {quantity}</Typography>
               <Typography variant="body1" gutterBottom>
-                <strong>Total:</strong> ₹ {(book.price * quantity).toFixed(2)}
+                Total: ₹ {(book.price * quantity).toFixed(2)}
               </Typography>
             </Box>
           </DialogContent>
@@ -291,7 +291,7 @@ const BookDetails = () => {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
+      </Box>
     </Layout>
   );
 };

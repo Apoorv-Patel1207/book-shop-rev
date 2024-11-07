@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Box,
 } from "@mui/material";
 import { CartItem as CartItemType, Order } from "../types/data-types";
 import {
@@ -21,7 +22,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { placeOrder } from "../service/order-service";
 
-const Cart: React.FC = () => {
+const Cart = () => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -167,7 +168,7 @@ const Cart: React.FC = () => {
         </Typography>
 
         <Paper elevation={3} sx={{ padding: 2 }}>
-          <div style={{ marginBottom: "16px" }}>
+          <Box style={{ marginBottom: "16px" }}>
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
                 <CartItem
@@ -180,8 +181,8 @@ const Cart: React.FC = () => {
             ) : (
               <Typography textAlign="center">Your cart is empty.</Typography>
             )}
-          </div>
-          <div
+          </Box>
+          <Box
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -191,7 +192,7 @@ const Cart: React.FC = () => {
             <Typography variant="h6" component="h2">
               Total: Rs {totalCost.toFixed(2)}
             </Typography>
-            <div>
+            <Box>
               <Button
                 variant="contained"
                 color="secondary"
@@ -208,8 +209,8 @@ const Cart: React.FC = () => {
               >
                 Proceed to Checkout
               </Button>
-            </div>
-          </div>
+            </Box>
+          </Box>
         </Paper>
 
         <Dialog open={isCheckoutModalOpen} onClose={handleCloseCheckoutModal}>
@@ -217,7 +218,7 @@ const Cart: React.FC = () => {
           <DialogContent>
             <Typography>
               Are you sure you want to proceed with the checkout? Your total is{" "}
-              <strong>Rs {totalCost.toFixed(2)}</strong>.
+              Rs {totalCost.toFixed(2)}.
             </Typography>
           </DialogContent>
           <DialogActions>

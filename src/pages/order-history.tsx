@@ -53,7 +53,7 @@ const OrderHistoryPage = () => {
                 {order.items.map((book) => (
                   <ListItem key={book.id}>
                     <ListItemText
-                      primary={<strong>{book.title}</strong>}
+                      primary={book.title}
                       secondary={`by ${book.author} - Rs ${book.price.toFixed(
                         2
                       )} x ${book.quantity}`}

@@ -6,6 +6,7 @@ import {
   CardContent,
   Typography,
   IconButton,
+  Box,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -20,7 +21,7 @@ interface CartItemProps {
   updateCartQuantity: (id: number, quantity: number) => void;
 }
 
-const CartItem: React.FC<CartItemProps> = ({
+const CartItem = ({
   id,
   title,
   author,
@@ -28,7 +29,7 @@ const CartItem: React.FC<CartItemProps> = ({
   quantity,
   handleRemove,
   updateCartQuantity,
-}) => {
+}: CartItemProps) => {
   const [itemQuantity, setItemQuantity] = useState(quantity);
 
   const handleIncrement = () => {
@@ -63,13 +64,13 @@ const CartItem: React.FC<CartItemProps> = ({
       }}
     >
       <CardContent sx={{ flexGrow: 1 }}>
-        <Typography variant="h6" component="div" fontWeight="bold">
+        <Typography variant="h6" fontWeight="bold">
           {title}
         </Typography>
         <Typography variant="body2">Author: {author}</Typography>
         <Typography variant="body2">Price: Rs {price.toFixed(2)}</Typography>
       </CardContent>
-      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <Box style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         <IconButton onClick={handleDecrement}>
           <RemoveIcon />
         </IconButton>
@@ -92,7 +93,7 @@ const CartItem: React.FC<CartItemProps> = ({
         >
           Remove
         </Button>
-      </div>
+      </Box>
     </Card>
   );
 };

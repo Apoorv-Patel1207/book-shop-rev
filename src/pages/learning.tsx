@@ -46,6 +46,11 @@ function Learning() {
   // Role base authentication?
   // Checkout process, cart local storage
 
+
+  // Issues faced 
+  // having issue with the yup validation import 
+  // while deleteling and reinstalling node modulus need to remove all direct elements like div
+
   return (
     <Layout>
       <Box sx={{ padding: 4 }}>

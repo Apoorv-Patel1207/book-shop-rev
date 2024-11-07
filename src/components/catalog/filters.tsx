@@ -23,7 +23,7 @@ interface BookFilterProps {
   handleResetFilters: () => void;
 }
 
-const BookFilter: React.FC<BookFilterProps> = ({
+const BookFilter = ({
   tempSearchQuery,
   tempFilterGenre,
   tempPriceValue,
@@ -32,7 +32,7 @@ const BookFilter: React.FC<BookFilterProps> = ({
   setTempPriceValue,
   handleApplyFilters,
   handleResetFilters,
-}) => {
+}: BookFilterProps) => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTempSearchQuery(event.target.value.toLowerCase());
   };
