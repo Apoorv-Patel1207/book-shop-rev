@@ -1,6 +1,8 @@
 import React from "react";
-import Layout from "../components/layout/layout";
+
 import { Container, Typography, Button } from "@mui/material";
+
+import Layout from "../components/layout/layout";
 
 const Home: React.FC = () => {
   return (

@@ -1,7 +1,9 @@
 import React from "react";
-import Header from "./header";
-import Footer from "./footer";
+
 import { Box } from "@mui/material";
+
+import Footer from "./footer";
+import Header from "./header";
 
 interface LayoutProps {
   children: React.ReactNode;

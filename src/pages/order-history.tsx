@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Layout from "../components/layout/layout";
+
 import {
   Container,
   Typography,
@@ -9,8 +9,10 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import { Order } from "../types/data-types";
+
+import Layout from "../components/layout/layout";
 import { fetchOrders } from "../service/order-service";
+import { Order } from "../types/data-types";
 
 const OrderHistoryPage = () => {
   const [orders, setOrders] = useState<Order[]>([]);

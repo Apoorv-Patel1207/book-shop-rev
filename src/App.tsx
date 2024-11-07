@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/home";
+
+import AdminPanel from "./pages/add-book";
+import BookDetails from "./pages/book-details";
 import Cart from "./pages/cart";
 import Catalog from "./pages/catalog";
-import BookDetails from "./pages/book-details";
-import OrderHistoryPage from "./pages/order-history";
-import AdminPanel from "./pages/add-book";
-import Learning from "./pages/learning";
 import Checkout from "./pages/checkout";
+import Home from "./pages/home";
+import Learning from "./pages/learning";
+import OrderHistoryPage from "./pages/order-history";
 
 const App = () => {
   return (

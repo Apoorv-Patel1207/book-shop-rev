@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import Layout from "../components/layout/layout";
+
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import {
   Button,
   Card,
@@ -17,10 +17,12 @@ import {
   DialogTitle,
   Divider,
 } from "@mui/material";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { Book, CartItem, Order } from "../types/data-types";
+import { useParams, useNavigate } from "react-router-dom";
+
+import Layout from "../components/layout/layout";
 import { addToCart } from "../service/cart-service";
 import { placeOrder } from "../service/order-service";
+import { Book, CartItem, Order } from "../types/data-types";
 
 const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,7 +40,7 @@ const BookDetails = () => {
         if (!response.ok) {
           throw new Error("Failed to fetch book details");
         }
-        const data: Book = await response.json();
+        const data = await response.json() as Book;
         setBook(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");

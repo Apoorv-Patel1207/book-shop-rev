@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useInView } from "react-intersection-observer";
-import Layout from "../components/layout/layout";
-import BookCard from "../components/book/book-card";
-import Filters from "../components/catalog/filters";
+
+import FilterListIcon from "@mui/icons-material/FilterList";
 import {
   Box,
   CircularProgress,
@@ -12,8 +10,12 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import axios from "axios";
-import FilterListIcon from "@mui/icons-material/FilterList";
+// import axios from "axios";
+import { useInView } from "react-intersection-observer";
+
+import BookCard from "../components/book/book-card";
+import Filters from "../components/catalog/filters";
+import Layout from "../components/layout/layout";
 
 interface Book {
   id: number;
@@ -40,14 +42,32 @@ const Catalog = () => {
 
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
+  // const fetchBooks = useCallback(async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await axios.get("http://localhost:5000/api/books", {
+  //       params: { page, limit: 10 },
+  //     });
+  //     if (response.data.length < 10) setHasMore(false);
+  //     setBooks((prevBooks) => [...prevBooks, ...response.data]);
+  //   } catch (error) {
+  //     console.error("Error fetching books:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }, [page]);
+
   const fetchBooks = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/books", {
-        params: { page, limit: 10 },
-      });
-      if (response.data.length < 10) setHasMore(false);
-      setBooks((prevBooks) => [...prevBooks, ...response.data]);
+      const response = await fetch(
+        `http://localhost:5000/api/books?page=${page}&limit=10`
+      );
+      if (!response.ok) throw new Error("Failed to fetch books");
+
+      const data = (await response.json()) as Book[];
+      if (data.length < 10) setHasMore(false);
+      setBooks((prevBooks) => [...prevBooks, ...data]);
     } catch (error) {
       console.error("Error fetching books:", error);
     } finally {
@@ -83,9 +103,25 @@ const Catalog = () => {
     });
   }, [books, searchQuery, filterGenre, priceValue]);
 
+  // const handleDelete = async (id: string) => {
+  //   try {
+  //     await axios.delete(`http://localhost:5000/api/books/${id}`);
+
+  //     setBooks((prevBooks) =>
+  //       prevBooks.filter((book) => book.id.toString() !== id)
+  //     );
+  //   } catch (error) {
+  //     console.error("Error deleting book:", error);
+  //   }
+  // };
+
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/books/${id}`);
+      const response = await fetch(`http://localhost:5000/api/books/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete book");
 
       setBooks((prevBooks) =>
         prevBooks.filter((book) => book.id.toString() !== id)
@@ -128,7 +164,7 @@ const Catalog = () => {
         sx={{ mb: { xs: 2, md: 4 } }}
         fontSize={{ xs: 20, md: 26 }}
       >
-        "Discover Your Next Read"
+        Discover Your Next Read
       </Typography>
 
       <Box display="flex" justifyContent="end">
@@ -173,10 +209,7 @@ const Catalog = () => {
                 key={book.id + index}
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}
               >
-                <BookCard
-                  book={book}
-                  handleDelete={handleDelete}
-                />
+                <BookCard book={book} handleDelete={handleDelete} />
               </Grid>
             ))
           : !isLoading && (

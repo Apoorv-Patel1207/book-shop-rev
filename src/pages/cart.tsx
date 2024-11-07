@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import CartItem from "../components/cart/cart-item";
-import Layout from "../components/layout/layout";
+import { useEffect, useState } from "react";
+
 import {
   Typography,
   Button,
@@ -12,15 +11,18 @@ import {
   DialogActions,
   Box,
 } from "@mui/material";
-import { CartItem as CartItemType, Order } from "../types/data-types";
+import { useNavigate } from "react-router-dom";
+
+import CartItem from "../components/cart/cart-item";
+import Layout from "../components/layout/layout";
 import {
   fetchCartItems,
   removeFromCart,
   clearCart,
   updateCartQuantityService,
 } from "../service/cart-service";
-import { useNavigate } from "react-router-dom";
 import { placeOrder } from "../service/order-service";
+import { CartItem as CartItemType, Order } from "../types/data-types";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);

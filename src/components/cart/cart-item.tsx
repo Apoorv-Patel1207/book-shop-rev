@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import {
   Button,
   TextField,
@@ -8,8 +11,6 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 
 interface CartItemProps {
   id: number;
