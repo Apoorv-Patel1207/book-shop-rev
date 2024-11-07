@@ -18,8 +18,9 @@ import {
   Divider,
 } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { Book, CartItem } from "../types/book-data-types";
+import { Book, CartItem, Order } from "../types/data-types";
 import { addToCart } from "../service/cart-service";
+import { placeOrder } from "../service/order-service";
 
 const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,10 +54,48 @@ const BookDetails = () => {
     setIsModalOpen(true);
   };
 
-  const handleConfirmBuy = () => {
-    console.log(`Buying ${quantity} of ${book?.title} now.`);
-    setIsModalOpen(false);
-    navigate("/checkout");
+  // const handleConfirmBuy = () => {
+  //   console.log(`Buying ${quantity} of ${book?.title} now.`);
+  //   setIsModalOpen(false);
+  //   navigate("/checkout");
+  // };
+
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+
+  const handleConfirmBuy = async () => {
+    if (!book) {
+      console.error("Book data is missing.");
+      return;
+    }
+
+    setIsPlacingOrder(true);
+
+    const order: Order = {
+      userId: 999999999,
+      items: [{ ...book, quantity }],
+      totalAmount: book.price * quantity,
+      orderDate: new Date().toISOString(),
+      status: "Processing",
+      shippingAddress: {
+        recipientName: "currentUser.name",
+        street: "currentUser.address.street",
+        city: "currentUser.address.city",
+        state: "currentUser.address.state",
+        zipCode: "currentUser.address.zipCode",
+        country: "currentUser.address.country",
+      },
+    };
+
+    try {
+      await placeOrder(order);
+      alert("Order placed successfully!");
+      handleCloseModal();
+    } catch (error) {
+      alert("Failed to place order. Please try again.");
+      console.error(error);
+    } finally {
+      setIsPlacingOrder(false);
+    }
   };
 
   const handleCloseModal = () => {
@@ -232,13 +271,23 @@ const BookDetails = () => {
             <Button onClick={handleCloseModal} variant="outlined" color="error">
               Cancel
             </Button>
-            <Button
+            {/* <Button
               onClick={handleConfirmBuy}
               variant="contained"
               color="primary"
               sx={{ ml: 1 }}
             >
               Confirm Buy
+            </Button> */}
+
+            <Button
+              onClick={handleConfirmBuy}
+              variant="contained"
+              color="primary"
+              sx={{ ml: 1 }}
+              disabled={isPlacingOrder}
+            >
+              {isPlacingOrder ? "Placing Order..." : "Confirm Buy"}
             </Button>
           </DialogActions>
         </Dialog>

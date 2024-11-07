@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import { CartItem as CartItemType } from "../types/book-data-types";
+import { CartItem as CartItemType, Order } from "../types/data-types";
 import {
   fetchCartItems,
   removeFromCart,
@@ -19,6 +19,7 @@ import {
   updateCartQuantityService,
 } from "../service/cart-service";
 import { useNavigate } from "react-router-dom";
+import { placeOrder } from "../service/order-service";
 
 const Cart: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
@@ -82,9 +83,43 @@ const Cart: React.FC = () => {
   const handleOpenClearCartModal = () => setIsClearCartModalOpen(true);
   const handleCloseClearCartModal = () => setIsClearCartModalOpen(false);
 
-  const handleConfirmCheckout = () => {
-    handleCloseCheckoutModal();
-    navigate("/checkout");
+  // const handleConfirmCheckout = () => {
+  //   handleCloseCheckoutModal();
+  //   navigate("/checkout");
+  // };
+
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+
+  const handleConfirmBuy = async () => {
+    setIsPlacingOrder(true);
+
+    const order: Order = {
+      userId: 999999999,
+      items: cartItems,
+      totalAmount: Number(totalCost.toFixed(2)),
+      orderDate: new Date().toISOString(),
+      status: "Processing",
+      shippingAddress: {
+        recipientName: "currentUser.name",
+        street: "currentUser.address.street",
+        city: "currentUser.address.city",
+        state: "currentUser.address.state",
+        zipCode: "currentUser.address.zipCode",
+        country: "currentUser.address.country",
+      },
+    };
+
+    try {
+      await placeOrder(order);
+      alert("Order placed successfully!");
+      handleCloseCheckoutModal();
+      handleClearCart();
+    } catch (error) {
+      alert("Failed to place order. Please try again.");
+      console.error(error);
+    } finally {
+      setIsPlacingOrder(false);
+    }
   };
 
   const handleConfirmClearCart = () => {
@@ -189,8 +224,18 @@ const Cart: React.FC = () => {
             <Button onClick={handleCloseCheckoutModal} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleConfirmCheckout} color="primary">
+            {/* <Button onClick={handleConfirmCheckout} color="primary">
               Confirm
+            </Button> */}
+
+            <Button
+              onClick={handleConfirmBuy}
+              variant="contained"
+              color="primary"
+              sx={{ ml: 1 }}
+              disabled={isPlacingOrder}
+            >
+              {isPlacingOrder ? "Placing Order..." : "Confirm Buy"}
             </Button>
           </DialogActions>
         </Dialog>

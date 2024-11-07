@@ -17,18 +17,6 @@ export interface CartItem extends Book {
   quantity: number;
 }
 
-// export interface Order {
-//   id: number;
-//   items: CartItem[];
-//   totalAmount: number;
-//   user: {
-//     name: string;
-//     email: string;
-//     address: string;
-//   };
-//   timestamp: string;
-// }
-
 export interface ShippingAddress {
   recipientName: string;
   street: string;
@@ -39,11 +27,11 @@ export interface ShippingAddress {
 }
 
 export interface Order {
-  orderId: number;
+  orderId?: number;
   userId: number;
   items: CartItem[];
   totalAmount: number;
   orderDate: string;
   status: "Shipped" | "Delivered" | "Processing";
-  shippingAddress: ShippingAddress;
+  shippingAddress?: ShippingAddress;
 }

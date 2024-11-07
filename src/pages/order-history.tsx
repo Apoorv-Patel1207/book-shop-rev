@@ -9,7 +9,7 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import { Order } from "../types/book-data-types";
+import { Order } from "../types/data-types";
 import { fetchOrders } from "../service/order-service";
 
 const OrderHistoryPage = () => {
@@ -64,16 +64,21 @@ const OrderHistoryPage = () => {
               <Typography variant="h6" sx={{ mt: 2 }}>
                 Total Amount: Rs {order.totalAmount.toFixed(2)}
               </Typography>
-              <Typography variant="h6" sx={{ mt: 2 }}>
-                Shipping Address:
-              </Typography>
-              <Typography>{order.shippingAddress.recipientName}</Typography>
-              <Typography>{order.shippingAddress.street}</Typography>
-              <Typography>
-                {order.shippingAddress.city}, {order.shippingAddress.state}{" "}
-                {order.shippingAddress.zipCode}
-              </Typography>
-              <Typography>{order.shippingAddress.country}</Typography>
+              {order.shippingAddress && (
+                <>
+                  {" "}
+                  <Typography variant="h6" sx={{ mt: 2 }}>
+                    Shipping Address:
+                  </Typography>
+                  <Typography>{order.shippingAddress.recipientName}</Typography>
+                  <Typography>{order.shippingAddress.street}</Typography>
+                  <Typography>
+                    {order.shippingAddress.city}, {order.shippingAddress.state}{" "}
+                    {order.shippingAddress.zipCode}
+                  </Typography>
+                  <Typography>{order.shippingAddress.country}</Typography>
+                </>
+              )}
             </CardContent>
           </Card>
         ))}

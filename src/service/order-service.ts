@@ -1,6 +1,6 @@
 // src/service/order-service.ts
 
-import { Order } from "../types/book-data-types";
+import { Order } from "../types/data-types";
 
 const API_URL = "http://localhost:5000/api/orders";
 
@@ -32,4 +32,27 @@ export const placeOrder = async (order: Order): Promise<Order> => {
     throw new Error("Failed to place order");
   }
   return response.json();
+};
+
+export const updateOrderStatus = async (
+  id: number,
+  status: string
+): Promise<Order> => {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ status }),
+  });
+  if (!response.ok) throw new Error("Failed to update order status");
+  return response.json();
+};
+
+// Delete an order
+export const deleteOrder = async (id: number): Promise<void> => {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) throw new Error("Failed to delete order");
 };
