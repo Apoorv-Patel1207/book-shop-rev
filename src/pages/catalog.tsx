@@ -13,6 +13,8 @@ import Grid from "@mui/material/Grid2";
 // import axios from "axios";
 import { useInView } from "react-intersection-observer";
 
+import { deleteBook } from "src/service/book-service";
+
 import BookCard from "../components/book/book-card";
 import Filters from "../components/catalog/filters";
 import Layout from "../components/layout/layout";
@@ -41,21 +43,6 @@ const Catalog = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [isFetchingMore, setIsFetchingMore] = useState(false);
-
-  // const fetchBooks = useCallback(async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await axios.get("http://localhost:5000/api/books", {
-  //       params: { page, limit: 10 },
-  //     });
-  //     if (response.data.length < 10) setHasMore(false);
-  //     setBooks((prevBooks) => [...prevBooks, ...response.data]);
-  //   } catch (error) {
-  //     console.error("Error fetching books:", error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // }, [page]);
 
   const fetchBooks = useCallback(async () => {
     setIsLoading(true);
@@ -103,33 +90,15 @@ const Catalog = () => {
     });
   }, [books, searchQuery, filterGenre, priceValue]);
 
-  // const handleDelete = async (id: string) => {
-  //   try {
-  //     await axios.delete(`http://localhost:5000/api/books/${id}`);
 
-  //     setBooks((prevBooks) =>
-  //       prevBooks.filter((book) => book.id.toString() !== id)
-  //     );
-  //   } catch (error) {
-  //     console.error("Error deleting book:", error);
-  //   }
-  // };
-
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/books/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) throw new Error("Failed to delete book");
-
-      setBooks((prevBooks) =>
-        prevBooks.filter((book) => book.id.toString() !== id)
-      );
-    } catch (error) {
-      console.error("Error deleting book:", error);
-    }
-  };
+   const handleDelete = async (id: number) => {
+     try {
+       await deleteBook(id); // Call delete book service
+       setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id)); // Remove book from state
+     } catch (error) {
+       console.error("Error deleting book:", error);
+     }
+   };
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 

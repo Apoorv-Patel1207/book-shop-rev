@@ -30,7 +30,7 @@ interface Book {
 
 interface BookCardProps {
   book: Book;
-  handleDelete: (id: string) => void;
+  handleDelete: (id: number) => void;
 }
 
 const BookCard = (props: BookCardProps) => {
@@ -55,7 +55,7 @@ const BookCard = (props: BookCardProps) => {
   };
 
   const confirmDelete = () => {
-    handleDelete(book.id.toString());
+    handleDelete(book.id);
     setOpenDialog(false);
   };
 

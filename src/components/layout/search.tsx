@@ -14,6 +14,7 @@ interface Book {
   coverImage: string;
 }
 
+
 const Search: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
@@ -78,3 +79,7 @@ const Search: React.FC = () => {
 };
 
 export default Search;
+
+
+
+// 
