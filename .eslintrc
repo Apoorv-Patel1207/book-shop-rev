@@ -1,99 +1,99 @@
-{
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
-  "extends": [
-    "eslint:recommended",
-    "plugin:import/recommended",
-    "plugin:import/typescript",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:react/jsx-runtime",
-    "plugin:jsx-a11y/recommended",
-    // "plugin:promise/recommended",
-    "plugin:regexp/recommended"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": "latest",
-    "sourceType": "module"
-  },
-  "plugins": ["react", "@typescript-eslint", "import"],
-  "rules": {
-    // "no-console": "warn",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "import/no-unresolved": "error",
-    "no-param-reassign": [
-      "error",
-      { "props": true, "ignorePropertyModificationsFor": ["state"] }
-    ],
-    // "@typescript-eslint/no-misused-promises": [
-    //   "error",
-    //   {
-    //     "checksVoidReturn": false
-    //   }
-    // ],
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": true
-      }
-    ],
-    "import/order": [
-      "error",
-      {
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          ["sibling", "parent"],
-          "index",
-          "unknown"
-        ],
-        "pathGroups": [
-          {
-            "pattern": "react",
-            "group": "external",
-            "position": "before"
-          }
-        ],
-        "pathGroupsExcludedImportTypes": ["react"],
-        "newlines-between": "always",
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true
-        }
-      }
-    ]
-  },
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "parserOptions": {
-        "project": ["./tsconfig.json"]
-      }
-    }
-  ],
-  "settings": {
-    "import/resolver": {
-      "typescript": { "alwaysTryTypes": true, "project": "./tsconfig.json" }
-    },
-    "alias": {
-      "map": [
-        ["@", "./src"],
-        ["@/assets", "./public/assets"]
-      ],
-      "extensions": [".js", ".jsx", ".ts", ".tsx"]
-    },
-    "react": {
-      "version": "detect"
-    }
-  }
-}
+// {
+//   "env": {
+//     "browser": true,
+//     "es2021": true
+//   },
+//   "extends": [
+//     "eslint:recommended",
+//     "plugin:import/recommended",
+//     "plugin:import/typescript",
+//     "plugin:@typescript-eslint/recommended",
+//     "plugin:@typescript-eslint/recommended-requiring-type-checking",
+//     "plugin:react/recommended",
+//     "plugin:react-hooks/recommended",
+//     "plugin:react/jsx-runtime",
+//     // "plugin:jsx-a11y/recommended",
+//     // "plugin:promise/recommended",
+//     "plugin:regexp/recommended"
+//   ],
+//   "parser": "@typescript-eslint/parser",
+//   "parserOptions": {
+//     "ecmaFeatures": {
+//       "jsx": true
+//     },
+//     "ecmaVersion": "latest",
+//     "sourceType": "module"
+//   },
+//   "plugins": ["react", "@typescript-eslint", "import"],
+//   "rules": {
+//     // "no-console": "warn",
+//     "react-hooks/rules-of-hooks": "error",
+//     "react-hooks/exhaustive-deps": "warn",
+//     "import/no-unresolved": "error",
+//     "no-param-reassign": [
+//       "error",
+//       { "props": true, "ignorePropertyModificationsFor": ["state"] }
+//     ],
+//     // "@typescript-eslint/no-misused-promises": [
+//     //   "error",
+//     //   {
+//     //     "checksVoidReturn": false
+//     //   }
+//     // ],
+//     "import/no-extraneous-dependencies": [
+//       "error",
+//       {
+//         "devDependencies": true
+//       }
+//     ],
+//     "import/order": [
+//       "error",
+//       {
+//         "groups": [
+//           "builtin",
+//           "external",
+//           "internal",
+//           ["sibling", "parent"],
+//           "index",
+//           "unknown"
+//         ],
+//         "pathGroups": [
+//           {
+//             "pattern": "react",
+//             "group": "external",
+//             "position": "before"
+//           }
+//         ],
+//         "pathGroupsExcludedImportTypes": ["react"],
+//         "newlines-between": "always",
+//         "alphabetize": {
+//           "order": "asc",
+//           "caseInsensitive": true
+//         }
+//       }
+//     ]
+//   },
+//   "overrides": [
+//     {
+//       "files": ["*.ts", "*.tsx"],
+//       "parserOptions": {
+//         "project": ["./tsconfig.json"]
+//       }
+//     }
+//   ],
+//   "settings": {
+//     "import/resolver": {
+//       "typescript": { "alwaysTryTypes": true, "project": "./tsconfig.json" }
+//     },
+//     "alias": {
+//       "map": [
+//         ["@", "./src"],
+//         ["@/assets", "./public/assets"]
+//       ],
+//       "extensions": [".js", ".jsx", ".ts", ".tsx"]
+//     },
+//     "react": {
+//       "version": "detect"
+//     }
+//   }
+// }
