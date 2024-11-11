@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
 import {
   AppBar,
   Box,
@@ -11,9 +13,9 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Link, useLocation } from "react-router-dom";
+
 import Search from "./search";
-import SearchIcon from "@mui/icons-material/Search";
 import Login from "../auth/login";
 
 const navLinks = [

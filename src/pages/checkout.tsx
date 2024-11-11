@@ -1,3 +1,4 @@
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
   Container,
   Card,
@@ -9,8 +10,8 @@ import {
   Stack,
   CardMedia,
 } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
+
 import Layout from "../components/layout/layout";
 
 const Checkout = () => {

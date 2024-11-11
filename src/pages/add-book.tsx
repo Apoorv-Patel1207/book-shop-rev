@@ -1,9 +1,12 @@
-import Layout from "../components/layout/layout";
-import { Container, TextField, Button, Typography } from "@mui/material";
-import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
+import { Container, TextField, Button, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { useForm, SubmitHandler } from "react-hook-form";
+import * as Yup from "yup";
+
+import { Book } from "src/types/data-types";
+
+import Layout from "../components/layout/layout";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
@@ -42,7 +45,7 @@ const AdminPanel = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<any> = async (data) => {
+  const onSubmit = async (data: any) => {
     try {
       const response = await fetch("http://localhost:5000/api/books", {
         method: "POST",
@@ -53,7 +56,7 @@ const AdminPanel = () => {
       });
 
       if (response.ok) {
-        const addedBook = await response.json();
+        const addedBook = (await response.json()) as Book;
         console.log("Book added successfully:", addedBook);
       } else {
         console.error("Failed to add book:", response.statusText);

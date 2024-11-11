@@ -26,7 +26,8 @@ const Footer = () => {
               "&:hover": { color: "grey.400" },
             }}
           >
-            Explore Apoorv's journey and challenges in building this bookstore
+            Explore Apoorv&apos;s journey and challenges in building this
+            bookstore
           </Link>
         </Typography>
       </Stack>

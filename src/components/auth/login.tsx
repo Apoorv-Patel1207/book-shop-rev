@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button, Typography, Box, Avatar, IconButton } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Button, Typography, Box, IconButton } from "@mui/material";
 
 const LoginButton = () => {
   const { user, isAuthenticated, isLoading, loginWithRedirect, logout } =

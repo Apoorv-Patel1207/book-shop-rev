@@ -8,7 +8,7 @@ export const fetchCartItems = async (): Promise<CartItem[]> => {
   if (!response.ok) {
     throw new Error("Failed to fetch cart items");
   }
-  return response.json();
+  return (await response.json()) as CartItem[];
 };
 
 // Add an item to the cart
@@ -23,7 +23,7 @@ export const addToCart = async (item: CartItem): Promise<CartItem> => {
   if (!response.ok) {
     throw new Error("Failed to add item to cart");
   }
-  return response.json();
+  return (await response.json()) as CartItem;
 };
 
 // Remove an item from the cart by ID
@@ -34,7 +34,7 @@ export const removeFromCart = async (id: number): Promise<CartItem> => {
   if (!response.ok) {
     throw new Error("Failed to remove item from cart");
   }
-  return response.json();
+  return (await response.json()) as CartItem;
 };
 
 // Clear the cart
@@ -47,6 +47,7 @@ export const clearCart = async (): Promise<void> => {
   }
 };
 
+// Update cart item quantity
 export const updateCartQuantityService = async (
   id: number,
   quantity: number
@@ -58,10 +59,8 @@ export const updateCartQuantityService = async (
     },
     body: JSON.stringify({ quantity }),
   });
-
   if (!response.ok) {
     throw new Error("Failed to update cart item quantity");
   }
-
-  return response.json();
+  return (await response.json()) as CartItem;
 };

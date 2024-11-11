@@ -1,10 +1,11 @@
+import { Auth0Provider } from "@auth0/auth0-react";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
 import ReactDOM from "react-dom/client"; // React 18+ uses react-dom/client
+
 import App from "./App";
 // import "./App.css";
 import theme from "./theme";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { Auth0Provider } from "@auth0/auth0-react";
 
 const rootElement = document.getElementById("root");
 if (rootElement) {

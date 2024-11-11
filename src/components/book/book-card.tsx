@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import {
   Box,
   Button,
@@ -16,7 +17,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import { useNavigate } from "react-router-dom";
 
 interface Book {
   id: number;
@@ -29,7 +30,7 @@ interface Book {
 
 interface BookCardProps {
   book: Book;
-  handleDelete: (id: string) => void;
+  handleDelete: (id: number) => void;
 }
 
 const BookCard = (props: BookCardProps) => {
@@ -54,7 +55,7 @@ const BookCard = (props: BookCardProps) => {
   };
 
   const confirmDelete = () => {
-    handleDelete(book.id.toString());
+    handleDelete(book.id);
     setOpenDialog(false);
   };
 
@@ -182,7 +183,7 @@ const BookCard = (props: BookCardProps) => {
           <Button onClick={closeDeleteDialog} color="primary">
             Cancel
           </Button>
-          <Button onClick={confirmDelete} color="error" autoFocus>
+          <Button onClick={confirmDelete} color="error">
             Confirm
           </Button>
         </DialogActions>
