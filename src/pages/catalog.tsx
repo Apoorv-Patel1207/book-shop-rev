@@ -17,24 +17,15 @@ import { deleteBook } from "src/service/book-service";
 import BookCard from "../components/book/book-card";
 import Filters from "../components/catalog/filters";
 import Layout from "../components/layout/layout";
-
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  genre: string;
-  price: number;
-  coverImage: string;
-}
+import { Book } from "src/types/data-types";
 
 const Catalog = () => {
   const [books, setBooks] = useState<Book[]>([]);
-  console.log("books: ", books);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterGenre, setFilterGenre] = useState("All");
+  const [filterGenre, setFilterGenre] = useState("all");
   const [priceValue, setPriceValue] = useState<number[]>([0, 100]);
   const [tempSearchQuery, setTempSearchQuery] = useState("");
-  const [tempFilterGenre, setTempFilterGenre] = useState("All");
+  const [tempFilterGenre, setTempFilterGenre] = useState("all");
   const [tempPriceValue, setTempPriceValue] = useState<number[]>([0, 100]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -45,7 +36,6 @@ const Catalog = () => {
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
   const fetchBooks = useCallback(async () => {
-    // if (isFetchingMore) return;
     setIsLoading(true);
     try {
       const params = new URLSearchParams({
@@ -108,21 +98,21 @@ const Catalog = () => {
     setSearchQuery(tempSearchQuery);
     setFilterGenre(tempFilterGenre);
     setPriceValue(tempPriceValue);
-    setPage(1); // Reset to the first page when filters are applied
-    setBooks([]); // Clear the current books
+    setPage(1);
+    setBooks([]);
     setDrawerOpen(false);
   };
 
   const handleResetFilters = () => {
     setSearchQuery("");
-    setFilterGenre("All");
+    setFilterGenre("all");
     setPriceValue([0, 100]);
 
     setTempSearchQuery("");
-    setTempFilterGenre("All");
+    setTempFilterGenre("all");
     setTempPriceValue([0, 100]);
-    setPage(1); // Reset to the first page when resetting filters
-    setBooks([]); // Clear the current books
+    setPage(1);
+    setBooks([]);
     setDrawerOpen(false);
   };
 
