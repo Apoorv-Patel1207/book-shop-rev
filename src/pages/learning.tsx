@@ -52,6 +52,11 @@ function Learning() {
   // while deleteling and reinstalling node modulus need to remove all direct elements like div
   // Promises eslint and typscript errors
   // recreate the project using the MUI and remove the shadcn and tailwind
+  // Issue while handling the search, filter functionality with the pagination
+
+  // Bugs
+  // showing up 2 cards of the same book when searched
+  // calling 2 pages at the very fast call
 
   return (
     <Layout>
