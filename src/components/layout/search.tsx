@@ -11,7 +11,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Book } from "src/types/data-types";
 
-const Search = () => {
+interface SearchProps {
+  isMobile: boolean;
+}
+
+const Search = (props: SearchProps) => {
+  const { isMobile } = props;
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const navigate = useNavigate();
@@ -58,6 +63,7 @@ const Search = () => {
   return (
     <Box style={{ position: "relative" }}>
       <TextField
+        autoComplete="off"
         variant="outlined"
         placeholder="Search by title or author"
         value={searchQuery}
@@ -78,7 +84,7 @@ const Search = () => {
       {filteredBooks.length > 0 && (
         <Paper
           sx={{
-            position: "absolute",
+            position: isMobile ? "relative" : "absolute",
             width: { md: "250px", lg: "500px" },
             zIndex: 10,
             borderRadius: "none",

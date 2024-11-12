@@ -32,15 +32,13 @@ function Learning() {
     },
   ];
 
-
-
   // ---------- To Do ---------
-  // Database connectivity, 
+  // Remove nodemodules in backend github
+  // Database connectivity,
   // Debouncing, Skelton UI,
-  //  Icons on drawer links, user data on drawer nav, 
+  //  Icons on drawer links, user data on drawer nav,
   // add book api, dropbox for image
   // Fix the input field at the cart,
-
 
   // Features : Price Slider, Responsive, Search, filters,
   // Concepts:  Infinite scroll,  lazy loading, use memo, callback,

@@ -55,7 +55,7 @@ const AdminPanel = () => {
       pages: 0,
       publisher: "Unknown",
       ISBN: "",
-      stockQuantity: 0, // Set initial value for stockQuantity
+      stockQuantity: 0,
     },
   });
 
@@ -169,7 +169,6 @@ const AdminPanel = () => {
                 label="Publication Date"
                 type="date"
                 {...register("publicationDate")}
-                InputLabelProps={{ shrink: true }}
               />
             </Grid>
 

@@ -8,6 +8,7 @@ import Checkout from "./pages/checkout";
 import Home from "./pages/home";
 import Learning from "./pages/learning";
 import OrderHistoryPage from "./pages/order-history";
+import Profile from "./pages/profile";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/add-book" element={<AdminPanel />} />
         <Route path="/learning" element={<Learning />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

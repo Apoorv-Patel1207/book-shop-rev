@@ -68,7 +68,7 @@ const Header = () => {
             <MobileSearch />
           </Box>
         ) : (
-          <Search />
+          <Search isMobile={false} />
         )}
 
         <Box sx={{ display: { xs: "none", md: "flex" } }}>

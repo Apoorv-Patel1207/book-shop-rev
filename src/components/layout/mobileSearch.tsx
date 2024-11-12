@@ -32,7 +32,7 @@ const MobileSearch = () => {
           horizontal: "center",
         }}
       >
-        <Search />
+        <Search isMobile={true} />
       </Popover>
     </>
   );
