@@ -1,5 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Container, TextField, Button, Typography } from "@mui/material";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as Yup from "yup";
@@ -7,6 +16,7 @@ import * as Yup from "yup";
 import { Book } from "src/types/data-types";
 
 import Layout from "../components/layout/layout";
+import { GENRES } from "src/constant/genres";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
@@ -22,6 +32,9 @@ const validationSchema = Yup.object().shape({
   pages: Yup.number().min(1, "Pages must be at least 1").optional(),
   publisher: Yup.string().optional(),
   ISBN: Yup.string().optional(),
+  stockQuantity: Yup.number()
+    .required("Stock Quantity is required")
+    .min(0, "Stock quantity must be a positive number"),
 });
 
 const AdminPanel = () => {
@@ -42,10 +55,11 @@ const AdminPanel = () => {
       pages: 0,
       publisher: "Unknown",
       ISBN: "",
+      stockQuantity: 0, // Set initial value for stockQuantity
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<any> = async (data) => {
     try {
       const response = await fetch("http://localhost:5000/api/books", {
         method: "POST",
@@ -103,13 +117,19 @@ const AdminPanel = () => {
             </Grid>
 
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Genre"
-                {...register("genre")}
-                error={!!errors.genre}
-                helperText={errors.genre?.message}
-              />
+              <FormControl fullWidth error={!!errors.genre}>
+                <InputLabel>Genre</InputLabel>
+                <Select {...register("genre")}>
+                  {GENRES.map((genre) => (
+                    <MenuItem key={genre.value} value={genre.value}>
+                      {genre.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.genre && (
+                  <Typography color="error">{errors.genre.message}</Typography>
+                )}
+              </FormControl>
             </Grid>
 
             <Grid size={{ xs: 12, sm: 6 }}>
@@ -183,6 +203,17 @@ const AdminPanel = () => {
                 {...register("ISBN")}
                 error={!!errors.ISBN}
                 helperText={errors.ISBN?.message}
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                fullWidth
+                label="Stock Quantity"
+                type="number"
+                {...register("stockQuantity")}
+                error={!!errors.stockQuantity}
+                helperText={errors.stockQuantity?.message}
               />
             </Grid>
 

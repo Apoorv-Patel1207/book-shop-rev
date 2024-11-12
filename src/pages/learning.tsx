@@ -53,6 +53,7 @@ function Learning() {
   // Promises eslint and typscript errors
   // recreate the project using the MUI and remove the shadcn and tailwind
   // Issue while handling the search, filter functionality with the pagination
+  // Its was difficult to find out the bug caused by the routing order for creation of the header search functionality
 
   // Bugs
   // showing up 2 cards of the same book when searched

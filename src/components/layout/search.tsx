@@ -1,48 +1,53 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useRef } from "react";
 import { TextField, List, ListItemText, Paper, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Book } from "src/types/data-types";
 
-import booksData from "../../constant/books.json";
-
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  genre: string;
-  price: number;
-  coverImage: string;
-}
-
-
-const Search: React.FC = () => {
+const Search = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const navigate = useNavigate();
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null); 
 
-  useEffect(() => {
-    if (searchQuery) {
-      const filtered = booksData.filter(
-        (book) =>
-          book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book.author.toLowerCase().includes(searchQuery.toLowerCase())
+  
+  const fetchBooks = async (query: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/books/search-books?searchQuery=${query}`
       );
-      setFilteredBooks(filtered);
-    } else {
-      setFilteredBooks([]);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setFilteredBooks(data);
+    } catch (error) {
+      console.error("Error fetching books:", error);
     }
-  }, [searchQuery]);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
   };
 
-  const handleBookClick = (bookId: string) => {
-    navigate(`/api/book-details/${bookId}`);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      if (query) {
+        fetchBooks(query); 
+      } else {
+        setFilteredBooks([]); 
+      }
+    }, 1000); 
+  };
+
+  const handleBookClick = (bookId: number) => {
+    navigate(`/book-details/${bookId}`); 
   };
 
   return (
-    <Box style={{}}>
+    <Box style={{ position: "relative" }}>
       <TextField
         variant="outlined"
         placeholder="Search by title or author"
@@ -66,7 +71,8 @@ const Search: React.FC = () => {
             {filteredBooks.map((book) => (
               <li
                 key={book.id}
-                onClick={() => handleBookClick(book.id.toString())}
+                onClick={() => handleBookClick(book.id)}
+                style={{ cursor: "pointer" }}
               >
                 <ListItemText primary={`${book.title} by ${book.author}`} />
               </li>
@@ -79,7 +85,3 @@ const Search: React.FC = () => {
 };
 
 export default Search;
-
-
-
-// 
