@@ -1,5 +1,13 @@
 import React, { useState, useRef } from "react";
-import { TextField, List, ListItemText, Paper, Box } from "@mui/material";
+import {
+  TextField,
+  List,
+  ListItemText,
+  Paper,
+  Box,
+  Divider,
+  Stack,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Book } from "src/types/data-types";
 
@@ -7,9 +15,8 @@ const Search = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const navigate = useNavigate();
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null); 
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  
   const fetchBooks = async (query: string) => {
     try {
       const response = await fetch(
@@ -35,15 +42,17 @@ const Search = () => {
 
     debounceTimeout.current = setTimeout(() => {
       if (query) {
-        fetchBooks(query); 
+        fetchBooks(query);
       } else {
-        setFilteredBooks([]); 
+        setFilteredBooks([]);
       }
-    }, 1000); 
+    }, 1000);
   };
 
-  const handleBookClick = (bookId: number) => {
-    navigate(`/book-details/${bookId}`); 
+  const handleBookClick = (bookId: number, bookTitle: string) => {
+    setSearchQuery(bookTitle);
+    setFilteredBooks([]);
+    navigate(`/book-details/${bookId}`);
   };
 
   return (
@@ -59,6 +68,7 @@ const Search = () => {
           borderRadius: 2,
           "& .MuiOutlinedInput-root": {
             height: "40px",
+            borderRadius: 2,
             "& input": {
               padding: "8px",
             },
@@ -66,16 +76,28 @@ const Search = () => {
         }}
       />
       {filteredBooks.length > 0 && (
-        <Paper style={{ position: "absolute", width: "500px", zIndex: 10 }}>
+        <Paper
+          sx={{
+            position: "absolute",
+            width: { md: "250px", lg: "500px" },
+            zIndex: 10,
+            borderRadius: "none",
+            paddingX: "8px",
+            maxHeight: "300px",
+            overflowY: "auto",
+          }}
+        >
           <List>
-            {filteredBooks.map((book) => (
-              <li
-                key={book.id}
-                onClick={() => handleBookClick(book.id)}
-                style={{ cursor: "pointer" }}
-              >
-                <ListItemText primary={`${book.title} by ${book.author}`} />
-              </li>
+            {filteredBooks.map((book, index) => (
+              <Stack key={book.id}>
+                <li
+                  onClick={() => handleBookClick(book.id, book.title)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <ListItemText primary={`${book.title} by ${book.author}`} />
+                </li>
+                {index < filteredBooks.length - 1 && <Divider />}
+              </Stack>
             ))}
           </List>
         </Paper>

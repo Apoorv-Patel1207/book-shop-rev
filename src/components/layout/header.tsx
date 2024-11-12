@@ -17,6 +17,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import Search from "./search";
 import Login from "../auth/login";
+import MobileSearch from "./mobileSearch";
 
 const navLinks = [
   { label: "Catalog", path: "/catalog" },
@@ -64,9 +65,7 @@ const Header = () => {
 
         {isMobile ? (
           <Box display="flex" justifyContent="end">
-            <IconButton color="inherit">
-              <SearchIcon />
-            </IconButton>
+            <MobileSearch />
           </Box>
         ) : (
           <Search />
