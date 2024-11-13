@@ -74,7 +74,7 @@ const BookDetails = () => {
     setIsPlacingOrder(true);
 
     const order: Order = {
-      userId: 999999999,
+      userId: userID,
       items: [{ ...book, quantity }],
       totalAmount: book.price * quantity,
       orderDate: new Date().toISOString(),
@@ -108,13 +108,18 @@ const BookDetails = () => {
   const handleAddToCart = async () => {
     if (!book) return;
 
+    if (!userID) {
+      alert("Please login to continue");
+      return;
+    }
+
     const item: CartItem = {
       ...book,
       quantity,
     };
 
     try {
-      await addToCart(item);
+      await addToCart(item, userID);
       console.log("Item added to cart:", item);
       navigate("/cart");
     } catch (err) {

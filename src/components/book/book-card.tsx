@@ -18,15 +18,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  genre: string;
-  price: number;
-  coverImage: string;
-}
+import { Book } from "src/types/data-types";
 
 interface BookCardProps {
   book: Book;
@@ -72,7 +64,7 @@ const BookCard = (props: BookCardProps) => {
           overflow: "hidden",
           maxWidth: isMobile ? "100%" : 300,
           margin: 2,
-          
+
           "&:hover .delete-icon-btn": {
             opacity: 1,
             transform: "translateY(0)",
@@ -80,6 +72,29 @@ const BookCard = (props: BookCardProps) => {
         }}
         onClick={handleCardClick}
       >
+        {book.stockQuantity < 1 && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.2)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 20,
+            }}
+          >
+            <img
+              src="/images/sold out.png"
+              alt="Sold Out"
+              style={{ maxWidth: "80%" }}
+            />
+          </Box>
+        )}
+
         <IconButton
           className="delete-icon-btn"
           onClick={openDeleteDialog}
@@ -89,8 +104,8 @@ const BookCard = (props: BookCardProps) => {
             top: 8,
             right: 8,
             backgroundColor: "rgba(255, 255, 255, 0.8)",
-            opacity: isMobile ? 1 : 0, 
-            transform: isMobile ? "translateY(0)" : "translateY(-20px)", 
+            opacity: isMobile ? 1 : 0,
+            transform: isMobile ? "translateY(0)" : "translateY(-20px)",
             transition: "0.3s ease",
             "&:hover": {
               backgroundColor: "rgba(255, 255, 255, 1)",

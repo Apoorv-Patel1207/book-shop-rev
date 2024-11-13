@@ -41,8 +41,13 @@ const Cart = () => {
   );
 
   const getCartItems = async () => {
+    if (!userID) {
+      alert("Please login to continue");
+      return;
+    }
+
     try {
-      const items = await fetchCartItems();
+      const items = await fetchCartItems(userID);
       setCartItems(items);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -52,8 +57,13 @@ const Cart = () => {
   };
 
   const handleRemove = async (id: number) => {
+    if (!userID) {
+      alert("Please login to continue");
+      return;
+    }
+
     try {
-      await removeFromCart(id);
+      await removeFromCart(userID, id);
       setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to remove item");
@@ -61,8 +71,13 @@ const Cart = () => {
   };
 
   const updateCartQuantity = async (id: number, quantity: number) => {
+    if (!userID) {
+      alert("Please login to continue");
+      return;
+    }
+
     try {
-      await updateCartQuantityService(id, quantity);
+      await updateCartQuantityService(userID, id, quantity);
       setCartItems((prevItems) =>
         prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
       );
@@ -74,8 +89,13 @@ const Cart = () => {
   };
 
   const handleClearCart = async () => {
+    if (!userID) {
+      alert("Please login to continue");
+      return;
+    }
+
     try {
-      await clearCart();
+      await clearCart(userID);
       setCartItems([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to clear cart");
@@ -88,7 +108,6 @@ const Cart = () => {
   const handleOpenClearCartModal = () => setIsClearCartModalOpen(true);
   const handleCloseClearCartModal = () => setIsClearCartModalOpen(false);
 
-
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const handleConfirmBuy = async () => {
@@ -96,7 +115,7 @@ const Cart = () => {
       setIsPlacingOrder(true);
 
       const order: Order = {
-        userId: 999999999,
+        userId: userID,
         items: cartItems,
         totalAmount: Number(totalCost.toFixed(2)),
         orderDate: new Date().toISOString(),
@@ -227,7 +246,6 @@ const Cart = () => {
             <Button onClick={handleCloseCheckoutModal} color="primary">
               Cancel
             </Button>
-           
 
             <Button
               onClick={handleConfirmBuy}

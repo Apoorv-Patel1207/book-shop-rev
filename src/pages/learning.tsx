@@ -39,6 +39,7 @@ function Learning() {
   //  Icons on drawer links, user data on drawer nav,
   // add book api, dropbox for image
   // Fix the input field at the cart,
+  // Handle the out of stock situation
 
   // Features : Price Slider, Responsive, Search, filters,
   // Concepts:  Infinite scroll,  lazy loading, use memo, callback,
