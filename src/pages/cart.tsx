@@ -23,6 +23,7 @@ import {
 } from "../service/cart-service";
 import { placeOrder } from "../service/order-service";
 import { CartItem as CartItemType, Order } from "../types/data-types";
+import { useUserID } from "src/components/auth/userID";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
@@ -32,6 +33,7 @@ const Cart = () => {
   const [isClearCartModalOpen, setIsClearCartModalOpen] = useState(false);
 
   const navigate = useNavigate();
+  const userID = useUserID();
 
   const totalCost = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -86,42 +88,40 @@ const Cart = () => {
   const handleOpenClearCartModal = () => setIsClearCartModalOpen(true);
   const handleCloseClearCartModal = () => setIsClearCartModalOpen(false);
 
-  // const handleConfirmCheckout = () => {
-  //   handleCloseCheckoutModal();
-  //   navigate("/checkout");
-  // };
 
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const handleConfirmBuy = async () => {
-    setIsPlacingOrder(true);
+    if (userID) {
+      setIsPlacingOrder(true);
 
-    const order: Order = {
-      userId: 999999999,
-      items: cartItems,
-      totalAmount: Number(totalCost.toFixed(2)),
-      orderDate: new Date().toISOString(),
-      status: "Processing",
-      shippingAddress: {
-        recipientName: "currentUser.name",
-        street: "currentUser.address.street",
-        city: "currentUser.address.city",
-        state: "currentUser.address.state",
-        zipCode: "currentUser.address.zipCode",
-        country: "currentUser.address.country",
-      },
-    };
+      const order: Order = {
+        userId: 999999999,
+        items: cartItems,
+        totalAmount: Number(totalCost.toFixed(2)),
+        orderDate: new Date().toISOString(),
+        status: "Processing",
+        shippingAddress: {
+          recipientName: "currentUser.name",
+          street: "currentUser.address.street",
+          city: "currentUser.address.city",
+          state: "currentUser.address.state",
+          zipCode: "currentUser.address.zipCode",
+          country: "currentUser.address.country",
+        },
+      };
 
-    try {
-      await placeOrder(order);
-      alert("Order placed successfully!");
-      handleCloseCheckoutModal();
-      handleClearCart();
-    } catch (error) {
-      alert("Failed to place order. Please try again.");
-      console.error(error);
-    } finally {
-      setIsPlacingOrder(false);
+      try {
+        await placeOrder(order, userID);
+        alert("Order placed successfully!");
+        handleCloseCheckoutModal();
+        handleClearCart();
+      } catch (error) {
+        alert("Failed to place order. Please try again.");
+        console.error(error);
+      } finally {
+        setIsPlacingOrder(false);
+      }
     }
   };
 
@@ -227,9 +227,7 @@ const Cart = () => {
             <Button onClick={handleCloseCheckoutModal} color="primary">
               Cancel
             </Button>
-            {/* <Button onClick={handleConfirmCheckout} color="primary">
-              Confirm
-            </Button> */}
+           
 
             <Button
               onClick={handleConfirmBuy}

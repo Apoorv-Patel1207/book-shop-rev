@@ -23,6 +23,7 @@ import Layout from "../components/layout/layout";
 import { addToCart } from "../service/cart-service";
 import { placeOrder } from "../service/order-service";
 import { Book, CartItem, Order } from "../types/data-types";
+import { useUserID } from "src/components/auth/userID";
 
 const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,6 +33,7 @@ const BookDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const userID = useUserID();
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -40,7 +42,7 @@ const BookDetails = () => {
         if (!response.ok) {
           throw new Error("Failed to fetch book details");
         }
-        const data = await response.json() as Book;
+        const data = (await response.json()) as Book;
         setBook(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
@@ -56,17 +58,16 @@ const BookDetails = () => {
     setIsModalOpen(true);
   };
 
-  // const handleConfirmBuy = () => {
-  //   console.log(`Buying ${quantity} of ${book?.title} now.`);
-  //   setIsModalOpen(false);
-  //   navigate("/checkout");
-  // };
-
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const handleConfirmBuy = async () => {
     if (!book) {
       console.error("Book data is missing.");
+      return;
+    }
+
+    if (!userID) {
+      alert("Please login to place order");
       return;
     }
 
@@ -89,7 +90,7 @@ const BookDetails = () => {
     };
 
     try {
-      await placeOrder(order);
+      await placeOrder(order, userID);
       alert("Order placed successfully!");
       handleCloseModal();
     } catch (error) {

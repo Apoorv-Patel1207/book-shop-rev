@@ -13,22 +13,31 @@ import {
 import Layout from "../components/layout/layout";
 import { fetchOrders } from "../service/order-service";
 import { Order } from "../types/data-types";
+import { useUserID } from "src/components/auth/userID";
 
 const OrderHistoryPage = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   console.log("orders: ", orders);
 
+  const userID = useUserID();
+
   useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        const fetchedOrders = await fetchOrders();
-        setOrders(fetchedOrders);
-      } catch (error) {
-        console.error("Failed to load orders", error);
-      }
-    };
-    loadOrders();
-  }, []);
+    if (userID) {
+      const loadOrders = async () => {
+        try {
+          const fetchedOrders = await fetchOrders(userID);
+          setOrders(fetchedOrders);
+        } catch (error) {
+          console.error("Failed to load orders", error);
+        }
+      };
+      loadOrders();
+    }
+  }, [userID]);
+
+  if (!userID) {
+    return <div>Please log in to view your orders.</div>; // Optional: show message if not logged in
+  }
 
   return (
     <Layout>
