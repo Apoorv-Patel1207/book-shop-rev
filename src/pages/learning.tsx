@@ -32,31 +32,37 @@ function Learning() {
     },
   ];
 
-  // price slider
-
-  // To Do : Database connectivity, Debouncing, Skelton UI, Icons on drawer links, user data on drawer nav, add book api, dropbox for image
+  // ---------- To Do ---------
+  // Remove nodemodules in backend github
+  // Database connectivity,
+  // Debouncing, Skelton UI,
+  //  Icons on drawer links, user data on drawer nav,
+  // add book api, dropbox for image
   // Fix the input field at the cart,
+
   // Features : Price Slider, Responsive, Search, filters,
   // Concepts:  Infinite scroll,  lazy loading, use memo, callback,
-  // Tech and liberaries : react router DOM, react intersection observer, react hook form,
+  // Tech and libraries : react router DOM, react intersection observer, react hook form,
   // Handle the hover effect in mobile
   // integrated auth 0 authentication
 
-  // Doubts
+  // ----------Doubts--------
   // Search Functionality backend?
   // Role base authentication?
   // Checkout process, cart local storage
 
-  // Issues faced
+  // -------Issues faced--------
   // having issue with the yup validation import
-  // while deleteling and reinstalling node modulus need to remove all direct elements like div
-  // Promises eslint and typscript errors
-  // recreate the project using the MUI and remove the shadcn and tailwind
+  // while deleting and reinstalling node modulus need to remove all direct elements like div
+  // Promises eslint and typescript errors
+  // recreate the project using the MUI and remove the shad cn and tailwind
   // Issue while handling the search, filter functionality with the pagination
+  // Its was difficult to find out the bug caused by the routing order for creation of the header search functionality
 
-  // Bugs
+  // ---------Bugs----------
   // showing up 2 cards of the same book when searched
   // calling 2 pages at the very fast call
+  // mobile view header search bar height to be fixed or separate search to be made
 
   return (
     <Layout>

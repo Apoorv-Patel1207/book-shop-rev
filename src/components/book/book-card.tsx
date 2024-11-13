@@ -72,10 +72,7 @@ const BookCard = (props: BookCardProps) => {
           overflow: "hidden",
           maxWidth: isMobile ? "100%" : 300,
           margin: 2,
-          "&:hover .add-to-cart-btn": {
-            opacity: 1,
-            transform: "translateY(0)",
-          },
+          
           "&:hover .delete-icon-btn": {
             opacity: 1,
             transform: "translateY(0)",
@@ -92,11 +89,8 @@ const BookCard = (props: BookCardProps) => {
             top: 8,
             right: 8,
             backgroundColor: "rgba(255, 255, 255, 0.8)",
-            opacity: isMobile ? 1 : 0, // Always visible on mobile
-            transform: isMobile ? "translateY(0)" : "translateY(-20px)", // Default position for mobile
-
-            // opacity: 0,
-            // transform: "translateY(-20px)",
+            opacity: isMobile ? 1 : 0, 
+            transform: isMobile ? "translateY(0)" : "translateY(-20px)", 
             transition: "0.3s ease",
             "&:hover": {
               backgroundColor: "rgba(255, 255, 255, 1)",

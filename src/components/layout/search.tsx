@@ -1,49 +1,69 @@
-import React, { useState, useEffect } from "react";
-
-import { TextField, List, ListItemText, Paper, Box } from "@mui/material";
+import React, { useState, useRef } from "react";
+import {
+  TextField,
+  List,
+  ListItemText,
+  Paper,
+  Box,
+  Divider,
+  Stack,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Book } from "src/types/data-types";
 
-import booksData from "../../constant/books.json";
-
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  genre: string;
-  price: number;
-  coverImage: string;
+interface SearchProps {
+  isMobile: boolean;
 }
 
-
-const Search: React.FC = () => {
+const Search = (props: SearchProps) => {
+  const { isMobile } = props;
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const navigate = useNavigate();
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    if (searchQuery) {
-      const filtered = booksData.filter(
-        (book) =>
-          book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          book.author.toLowerCase().includes(searchQuery.toLowerCase())
+  const fetchBooks = async (query: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/books/search-books?searchQuery=${query}`
       );
-      setFilteredBooks(filtered);
-    } else {
-      setFilteredBooks([]);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setFilteredBooks(data);
+    } catch (error) {
+      console.error("Error fetching books:", error);
     }
-  }, [searchQuery]);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
   };
 
-  const handleBookClick = (bookId: string) => {
-    navigate(`/api/book-details/${bookId}`);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      if (query) {
+        fetchBooks(query);
+      } else {
+        setFilteredBooks([]);
+      }
+    }, 1000);
+  };
+
+  const handleBookClick = (bookId: number, bookTitle: string) => {
+    setSearchQuery(bookTitle);
+    setFilteredBooks([]);
+    navigate(`/book-details/${bookId}`);
   };
 
   return (
-    <Box style={{}}>
+    <Box style={{ position: "relative" }}>
       <TextField
+        autoComplete="off"
         variant="outlined"
         placeholder="Search by title or author"
         value={searchQuery}
@@ -54,6 +74,7 @@ const Search: React.FC = () => {
           borderRadius: 2,
           "& .MuiOutlinedInput-root": {
             height: "40px",
+            borderRadius: 2,
             "& input": {
               padding: "8px",
             },
@@ -61,15 +82,28 @@ const Search: React.FC = () => {
         }}
       />
       {filteredBooks.length > 0 && (
-        <Paper style={{ position: "absolute", width: "500px", zIndex: 10 }}>
+        <Paper
+          sx={{
+            position: isMobile ? "relative" : "absolute",
+            width: { md: "250px", lg: "500px" },
+            zIndex: 10,
+            borderRadius: "none",
+            paddingX: "8px",
+            maxHeight: "300px",
+            overflowY: "auto",
+          }}
+        >
           <List>
-            {filteredBooks.map((book) => (
-              <li
-                key={book.id}
-                onClick={() => handleBookClick(book.id.toString())}
-              >
-                <ListItemText primary={`${book.title} by ${book.author}`} />
-              </li>
+            {filteredBooks.map((book, index) => (
+              <Stack key={book.id}>
+                <li
+                  onClick={() => handleBookClick(book.id, book.title)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <ListItemText primary={`${book.title} by ${book.author}`} />
+                </li>
+                {index < filteredBooks.length - 1 && <Divider />}
+              </Stack>
             ))}
           </List>
         </Paper>
@@ -79,7 +113,3 @@ const Search: React.FC = () => {
 };
 
 export default Search;
-
-
-
-// 
