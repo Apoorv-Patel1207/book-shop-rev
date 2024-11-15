@@ -177,14 +177,44 @@ const BookDetails = () => {
         <Card variant="outlined">
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
-              <CardMedia
-                component="img"
-                alt={book.title}
-                height="300"
-                image={book.coverImage}
-                sx={{ objectFit: "cover" }}
-              />
+              <Box sx={{ position: "relative" }}>
+                {book.stockQuantity < 1 && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      zIndex: 1,
+                    }}
+                  >
+                    <img
+                      src="/images/sold out.png"
+                      alt="Sold Out"
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                      }}
+                    />
+                  </Box>
+                )}
+                <CardMedia
+                  component="img"
+                  alt={book.title}
+                  height="300"
+                  image={book.coverImage}
+                  sx={{
+                    objectFit: "cover",
+                    zIndex: 0,
+                  }}
+                />
+              </Box>
             </Grid>
+
             <Grid item xs={12} md={8}>
               <CardContent>
                 <Typography variant="h4" fontWeight="bold">
@@ -232,18 +262,24 @@ const BookDetails = () => {
               <Button variant="outlined" onClick={() => navigate("/catalog")}>
                 Back to Books
               </Button>
-              <Box style={{ display: "flex", gap: "8px" }}>
-                <Button variant="contained" onClick={handleAddToCart}>
-                  Add to Cart
-                </Button>
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={handleBuyNow}
-                >
-                  Buy Now
-                </Button>
-              </Box>
+              {book.stockQuantity < 1 ? (
+                <Typography color="red">
+                  The book is not available currently
+                </Typography>
+              ) : (
+                <Box style={{ display: "flex", gap: "8px" }}>
+                  <Button variant="contained" onClick={handleAddToCart}>
+                    Add to Cart
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={handleBuyNow}
+                  >
+                    Buy Now
+                  </Button>
+                </Box>
+              )}
             </Box>
           </CardContent>
         </Card>
@@ -283,19 +319,56 @@ const BookDetails = () => {
                 Total: ₹ {(book.price * quantity).toFixed(2)}
               </Typography>
             </Box>
+            <Box
+              component="form"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                mt: 2,
+              }}
+            >
+              <TextField
+                label="Name"
+                variant="outlined"
+                fullWidth
+                value={userProfile?.name || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, name: e.target.value } : null
+                  )
+                }
+              />
+              <TextField
+                label="Mobile Number"
+                variant="outlined"
+                fullWidth
+                value={userProfile?.phone || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, phone: e.target.value } : null
+                  )
+                }
+              />
+              <TextField
+                label="Address"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={3}
+                value={userProfile?.address || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, address: e.target.value } : null
+                  )
+                }
+              />
+            </Box>
           </DialogContent>
           <DialogActions sx={{ justifyContent: "center", mb: 2 }}>
             <Button onClick={handleCloseModal} variant="outlined" color="error">
               Cancel
             </Button>
-            {/* <Button
-              onClick={handleConfirmBuy}
-              variant="contained"
-              color="primary"
-              sx={{ ml: 1 }}
-            >
-              Confirm Buy
-            </Button> */}
 
             <Button
               onClick={handleConfirmBuy}

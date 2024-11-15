@@ -16,12 +16,14 @@ interface UpdateBookModalProps {
   book: Book;
   open: boolean;
   onClose: () => void;
+  handleUpdateBook: (updatedBook: Book) => void;
 }
 
 const UpdateBookModal: React.FC<UpdateBookModalProps> = ({
   book,
   open,
   onClose,
+  handleUpdateBook,
 }) => {
   const [price, setPrice] = useState(book.price);
   const [stockQuantity, setStockQuantity] = useState(book.stockQuantity);
@@ -31,6 +33,7 @@ const UpdateBookModal: React.FC<UpdateBookModalProps> = ({
     setLoading(true);
     try {
       const updatedBook = await updateBook(book.id, { price, stockQuantity });
+      handleUpdateBook(updatedBook);
       onClose(); // Close the modal
     } catch (error) {
       alert("Failed to update book.");

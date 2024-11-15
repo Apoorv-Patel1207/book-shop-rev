@@ -3,15 +3,9 @@ import { useState } from "react";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardMedia,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   IconButton,
   Typography,
   useMediaQuery,
@@ -21,14 +15,16 @@ import { useNavigate } from "react-router-dom";
 import { Book } from "src/types/data-types";
 import UpdateBookModal from "./update-book-modal";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteConfirmationDialog from "./delete-book-modal";
 
 interface BookCardProps {
   book: Book;
   handleDelete: (id: number) => void;
+  handleUpdateBook: (updatedBook: Book) => void;
 }
 
 const BookCard = (props: BookCardProps) => {
-  const { book, handleDelete } = props;
+  const { book, handleDelete, handleUpdateBook } = props;
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -217,30 +213,14 @@ const BookCard = (props: BookCardProps) => {
         book={book}
         open={openUpdateModal}
         onClose={closeUpdateModalHandler}
+        handleUpdateBook={handleUpdateBook}
       />
 
-      <Dialog
+      <DeleteConfirmationDialog
         open={openDialog}
         onClose={closeDeleteDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Delete Book?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this book? This action cannot be
-            undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDeleteDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={confirmDelete} color="error">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={confirmDelete}
+      />
     </>
   );
 };

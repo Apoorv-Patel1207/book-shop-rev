@@ -30,10 +30,9 @@ const Catalog = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const { ref, inView } = useInView();
-
   const [isLoading, setIsLoading] = useState(true);
-
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [isBookUpdated, setIsBookUpdated] = useState(false);
 
   const fetchBooks = useCallback(async () => {
     setIsLoading(true);
@@ -49,7 +48,7 @@ const Catalog = () => {
 
       const response = await fetch(
         `http://localhost:5000/api/books?${params.toString()}`
-      ); 
+      );
 
       if (!response.ok) throw new Error("Failed to fetch books");
 
@@ -87,6 +86,14 @@ const Catalog = () => {
       console.error("Error deleting book:", error);
     }
   };
+
+    const handleUpdateBook = (updatedBook: Book) => {
+      setBooks((prevBooks) =>
+        prevBooks.map((book) =>
+          book.id === updatedBook.id ? updatedBook : book
+        )
+      );
+    }; 
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -170,7 +177,11 @@ const Catalog = () => {
                 key={book.id + index}
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}
               >
-                <BookCard book={book} handleDelete={handleDelete} />
+                <BookCard
+                  book={book}
+                  handleDelete={handleDelete}
+                  handleUpdateBook={handleUpdateBook}
+                />
               </Grid>
             ))
           : !isLoading && (

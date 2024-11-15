@@ -83,10 +83,9 @@ const OrderHistoryPage = () => {
                   </Typography>
                   <Typography>{order.userProfile.name}</Typography>
                   <Typography>{order.userProfile.address}</Typography>
+                  <Typography>{order.userProfile.phone}</Typography>
                 </>
               )}
-
-          
             </CardContent>
           </Card>
         ))}

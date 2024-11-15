@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogActions,
   Box,
+  TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -139,22 +140,6 @@ const Cart = () => {
 
     setIsPlacingOrder(true);
 
-    // const order: Order = {
-    //   userId: userID,
-    //   items: cartItems,
-    //   totalAmount: Number(totalCost.toFixed(2)),
-    //   orderDate: new Date().toISOString(),
-    //   status: "Processing",
-    //   shippingAddress: {
-    //     recipientName: "currentUser.name",
-    //     street: "currentUser.address.street",
-    //     city: "currentUser.address.city",
-    //     state: "currentUser.address.state",
-    //     zipCode: "currentUser.address.zipCode",
-    //     country: "currentUser.address.country",
-    //   },
-    // };
-
     const order: Order = {
       userId: userID,
       items: cartItems,
@@ -251,6 +236,7 @@ const Cart = () => {
                 variant="contained"
                 color="secondary"
                 onClick={handleOpenClearCartModal}
+                disabled={cartItems.length === 0}
               >
                 Clear Cart
               </Button>
@@ -271,15 +257,59 @@ const Cart = () => {
           <DialogTitle>Confirm Checkout</DialogTitle>
           <DialogContent>
             <Typography>
-              Are you sure you want to proceed with the checkout? Your total is{" "}
-              Rs {totalCost.toFixed(2)}.
+              Please confirm your details before proceeding. Your total is Rs{" "}
+              {totalCost.toFixed(2)}.
             </Typography>
+            <Box
+              component="form"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                mt: 2,
+              }}
+            >
+              <TextField
+                label="Name"
+                variant="outlined"
+                fullWidth
+                value={userProfile?.name || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, name: e.target.value } : null
+                  )
+                }
+              />
+              <TextField
+                label="Mobile Number"
+                variant="outlined"
+                fullWidth
+                value={userProfile?.phone || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, phone: e.target.value } : null
+                  )
+                }
+              />
+              <TextField
+                label="Address"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={3}
+                value={userProfile?.address || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, address: e.target.value } : null
+                  )
+                }
+              />
+            </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseCheckoutModal} color="primary">
               Cancel
             </Button>
-
             <Button
               onClick={handleConfirmBuy}
               variant="contained"
