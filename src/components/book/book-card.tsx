@@ -19,6 +19,8 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Book } from "src/types/data-types";
+import UpdateBookModal from "./update-book-modal";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface BookCardProps {
   book: Book;
@@ -29,6 +31,7 @@ const BookCard = (props: BookCardProps) => {
   const { book, handleDelete } = props;
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -51,6 +54,16 @@ const BookCard = (props: BookCardProps) => {
     setOpenDialog(false);
   };
 
+  const openUpdateModalHandler = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    setOpenUpdateModal(true);
+  };
+
+  const closeUpdateModalHandler = () => {
+    setOpenUpdateModal(false);
+  };
+
   return (
     <>
       <Card
@@ -69,6 +82,11 @@ const BookCard = (props: BookCardProps) => {
             opacity: 1,
             transform: "translateY(0)",
           },
+
+          "&:hover .edit-icon-btn": {
+            opacity: 1,
+            transform: "translateY(0)",
+          },
         }}
         onClick={handleCardClick}
       >
@@ -84,7 +102,7 @@ const BookCard = (props: BookCardProps) => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              zIndex: 20,
+              zIndex: 5,
             }}
           >
             <img
@@ -113,6 +131,26 @@ const BookCard = (props: BookCardProps) => {
           }}
         >
           <RemoveCircleIcon sx={{ color: "crimson" }} />
+        </IconButton>
+
+        <IconButton
+          className="edit-icon-btn"
+          onClick={openUpdateModalHandler}
+          sx={{
+            position: "absolute",
+            top: 50,
+            right: 8,
+            zIndex: 10,
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            opacity: isMobile ? 1 : 0,
+            transform: isMobile ? "translateY(0)" : "translateY(-20px)",
+            transition: "0.3s ease",
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 1)",
+            },
+          }}
+        >
+          <EditIcon sx={{ color: "primary.main" }} />
         </IconButton>
 
         <Box paddingX={4} paddingTop={4} paddingBottom={2}>
@@ -174,6 +212,12 @@ const BookCard = (props: BookCardProps) => {
           </Typography>
         </CardContent>
       </Card>
+
+      <UpdateBookModal
+        book={book}
+        open={openUpdateModal}
+        onClose={closeUpdateModalHandler}
+      />
 
       <Dialog
         open={openDialog}

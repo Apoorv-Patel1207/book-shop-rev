@@ -22,8 +22,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/layout/layout";
 import { addToCart } from "../service/cart-service";
 import { placeOrder } from "../service/order-service";
-import { Book, CartItem, Order } from "../types/data-types";
+import { Book, CartItem, Order, UserProfile } from "../types/data-types";
 import { useUserID } from "src/components/auth/userID";
+import { getUserProfile } from "src/service/user-profie-service";
 
 const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,6 +33,8 @@ const BookDetails = () => {
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
   const navigate = useNavigate();
   const userID = useUserID();
 
@@ -54,6 +57,19 @@ const BookDetails = () => {
     fetchBookDetails();
   }, [id]);
 
+  useEffect(() => {
+    const getProfile = async () => {
+      if (!userID) return;
+      try {
+        const profile = await getUserProfile(userID);
+        setUserProfile(profile);
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
+      }
+    };
+    getProfile();
+  }, []);
+
   const handleBuyNow = () => {
     setIsModalOpen(true);
   };
@@ -66,8 +82,8 @@ const BookDetails = () => {
       return;
     }
 
-    if (!userID) {
-      alert("Please login to place order");
+    if (!userID || !userProfile) {
+      alert("Please login and complete your profile to continue.");
       return;
     }
 
@@ -79,14 +95,7 @@ const BookDetails = () => {
       totalAmount: book.price * quantity,
       orderDate: new Date().toISOString(),
       status: "Processing",
-      shippingAddress: {
-        recipientName: "currentUser.name",
-        street: "currentUser.address.street",
-        city: "currentUser.address.city",
-        state: "currentUser.address.state",
-        zipCode: "currentUser.address.zipCode",
-        country: "currentUser.address.country",
-      },
+      userProfile: userProfile,
     };
 
     try {

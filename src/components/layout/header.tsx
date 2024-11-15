@@ -23,7 +23,8 @@ const navLinks = [
   { label: "Catalog", path: "/catalog" },
   { label: "Orders", path: "/order-history" },
   { label: "Cart", path: "/cart" },
-  { label: "Add Book", path: "/add-book" },
+  { label: "Admin", path: "/add-book" },
+  { label: "Sales", path: "/sales-panel" },
 ];
 
 const Header = () => {

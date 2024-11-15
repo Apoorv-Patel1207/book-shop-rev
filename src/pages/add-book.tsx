@@ -17,6 +17,8 @@ import { Book } from "src/types/data-types";
 
 import Layout from "../components/layout/layout";
 import { GENRES } from "src/constant/genres";
+import AdminApproval from "src/components/Admin/admin-approval";
+import { useState } from "react";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
@@ -38,6 +40,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const AdminPanel = () => {
+  const [showForm, setShowForm] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -94,139 +98,157 @@ const AdminPanel = () => {
           Admin Panel - Add a New Book
         </Typography>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Title"
-                {...register("title")}
-                error={!!errors.title}
-                helperText={errors.title?.message}
-              />
-            </Grid>
+        {!showForm ? (
+          // Render Add Book button if form is not visible
+          <Button
+            variant="contained"
+            onClick={() => setShowForm(true)}
+            sx={{ bgcolor: "#1F2937" }}
+          >
+            Add Book
+          </Button>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Title"
+                  {...register("title")}
+                  error={!!errors.title}
+                  helperText={errors.title?.message}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Author"
-                {...register("author")}
-                error={!!errors.author}
-                helperText={errors.author?.message}
-              />
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Author"
+                  {...register("author")}
+                  error={!!errors.author}
+                  helperText={errors.author?.message}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <FormControl fullWidth error={!!errors.genre}>
-                <InputLabel>Genre</InputLabel>
-                <Select {...register("genre")}>
-                  {GENRES.map((genre) => (
-                    <MenuItem key={genre.value} value={genre.value}>
-                      {genre.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.genre && (
-                  <Typography color="error">{errors.genre.message}</Typography>
-                )}
-              </FormControl>
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <FormControl fullWidth error={!!errors.genre}>
+                  <InputLabel>Genre</InputLabel>
+                  <Select {...register("genre")}>
+                    {GENRES.map((genre) => (
+                      <MenuItem key={genre.value} value={genre.value}>
+                        {genre.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.genre && (
+                    <Typography color="error">
+                      {errors.genre.message}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Price"
-                type="number"
-                {...register("price")}
-                error={!!errors.price}
-                helperText={errors.price?.message}
-              />
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Price"
+                  type="number"
+                  {...register("price")}
+                  error={!!errors.price}
+                  helperText={errors.price?.message}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Cover Image URL"
-                {...register("coverImage")}
-                error={!!errors.coverImage}
-                helperText={errors.coverImage?.message}
-              />
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Cover Image URL"
+                  {...register("coverImage")}
+                  error={!!errors.coverImage}
+                  helperText={errors.coverImage?.message}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12 }}>
-              <TextField
-                fullWidth
-                label="Description"
-                multiline
-                rows={4}
-                {...register("description")}
-              />
-            </Grid>
+              <Grid size={{ xs: 12 }}>
+                <TextField
+                  fullWidth
+                  label="Description"
+                  multiline
+                  rows={4}
+                  {...register("description")}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Publication Date"
-                type="date"
-                {...register("publicationDate")}
-              />
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Publication Date"
+                  type="date"
+                  {...register("publicationDate")}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField fullWidth label="Language" {...register("language")} />
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Language"
+                  {...register("language")}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Pages"
-                type="number"
-                {...register("pages")}
-                error={!!errors.pages}
-                helperText={errors.pages?.message}
-              />
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Pages"
+                  type="number"
+                  {...register("pages")}
+                  error={!!errors.pages}
+                  helperText={errors.pages?.message}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Publisher"
-                {...register("publisher")}
-              />
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Publisher"
+                  {...register("publisher")}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="ISBN"
-                {...register("ISBN")}
-                error={!!errors.ISBN}
-                helperText={errors.ISBN?.message}
-              />
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="ISBN"
+                  {...register("ISBN")}
+                  error={!!errors.ISBN}
+                  helperText={errors.ISBN?.message}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Stock Quantity"
-                type="number"
-                {...register("stockQuantity")}
-                error={!!errors.stockQuantity}
-                helperText={errors.stockQuantity?.message}
-              />
-            </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Stock Quantity"
+                  type="number"
+                  {...register("stockQuantity")}
+                  error={!!errors.stockQuantity}
+                  helperText={errors.stockQuantity?.message}
+                />
+              </Grid>
 
-            <Grid size={{ xs: 12 }}>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ mt: 2, bgcolor: "#1F2937" }}
-              >
-                Add Book
-              </Button>
+              <Grid size={{ xs: 12 }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{ mt: 2, bgcolor: "#1F2937" }}
+                >
+                  Add Book
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
+          </form>
+        )}
+        <AdminApproval />
       </Container>
     </Layout>
   );

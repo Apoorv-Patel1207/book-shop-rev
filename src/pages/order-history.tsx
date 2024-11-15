@@ -75,21 +75,18 @@ const OrderHistoryPage = () => {
               <Typography variant="h6" sx={{ mt: 2 }}>
                 Total Amount: Rs {order.totalAmount.toFixed(2)}
               </Typography>
-              {order.shippingAddress && (
+              {order.userProfile && (
                 <>
                   {" "}
                   <Typography variant="h6" sx={{ mt: 2 }}>
                     Shipping Address:
                   </Typography>
-                  <Typography>{order.shippingAddress.recipientName}</Typography>
-                  <Typography>{order.shippingAddress.street}</Typography>
-                  <Typography>
-                    {order.shippingAddress.city}, {order.shippingAddress.state}{" "}
-                    {order.shippingAddress.zipCode}
-                  </Typography>
-                  <Typography>{order.shippingAddress.country}</Typography>
+                  <Typography>{order.userProfile.name}</Typography>
+                  <Typography>{order.userProfile.address}</Typography>
                 </>
               )}
+
+          
             </CardContent>
           </Card>
         ))}

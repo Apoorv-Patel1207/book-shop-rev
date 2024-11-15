@@ -5,6 +5,11 @@ import * as Yup from "yup";
 import { Container, TextField, Button, Typography, Grid } from "@mui/material";
 import Layout from "../components/layout/layout";
 import { useAuth0 } from "@auth0/auth0-react";
+import {
+  getUserProfile,
+  updateUserProfile,
+} from "src/service/user-profie-service";
+import { useUserID } from "src/components/auth/userID";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -19,11 +24,12 @@ const validationSchema = Yup.object().shape({
 });
 
 const Profile = () => {
-  const { user, isAuthenticated } = useAuth0();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<boolean>(false);
   const [profile, setProfile] = useState<any>(null);
+
+  const userID = useUserID();
 
   const {
     register,
@@ -35,44 +41,29 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    if (isAuthenticated && user?.sub) {
-      fetch(`http://localhost:5000/api/users/profile`, {
-        method: "GET",
-        headers: {
-          "x-user-id": user.sub, // Send Auth0 user ID
-        },
-      })
-        .then((response) => response.json())
+    if (userID) {
+      setLoading(true);
+      getUserProfile(userID)
         .then((data) => {
-          setProfile(data);
-          reset(data); // Populate form with data
-          setLoading(false);
+          if (data) {
+            setProfile(data);
+            reset(data);
+          } else {
+            setError("Failed to load user profile.");
+          }
         })
-        .catch(() => {
-          setError("Failed to load user profile.");
-          setLoading(false);
-        });
+        .catch(() => setError("Failed to load user profile."))
+        .finally(() => setLoading(false));
     }
-  }, [isAuthenticated, user?.sub, reset]);
+  }, [userID, reset]);
+
 
   const onSubmit: SubmitHandler<any> = async (data) => {
-    if (!user?.sub) return;
+    if (!userID) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/users/profile/${user.sub}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "x-user-id": user.sub,
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      if (response.ok) {
-        const updatedProfile = await response.json();
+      const updatedProfile = await updateUserProfile(userID, data);
+      if (updatedProfile) {
         setProfile(updatedProfile);
         setEditing(false);
       } else {

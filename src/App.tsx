@@ -9,6 +9,7 @@ import Home from "./pages/home";
 import Learning from "./pages/learning";
 import OrderHistoryPage from "./pages/order-history";
 import Profile from "./pages/profile";
+import SalesPanel from "./pages/sales-panel";
 
 const App = () => {
   return (
@@ -20,6 +21,8 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/book-details/:id" element={<BookDetails />} />
         <Route path="/add-book" element={<AdminPanel />} />
+        <Route path="/sales-panel" element={<SalesPanel />} />
+
         <Route path="/learning" element={<Learning />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/profile" element={<Profile />} />

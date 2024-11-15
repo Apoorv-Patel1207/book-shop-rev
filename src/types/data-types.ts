@@ -18,6 +18,19 @@ export interface CartItem extends Book {
   quantity: number;
 }
 
+export interface UserProfile {
+  userId: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  profileImage: string;
+  dob: string;
+  gender: "male" | "female" | "other";
+  role: "admin" | "salesman" | "guest";
+  createdAt: string; // ISO date string for account creation
+}
+
 export interface ShippingAddress {
   recipientName: string;
   street: string;
@@ -34,5 +47,7 @@ export interface Order {
   totalAmount: number;
   orderDate: string;
   status: "Shipped" | "Delivered" | "Processing";
+  userProfile: UserProfile;
+  address?: string;
   shippingAddress?: ShippingAddress;
 }

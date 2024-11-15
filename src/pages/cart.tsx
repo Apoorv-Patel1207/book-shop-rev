@@ -22,8 +22,13 @@ import {
   updateCartQuantityService,
 } from "../service/cart-service";
 import { placeOrder } from "../service/order-service";
-import { CartItem as CartItemType, Order } from "../types/data-types";
+import {
+  CartItem as CartItemType,
+  Order,
+  UserProfile,
+} from "../types/data-types";
 import { useUserID } from "src/components/auth/userID";
+import { getUserProfile } from "src/service/user-profie-service";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
@@ -31,9 +36,25 @@ const Cart = () => {
   const [error, setError] = useState<string | null>(null);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [isClearCartModalOpen, setIsClearCartModalOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   const navigate = useNavigate();
+
   const userID = useUserID();
+
+  useEffect(() => {
+    const getProfile = async () => {
+      if (!userID) return;
+      try {
+        const profile = await getUserProfile(userID);
+        setUserProfile(profile);
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
+      }
+    };
+    getCartItems();
+    getProfile();
+  }, []);
 
   const totalCost = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -111,36 +132,48 @@ const Cart = () => {
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const handleConfirmBuy = async () => {
-    if (userID) {
-      setIsPlacingOrder(true);
+    if (!userID || !userProfile) {
+      alert("Please login and complete your profile to continue.");
+      return;
+    }
 
-      const order: Order = {
-        userId: userID,
-        items: cartItems,
-        totalAmount: Number(totalCost.toFixed(2)),
-        orderDate: new Date().toISOString(),
-        status: "Processing",
-        shippingAddress: {
-          recipientName: "currentUser.name",
-          street: "currentUser.address.street",
-          city: "currentUser.address.city",
-          state: "currentUser.address.state",
-          zipCode: "currentUser.address.zipCode",
-          country: "currentUser.address.country",
-        },
-      };
+    setIsPlacingOrder(true);
 
-      try {
-        await placeOrder(order, userID);
-        alert("Order placed successfully!");
-        handleCloseCheckoutModal();
-        handleClearCart();
-      } catch (error) {
-        alert("Failed to place order. Please try again.");
-        console.error(error);
-      } finally {
-        setIsPlacingOrder(false);
-      }
+    // const order: Order = {
+    //   userId: userID,
+    //   items: cartItems,
+    //   totalAmount: Number(totalCost.toFixed(2)),
+    //   orderDate: new Date().toISOString(),
+    //   status: "Processing",
+    //   shippingAddress: {
+    //     recipientName: "currentUser.name",
+    //     street: "currentUser.address.street",
+    //     city: "currentUser.address.city",
+    //     state: "currentUser.address.state",
+    //     zipCode: "currentUser.address.zipCode",
+    //     country: "currentUser.address.country",
+    //   },
+    // };
+
+    const order: Order = {
+      userId: userID,
+      items: cartItems,
+      totalAmount: Number(totalCost.toFixed(2)),
+      orderDate: new Date().toISOString(),
+      status: "Processing",
+      userProfile: userProfile,
+    };
+
+    try {
+      await placeOrder(order, userID);
+      alert("Order placed successfully!");
+      handleCloseCheckoutModal();
+      handleClearCart();
+    } catch (error) {
+      alert("Failed to place order. Please try again.");
+      console.error(error);
+    } finally {
+      setIsPlacingOrder(false);
     }
   };
 
