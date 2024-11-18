@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
-
 import {
   Container,
   Typography,
   Card,
   CardContent,
-  List,
-  ListItem,
-  ListItemText,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Avatar,
+  Box,
+  Grid,
 } from "@mui/material";
 
 import Layout from "../components/layout/layout";
@@ -36,7 +42,7 @@ const OrderHistoryPage = () => {
   }, [userID]);
 
   if (!userID) {
-    return <div>Please log in to view your orders.</div>; // Optional: show message if not logged in
+    return <div>Please log in to view your orders.</div>;
   }
 
   return (
@@ -48,44 +54,82 @@ const OrderHistoryPage = () => {
         {orders.map((order) => (
           <Card key={order.orderId} variant="outlined" sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6" component="h2">
-                Order ID: {order.orderId}
-              </Typography>
-              <Typography color="text.secondary">
-                Order Date: {order.orderDate}
-              </Typography>
-              <Typography color="text.secondary">
-                Status: {order.status}
-              </Typography>
-              <Typography variant="h6" sx={{ mt: 2 }}>
+              <Box sx={{ mb: 2 }}>
+                <Typography fontWeight="bold">
+                  Order ID: {order.orderId}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Order Date: {order.orderDate}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Status: {order.status}
+                </Typography>
+
+                {order.userProfile && (
+                  <>
+                    <Typography fontWeight="bold" variant="body2">
+                      Shipping Details:
+                    </Typography>
+
+                    <Typography variant="body2" color="text.secondary">
+                      Name: {order.userProfile.name}
+                    </Typography>
+                    <Typography variant="body2">
+                      Address: {order.userProfile.address}
+                    </Typography>
+                    <Typography variant="body2">
+                      Phone: {order.userProfile.phone}
+                    </Typography>
+                  </>
+                )}
+              </Box>
+
+              <Typography fontWeight="bold" sx={{ mt: 2 }}>
                 Books Ordered:
               </Typography>
-              <List>
-                {order.items.map((book) => (
-                  <ListItem key={book.id}>
-                    <ListItemText
-                      primary={book.title}
-                      secondary={`by ${book.author} - Rs ${book.price.toFixed(
-                        2
-                      )} x ${book.quantity}`}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-              <Typography variant="h6" sx={{ mt: 2 }}>
-                Total Amount: Rs {order.totalAmount.toFixed(2)}
-              </Typography>
-              {order.userProfile && (
-                <>
-                  {" "}
-                  <Typography variant="h6" sx={{ mt: 2 }}>
-                    Shipping Address:
+              <TableContainer component={Paper} sx={{ mt: 2 }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Book</TableCell>
+                      <TableCell sx={{ minWidth: "150px" }}>Title</TableCell>
+                      <TableCell>Author</TableCell>
+                      <TableCell sx={{ minWidth: "100px" }}>Price</TableCell>
+                      <TableCell>Quantity</TableCell>
+                      <TableCell sx={{ minWidth: "100px" }}>Total</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {order.items.map((book) => (
+                      <TableRow key={book.id}>
+                        <TableCell>
+                          <Avatar
+                            src={book.coverImage}
+                            alt={book.title}
+                            variant="rounded"
+                            sx={{ width: 56, height: 56 }}
+                          />
+                        </TableCell>
+                        <TableCell>{book.title}</TableCell>
+                        <TableCell>{book.author}</TableCell>
+                        <TableCell>₹ {book.price.toFixed(2)}</TableCell>
+                        <TableCell>{book.quantity}</TableCell>
+                        <TableCell>
+                          ₹ {(book.price * book.quantity).toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>
+                <Grid item>
+                  <Typography fontWeight="bold">
+                    Total Amount: ₹ {order.totalAmount.toFixed(2)}
                   </Typography>
-                  <Typography>{order.userProfile.name}</Typography>
-                  <Typography>{order.userProfile.address}</Typography>
-                  <Typography>{order.userProfile.phone}</Typography>
-                </>
-              )}
+                </Grid>
+              </Grid>
             </CardContent>
           </Card>
         ))}

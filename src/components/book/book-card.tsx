@@ -149,7 +149,7 @@ const BookCard = (props: BookCardProps) => {
           <EditIcon sx={{ color: "primary.main" }} />
         </IconButton>
 
-        <Box paddingX={4} paddingTop={4} paddingBottom={2}>
+        <Box paddingX={4} paddingTop={4} paddingBottom={0}>
           <CardMedia
             component="img"
             height="200"
@@ -165,6 +165,19 @@ const BookCard = (props: BookCardProps) => {
         </Box>
 
         <CardContent>
+          {book.stockQuantity < 6 && book.stockQuantity > 0 && (
+            <Typography
+              sx={{
+                color: "error.main",
+                fontWeight: "bold",
+                borderRadius: "8px",
+                fontSize: "12px",
+                position: "absolute",
+              }}
+            >
+              Only {book.stockQuantity} left in stock!
+            </Typography>
+          )}
           <Typography
             fontWeight="bold"
             color="#1F2937"
@@ -173,6 +186,7 @@ const BookCard = (props: BookCardProps) => {
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
               fontSize: isMobile ? "1rem" : "1.1rem",
+              mt: 2,
             }}
           >
             {book.title}
