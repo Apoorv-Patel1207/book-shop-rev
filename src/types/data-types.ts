@@ -12,6 +12,7 @@ export interface Book {
   pages: number;
   publisher: string;
   stockQuantity: number;
+  status?: "pending" | "approved" | "rejected";
 }
 
 export interface CartItem extends Book {
