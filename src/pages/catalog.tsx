@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import FilterListIcon from "@mui/icons-material/FilterList";
 import {
@@ -32,7 +32,6 @@ const Catalog = () => {
   const { ref, inView } = useInView();
   const [isLoading, setIsLoading] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
-  const [isBookUpdated, setIsBookUpdated] = useState(false);
 
   const fetchBooks = useCallback(async () => {
     setIsLoading(true);
@@ -87,13 +86,11 @@ const Catalog = () => {
     }
   };
 
-    const handleUpdateBook = (updatedBook: Book) => {
-      setBooks((prevBooks) =>
-        prevBooks.map((book) =>
-          book.id === updatedBook.id ? updatedBook : book
-        )
-      );
-    }; 
+  const handleUpdateBook = (updatedBook: Book) => {
+    setBooks((prevBooks) =>
+      prevBooks.map((book) => (book.id === updatedBook.id ? updatedBook : book))
+    );
+  };
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 

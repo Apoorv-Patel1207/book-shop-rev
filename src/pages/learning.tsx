@@ -64,6 +64,7 @@ function Learning() {
   // showing up 2 cards of the same book when searched
   // calling 2 pages at the very fast call
   // mobile view header search bar height to be fixed or separate search to be made
+  // Fix the data base id to string and accordingly match in the getBookbyID
 
   return (
     <Layout>

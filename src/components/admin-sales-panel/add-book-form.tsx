@@ -271,10 +271,26 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { GENRES } from "src/constant/genres";
 
-export interface BookFormProps {
+interface BookFormProps {
   onSubmit: SubmitHandler<any>;
   isAdmin?: boolean;
 }
+
+// interface BookFormType {
+//   id: number;
+//   title: string;
+//   author: string;
+//   genre: string;
+//   price: number;
+//   coverImage: string;
+//   description: string;
+//   publicationDate: string;
+//   ISBN: string;
+//   language: string;
+//   pages: number;
+//   publisher: string;
+//   stockQuantity: number;
+// }
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),

@@ -285,6 +285,17 @@ const BookDetails = () => {
         </Card>
 
         {/* Buy Now Confirmation Modal */}
+        {/* <ConfirmPurchaseDialog
+          isModalOpen={isModalOpen}
+          book={book}
+          quantity={quantity}
+          userProfile={userProfile}
+          isPlacingOrder={isPlacingOrder}
+          handleCloseModal={handleCloseModal}
+          handleConfirmBuy={handleConfirmBuy}
+          setUserProfile={setUserProfile}
+        /> */}
+
         <Dialog
           open={isModalOpen}
           onClose={handleCloseModal}

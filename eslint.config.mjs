@@ -14,11 +14,11 @@ export default [
   {
     rules: {
       "react/react-in-jsx-scope": "off",
+       "react/jsx-uses-react": "off"
       eqeqeq: "error", // Enforce the use of === and !==
       "no-console": "warn", // Warn about console.log statements
       "no-unused-vars": "warn", // Warn about unused variables
-      indent: ["error", 2], // Enforce 2-space indentation
-      "arrow-parens": ["error", "always"], // Require parentheses around arrow function arguments
+     
     },
   },
 ];
