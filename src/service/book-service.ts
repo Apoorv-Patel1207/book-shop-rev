@@ -52,6 +52,25 @@ export const addBook = async (book: Book): Promise<Book> => {
   return (await response.json()) as Book;
 };
 
+export const updateBook = async (
+  id: number,
+  data: { price: number; stockQuantity: number }
+) => {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update the book");
+  }
+
+  return await response.json();
+};
+
 // Delete a book by ID
 export const deleteBook = async (id: number): Promise<Book> => {
   const response = await fetch(`${API_URL}/${id}`, {

@@ -1,17 +1,15 @@
-import React from "react";
-
 import { Container, Typography, Button } from "@mui/material";
 
 import Layout from "../components/layout/layout";
 
-const Home: React.FC = () => {
+const Home = () => {
   return (
     <Layout>
       <Container maxWidth="sm" sx={{ textAlign: "center", marginTop: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Welcome to the Online Bookstore!
         </Typography>
-        <Typography variant="body1" paragraph>
+        <Typography variant="body1">
           Browse through a wide variety of books and find your next great read.
         </Typography>
         <Button

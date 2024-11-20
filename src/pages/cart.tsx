@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogActions,
   Box,
+  TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -22,8 +23,13 @@ import {
   updateCartQuantityService,
 } from "../service/cart-service";
 import { placeOrder } from "../service/order-service";
-import { CartItem as CartItemType, Order } from "../types/data-types";
+import {
+  CartItem as CartItemType,
+  Order,
+  UserProfile,
+} from "../types/data-types";
 import { useUserID } from "src/components/auth/userID";
+import { getUserProfile } from "src/service/user-profie-service";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
@@ -31,9 +37,25 @@ const Cart = () => {
   const [error, setError] = useState<string | null>(null);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [isClearCartModalOpen, setIsClearCartModalOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   const navigate = useNavigate();
+
   const userID = useUserID();
+
+  useEffect(() => {
+    const getProfile = async () => {
+      if (!userID) return;
+      try {
+        const profile = await getUserProfile(userID);
+        setUserProfile(profile);
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
+      }
+    };
+    getCartItems();
+    getProfile();
+  }, []);
 
   const totalCost = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -41,8 +63,13 @@ const Cart = () => {
   );
 
   const getCartItems = async () => {
+    if (!userID) {
+      alert("Please login to continue");
+      return;
+    }
+
     try {
-      const items = await fetchCartItems();
+      const items = await fetchCartItems(userID);
       setCartItems(items);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -52,8 +79,13 @@ const Cart = () => {
   };
 
   const handleRemove = async (id: number) => {
+    if (!userID) {
+      alert("Please login to continue");
+      return;
+    }
+
     try {
-      await removeFromCart(id);
+      await removeFromCart(userID, id);
       setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to remove item");
@@ -61,8 +93,13 @@ const Cart = () => {
   };
 
   const updateCartQuantity = async (id: number, quantity: number) => {
+    if (!userID) {
+      alert("Please login to continue");
+      return;
+    }
+
     try {
-      await updateCartQuantityService(id, quantity);
+      await updateCartQuantityService(userID, id, quantity);
       setCartItems((prevItems) =>
         prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
       );
@@ -74,8 +111,13 @@ const Cart = () => {
   };
 
   const handleClearCart = async () => {
+    if (!userID) {
+      alert("Please login to continue");
+      return;
+    }
+
     try {
-      await clearCart();
+      await clearCart(userID);
       setCartItems([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to clear cart");
@@ -88,40 +130,35 @@ const Cart = () => {
   const handleOpenClearCartModal = () => setIsClearCartModalOpen(true);
   const handleCloseClearCartModal = () => setIsClearCartModalOpen(false);
 
-
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const handleConfirmBuy = async () => {
-    if (userID) {
-      setIsPlacingOrder(true);
+    if (!userID || !userProfile) {
+      alert("Please login and complete your profile to continue.");
+      return;
+    }
 
-      const order: Order = {
-        userId: 999999999,
-        items: cartItems,
-        totalAmount: Number(totalCost.toFixed(2)),
-        orderDate: new Date().toISOString(),
-        status: "Processing",
-        shippingAddress: {
-          recipientName: "currentUser.name",
-          street: "currentUser.address.street",
-          city: "currentUser.address.city",
-          state: "currentUser.address.state",
-          zipCode: "currentUser.address.zipCode",
-          country: "currentUser.address.country",
-        },
-      };
+    setIsPlacingOrder(true);
 
-      try {
-        await placeOrder(order, userID);
-        alert("Order placed successfully!");
-        handleCloseCheckoutModal();
-        handleClearCart();
-      } catch (error) {
-        alert("Failed to place order. Please try again.");
-        console.error(error);
-      } finally {
-        setIsPlacingOrder(false);
-      }
+    const order: Order = {
+      userId: userID,
+      items: cartItems,
+      totalAmount: Number(totalCost.toFixed(2)),
+      orderDate: new Date().toISOString(),
+      status: "Processing",
+      userProfile: userProfile,
+    };
+
+    try {
+      await placeOrder(order, userID);
+      alert("Order placed successfully!");
+      handleCloseCheckoutModal();
+      handleClearCart();
+    } catch (error) {
+      alert("Failed to place order. Please try again.");
+      console.error(error);
+    } finally {
+      setIsPlacingOrder(false);
     }
   };
 
@@ -199,6 +236,7 @@ const Cart = () => {
                 variant="contained"
                 color="secondary"
                 onClick={handleOpenClearCartModal}
+                disabled={cartItems.length === 0}
               >
                 Clear Cart
               </Button>
@@ -219,16 +257,59 @@ const Cart = () => {
           <DialogTitle>Confirm Checkout</DialogTitle>
           <DialogContent>
             <Typography>
-              Are you sure you want to proceed with the checkout? Your total is{" "}
-              Rs {totalCost.toFixed(2)}.
+              Please confirm your details before proceeding. Your total is Rs{" "}
+              {totalCost.toFixed(2)}.
             </Typography>
+            <Box
+              component="form"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                mt: 2,
+              }}
+            >
+              <TextField
+                label="Name"
+                variant="outlined"
+                fullWidth
+                value={userProfile?.name || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, name: e.target.value } : null
+                  )
+                }
+              />
+              <TextField
+                label="Mobile Number"
+                variant="outlined"
+                fullWidth
+                value={userProfile?.phone || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, phone: e.target.value } : null
+                  )
+                }
+              />
+              <TextField
+                label="Address"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={3}
+                value={userProfile?.address || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, address: e.target.value } : null
+                  )
+                }
+              />
+            </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseCheckoutModal} color="primary">
               Cancel
             </Button>
-           
-
             <Button
               onClick={handleConfirmBuy}
               variant="contained"

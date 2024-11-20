@@ -22,8 +22,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/layout/layout";
 import { addToCart } from "../service/cart-service";
 import { placeOrder } from "../service/order-service";
-import { Book, CartItem, Order } from "../types/data-types";
+import { Book, CartItem, Order, UserProfile } from "../types/data-types";
 import { useUserID } from "src/components/auth/userID";
+import { getUserProfile } from "src/service/user-profie-service";
 
 const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,6 +33,8 @@ const BookDetails = () => {
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
   const navigate = useNavigate();
   const userID = useUserID();
 
@@ -54,6 +57,19 @@ const BookDetails = () => {
     fetchBookDetails();
   }, [id]);
 
+  useEffect(() => {
+    const getProfile = async () => {
+      if (!userID) return;
+      try {
+        const profile = await getUserProfile(userID);
+        setUserProfile(profile);
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
+      }
+    };
+    getProfile();
+  }, []);
+
   const handleBuyNow = () => {
     setIsModalOpen(true);
   };
@@ -66,27 +82,20 @@ const BookDetails = () => {
       return;
     }
 
-    if (!userID) {
-      alert("Please login to place order");
+    if (!userID || !userProfile) {
+      alert("Please login and complete your profile to continue.");
       return;
     }
 
     setIsPlacingOrder(true);
 
     const order: Order = {
-      userId: 999999999,
+      userId: userID,
       items: [{ ...book, quantity }],
       totalAmount: book.price * quantity,
       orderDate: new Date().toISOString(),
       status: "Processing",
-      shippingAddress: {
-        recipientName: "currentUser.name",
-        street: "currentUser.address.street",
-        city: "currentUser.address.city",
-        state: "currentUser.address.state",
-        zipCode: "currentUser.address.zipCode",
-        country: "currentUser.address.country",
-      },
+      userProfile: userProfile,
     };
 
     try {
@@ -108,13 +117,18 @@ const BookDetails = () => {
   const handleAddToCart = async () => {
     if (!book) return;
 
+    if (!userID) {
+      alert("Please login to continue");
+      return;
+    }
+
     const item: CartItem = {
       ...book,
       quantity,
     };
 
     try {
-      await addToCart(item);
+      await addToCart(item, userID);
       console.log("Item added to cart:", item);
       navigate("/cart");
     } catch (err) {
@@ -163,14 +177,44 @@ const BookDetails = () => {
         <Card variant="outlined">
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
-              <CardMedia
-                component="img"
-                alt={book.title}
-                height="300"
-                image={book.coverImage}
-                sx={{ objectFit: "cover" }}
-              />
+              <Box sx={{ position: "relative" }}>
+                {book.stockQuantity < 1 && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      zIndex: 1,
+                    }}
+                  >
+                    <img
+                      src="/images/sold out.png"
+                      alt="Sold Out"
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                      }}
+                    />
+                  </Box>
+                )}
+                <CardMedia
+                  component="img"
+                  alt={book.title}
+                  height="300"
+                  image={book.coverImage}
+                  sx={{
+                    objectFit: "cover",
+                    zIndex: 0,
+                  }}
+                />
+              </Box>
             </Grid>
+
             <Grid item xs={12} md={8}>
               <CardContent>
                 <Typography variant="h4" fontWeight="bold">
@@ -218,23 +262,40 @@ const BookDetails = () => {
               <Button variant="outlined" onClick={() => navigate("/catalog")}>
                 Back to Books
               </Button>
-              <Box style={{ display: "flex", gap: "8px" }}>
-                <Button variant="contained" onClick={handleAddToCart}>
-                  Add to Cart
-                </Button>
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={handleBuyNow}
-                >
-                  Buy Now
-                </Button>
-              </Box>
+              {book.stockQuantity < 1 ? (
+                <Typography color="red">
+                  The book is not available currently
+                </Typography>
+              ) : (
+                <Box style={{ display: "flex", gap: "8px" }}>
+                  <Button variant="contained" onClick={handleAddToCart}>
+                    Add to Cart
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={handleBuyNow}
+                  >
+                    Buy Now
+                  </Button>
+                </Box>
+              )}
             </Box>
           </CardContent>
         </Card>
 
         {/* Buy Now Confirmation Modal */}
+        {/* <ConfirmPurchaseDialog
+          isModalOpen={isModalOpen}
+          book={book}
+          quantity={quantity}
+          userProfile={userProfile}
+          isPlacingOrder={isPlacingOrder}
+          handleCloseModal={handleCloseModal}
+          handleConfirmBuy={handleConfirmBuy}
+          setUserProfile={setUserProfile}
+        /> */}
+
         <Dialog
           open={isModalOpen}
           onClose={handleCloseModal}
@@ -269,19 +330,56 @@ const BookDetails = () => {
                 Total: ₹ {(book.price * quantity).toFixed(2)}
               </Typography>
             </Box>
+            <Box
+              component="form"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                mt: 2,
+              }}
+            >
+              <TextField
+                label="Name"
+                variant="outlined"
+                fullWidth
+                value={userProfile?.name || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, name: e.target.value } : null
+                  )
+                }
+              />
+              <TextField
+                label="Mobile Number"
+                variant="outlined"
+                fullWidth
+                value={userProfile?.phone || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, phone: e.target.value } : null
+                  )
+                }
+              />
+              <TextField
+                label="Address"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={3}
+                value={userProfile?.address || ""}
+                onChange={(e) =>
+                  setUserProfile((prev) =>
+                    prev ? { ...prev, address: e.target.value } : null
+                  )
+                }
+              />
+            </Box>
           </DialogContent>
           <DialogActions sx={{ justifyContent: "center", mb: 2 }}>
             <Button onClick={handleCloseModal} variant="outlined" color="error">
               Cancel
             </Button>
-            {/* <Button
-              onClick={handleConfirmBuy}
-              variant="contained"
-              color="primary"
-              sx={{ ml: 1 }}
-            >
-              Confirm Buy
-            </Button> */}
 
             <Button
               onClick={handleConfirmBuy}

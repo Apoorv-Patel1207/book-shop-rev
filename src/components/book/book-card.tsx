@@ -3,40 +3,31 @@ import { useState } from "react";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardMedia,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   IconButton,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  genre: string;
-  price: number;
-  coverImage: string;
-}
+import { Book } from "src/types/data-types";
+import UpdateBookModal from "./update-book-modal";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteConfirmationDialog from "./delete-book-modal";
 
 interface BookCardProps {
   book: Book;
   handleDelete: (id: number) => void;
+  handleUpdateBook: (updatedBook: Book) => void;
 }
 
 const BookCard = (props: BookCardProps) => {
-  const { book, handleDelete } = props;
+  const { book, handleDelete, handleUpdateBook } = props;
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -59,6 +50,16 @@ const BookCard = (props: BookCardProps) => {
     setOpenDialog(false);
   };
 
+  const openUpdateModalHandler = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    setOpenUpdateModal(true);
+  };
+
+  const closeUpdateModalHandler = () => {
+    setOpenUpdateModal(false);
+  };
+
   return (
     <>
       <Card
@@ -72,14 +73,42 @@ const BookCard = (props: BookCardProps) => {
           overflow: "hidden",
           maxWidth: isMobile ? "100%" : 300,
           margin: 2,
-          
+
           "&:hover .delete-icon-btn": {
+            opacity: 1,
+            transform: "translateY(0)",
+          },
+
+          "&:hover .edit-icon-btn": {
             opacity: 1,
             transform: "translateY(0)",
           },
         }}
         onClick={handleCardClick}
       >
+        {book.stockQuantity < 1 && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.2)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 5,
+            }}
+          >
+            <img
+              src="/images/sold out.png"
+              alt="Sold Out"
+              style={{ maxWidth: "80%" }}
+            />
+          </Box>
+        )}
+
         <IconButton
           className="delete-icon-btn"
           onClick={openDeleteDialog}
@@ -89,8 +118,8 @@ const BookCard = (props: BookCardProps) => {
             top: 8,
             right: 8,
             backgroundColor: "rgba(255, 255, 255, 0.8)",
-            opacity: isMobile ? 1 : 0, 
-            transform: isMobile ? "translateY(0)" : "translateY(-20px)", 
+            opacity: isMobile ? 1 : 0,
+            transform: isMobile ? "translateY(0)" : "translateY(-20px)",
             transition: "0.3s ease",
             "&:hover": {
               backgroundColor: "rgba(255, 255, 255, 1)",
@@ -100,7 +129,27 @@ const BookCard = (props: BookCardProps) => {
           <RemoveCircleIcon sx={{ color: "crimson" }} />
         </IconButton>
 
-        <Box paddingX={4} paddingTop={4} paddingBottom={2}>
+        <IconButton
+          className="edit-icon-btn"
+          onClick={openUpdateModalHandler}
+          sx={{
+            position: "absolute",
+            top: 50,
+            right: 8,
+            zIndex: 10,
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            opacity: isMobile ? 1 : 0,
+            transform: isMobile ? "translateY(0)" : "translateY(-20px)",
+            transition: "0.3s ease",
+            "&:hover": {
+              backgroundColor: "rgba(255, 255, 255, 1)",
+            },
+          }}
+        >
+          <EditIcon sx={{ color: "primary.main" }} />
+        </IconButton>
+
+        <Box paddingX={4} paddingTop={4} paddingBottom={0}>
           <CardMedia
             component="img"
             height="200"
@@ -116,6 +165,19 @@ const BookCard = (props: BookCardProps) => {
         </Box>
 
         <CardContent>
+          {book.stockQuantity < 6 && book.stockQuantity > 0 && (
+            <Typography
+              sx={{
+                color: "error.main",
+                fontWeight: "bold",
+                borderRadius: "8px",
+                fontSize: "12px",
+                position: "absolute",
+              }}
+            >
+              Only {book.stockQuantity} left in stock!
+            </Typography>
+          )}
           <Typography
             fontWeight="bold"
             color="#1F2937"
@@ -124,6 +186,7 @@ const BookCard = (props: BookCardProps) => {
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
               fontSize: isMobile ? "1rem" : "1.1rem",
+              mt: 2,
             }}
           >
             {book.title}
@@ -160,28 +223,18 @@ const BookCard = (props: BookCardProps) => {
         </CardContent>
       </Card>
 
-      <Dialog
+      <UpdateBookModal
+        book={book}
+        open={openUpdateModal}
+        onClose={closeUpdateModalHandler}
+        handleUpdateBook={handleUpdateBook}
+      />
+
+      <DeleteConfirmationDialog
         open={openDialog}
         onClose={closeDeleteDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Delete Book?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this book? This action cannot be
-            undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDeleteDialog} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={confirmDelete} color="error">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={confirmDelete}
+      />
     </>
   );
 };
