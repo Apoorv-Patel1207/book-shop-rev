@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { IconButton, Popover } from "@mui/material";
+
 import SearchIcon from "@mui/icons-material/Search";
+import { IconButton, Popover } from "@mui/material";
+
 import Search from "./search";
 
 const MobileSearch = () => {
@@ -32,7 +34,7 @@ const MobileSearch = () => {
           horizontal: "center",
         }}
       >
-        <Search isMobile={true} />
+        <Search isMobile />
       </Popover>
     </>
   );

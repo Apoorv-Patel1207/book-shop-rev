@@ -19,12 +19,13 @@ import {
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { useUserID } from "src/components/auth/userID";
+import { getUserProfile } from "src/service/user-profie-service";
+
 import Layout from "../components/layout/layout";
 import { addToCart } from "../service/cart-service";
 import { placeOrder } from "../service/order-service";
 import { Book, CartItem, Order, UserProfile } from "../types/data-types";
-import { useUserID } from "src/components/auth/userID";
-import { getUserProfile } from "src/service/user-profie-service";
 
 const BookDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -95,7 +96,7 @@ const BookDetails = () => {
       totalAmount: book.price * quantity,
       orderDate: new Date().toISOString(),
       status: "Processing",
-      userProfile: userProfile,
+      userProfile,
     };
 
     try {

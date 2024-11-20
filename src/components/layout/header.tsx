@@ -15,9 +15,9 @@ import {
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 
+import MobileSearch from "./mobileSearch";
 import Search from "./search";
 import Login from "../auth/login";
-import MobileSearch from "./mobileSearch";
 
 const navLinks = [
   { label: "Catalog", path: "/catalog" },

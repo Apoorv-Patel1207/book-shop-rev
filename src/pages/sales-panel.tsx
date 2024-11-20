@@ -263,11 +263,14 @@
 
 // export default SalesPanel;
 
+import { useState } from "react";
+
 import { Container, Typography } from "@mui/material";
-import Layout from "../components/layout/layout";
+
 import BookForm from "src/components/admin-sales-panel/add-book-form";
 import SnackbarAlert from "src/components/layout/reuseable-components/snackbar";
-import { useState } from "react";
+
+import Layout from "../components/layout/layout";
 
 const SalesPanel = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);

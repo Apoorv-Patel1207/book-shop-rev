@@ -9,8 +9,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
-  return (
+const Layout = ({ children }: LayoutProps) => (
     <Box
       sx={{
         display: "flex",
@@ -31,6 +30,5 @@ const Layout = ({ children }: LayoutProps) => {
       <Footer />
     </Box>
   );
-};
 
 export default Layout;

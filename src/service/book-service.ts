@@ -68,7 +68,7 @@ export const updateBook = async (
     throw new Error("Failed to update the book");
   }
 
-  return await response.json();
+  return response.json();
 };
 
 // Delete a book by ID

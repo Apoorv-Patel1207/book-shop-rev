@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import EditIcon from "@mui/icons-material/Edit";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import {
   Box,
@@ -12,10 +13,11 @@ import {
   useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
 import { Book } from "src/types/data-types";
-import UpdateBookModal from "./update-book-modal";
-import EditIcon from "@mui/icons-material/Edit";
+
 import DeleteConfirmationDialog from "./delete-book-modal";
+import UpdateBookModal from "./update-book-modal";
 
 interface BookCardProps {
   book: Book;

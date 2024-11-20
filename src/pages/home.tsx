@@ -2,8 +2,7 @@ import { Container, Typography, Button } from "@mui/material";
 
 import Layout from "../components/layout/layout";
 
-const Home = () => {
-  return (
+const Home = () => (
     <Layout>
       <Container maxWidth="sm" sx={{ textAlign: "center", marginTop: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
@@ -23,6 +22,5 @@ const Home = () => {
       </Container>
     </Layout>
   );
-};
 
 export default Home;

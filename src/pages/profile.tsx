@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
-import { Container, TextField, Button, Typography, Grid } from "@mui/material";
-import Layout from "../components/layout/layout";
+
 import { useAuth0 } from "@auth0/auth0-react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Container, TextField, Button, Typography, Grid } from "@mui/material";
+import { useForm, SubmitHandler } from "react-hook-form";
+import * as Yup from "yup";
+
+import { useUserID } from "src/components/auth/userID";
 import {
   getUserProfile,
   updateUserProfile,
 } from "src/service/user-profie-service";
-import { useUserID } from "src/components/auth/userID";
+
+import Layout from "../components/layout/layout";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),

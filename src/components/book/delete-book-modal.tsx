@@ -18,15 +18,14 @@ const DeleteConfirmationDialog = ({
   open,
   onClose,
   onConfirm,
-}: DeleteConfirmationDialogProps) => {
-  return (
+}: DeleteConfirmationDialogProps) => (
     <Dialog
       open={open}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{"Delete Book?"}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">Delete Book?</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           Are you sure you want to delete this book? This action cannot be
@@ -43,6 +42,5 @@ const DeleteConfirmationDialog = ({
       </DialogActions>
     </Dialog>
   );
-};
 
 export default DeleteConfirmationDialog;

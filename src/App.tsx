@@ -11,8 +11,7 @@ import OrderHistoryPage from "./pages/order-history";
 import Profile from "./pages/profile";
 import SalesPanel from "./pages/sales-panel";
 
-const App = () => {
-  return (
+const App = () => (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -29,6 +28,5 @@ const App = () => {
       </Routes>
     </Router>
   );
-};
 
 export default App;

@@ -14,6 +14,9 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+import { useUserID } from "src/components/auth/userID";
+import { getUserProfile } from "src/service/user-profie-service";
+
 import CartItem from "../components/cart/cart-item";
 import Layout from "../components/layout/layout";
 import {
@@ -28,8 +31,6 @@ import {
   Order,
   UserProfile,
 } from "../types/data-types";
-import { useUserID } from "src/components/auth/userID";
-import { getUserProfile } from "src/service/user-profie-service";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
@@ -146,7 +147,7 @@ const Cart = () => {
       totalAmount: Number(totalCost.toFixed(2)),
       orderDate: new Date().toISOString(),
       status: "Processing",
-      userProfile: userProfile,
+      userProfile,
     };
 
     try {

@@ -1,7 +1,6 @@
 import { Box, Link, Typography, Stack } from "@mui/material";
 
-const Footer = () => {
-  return (
+const Footer = () => (
     <Box
       sx={{
         backgroundColor: "#1F2937",
@@ -33,6 +32,5 @@ const Footer = () => {
       </Stack>
     </Box>
   );
-};
 
 export default Footer;

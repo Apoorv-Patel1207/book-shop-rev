@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Book } from "src/types/data-types";
+
 import {
   Box,
   Button,
@@ -10,7 +10,9 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+
 import { updateBook } from "src/service/book-service";
+import { Book } from "src/types/data-types";
 
 interface UpdateBookModalProps {
   book: Book;
