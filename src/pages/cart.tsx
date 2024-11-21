@@ -1,23 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
 
-import {
-  Typography,
-  Button,
-  Container,
-  Paper,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Box,
-  TextField,
-} from "@mui/material"
-// import { useNavigate } from "react-router-dom"
+import { Typography, Button, Container, Paper, Box } from "@mui/material"
 
 import { useUserID } from "src/components/auth/userID"
 import { getUserProfile } from "src/service/user-profie-service"
 
 import ClearCartDialog from "src/components/cart/clear-cart-dialog"
+import CartConfirmPurchaseDailog from "src/components/cart/cart-confirm-purchase-dailog"
 import CartItem from "../components/cart/cart-item"
 import Layout from "../components/layout/layout"
 import {
@@ -265,95 +254,21 @@ const Cart = () => {
           </Box>
         </Paper>
 
-        <Dialog open={isCheckoutModalOpen} onClose={handleCloseCheckoutModal}>
-          <DialogTitle>Confirm Checkout</DialogTitle>
-          <DialogContent>
-            <Typography>
-              Please confirm your details before proceeding. Your total is Rs{" "}
-              {totalCost.toFixed(2)}.
-            </Typography>
-            <Box
-              component='form'
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-                mt: 2,
-              }}
-            >
-              <TextField
-                label='Name'
-                variant='outlined'
-                fullWidth
-                value={userProfile?.name || ""}
-                onChange={(e) =>
-                  setUserProfile((prev) =>
-                    prev ? { ...prev, name: e.target.value } : null,
-                  )
-                }
-              />
-              <TextField
-                label='Mobile Number'
-                variant='outlined'
-                fullWidth
-                value={userProfile?.phone || ""}
-                onChange={(e) =>
-                  setUserProfile((prev) =>
-                    prev ? { ...prev, phone: e.target.value } : null,
-                  )
-                }
-              />
-              <TextField
-                label='Address'
-                variant='outlined'
-                fullWidth
-                multiline
-                rows={3}
-                value={userProfile?.address || ""}
-                onChange={(e) =>
-                  setUserProfile((prev) =>
-                    prev ? { ...prev, address: e.target.value } : null,
-                  )
-                }
-              />
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseCheckoutModal} color='primary'>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleConfirmBuy}
-              variant='contained'
-              color='primary'
-              sx={{ ml: 1 }}
-              disabled={isPlacingOrder}
-            >
-              {isPlacingOrder ? "Placing Order..." : "Confirm Buy"}
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <CartConfirmPurchaseDailog
+          isCheckoutModalOpen={isCheckoutModalOpen}
+          handleCloseCheckoutModal={handleCloseCheckoutModal}
+          totalCost={totalCost}
+          userProfile={userProfile}
+          setUserProfile={setUserProfile}
+          handleConfirmBuy={handleConfirmBuy}
+          isPlacingOrder={isPlacingOrder}
+        />
 
         <ClearCartDialog
           isClearCartModalOpen={isClearCartModalOpen}
           handleCloseClearCartModal={handleCloseClearCartModal}
           handleConfirmClearCart={handleConfirmClearCart}
         />
-
-        {/* <Dialog open={isClearCartModalOpen} onClose={handleCloseClearCartModal}>
-          <DialogTitle>Clear Cart</DialogTitle>
-          <DialogContent>
-            <Typography>Are you sure you want to clear the cart?</Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseClearCartModal} color='primary'>
-              Cancel
-            </Button>
-            <Button onClick={handleConfirmClearCart} color='secondary'>
-              Clear
-            </Button>
-          </DialogActions>
-        </Dialog> */}
       </Container>
     </Layout>
   )
