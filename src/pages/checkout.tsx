@@ -1,130 +1,159 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import {
   Container,
-  Card,
-  CardContent,
   Typography,
   Box,
-  Divider,
   Button,
-  Stack,
-  CardMedia,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material"
+import { useNavigate, useParams } from "react-router-dom"
 
-import Layout from "../components/layout/layout";
+import { useEffect, useState } from "react"
+import { Order } from "src/types/data-types"
+import { fetchOrderById } from "src/service/order-service"
+import { useUserID } from "src/components/auth/userID"
+import Layout from "../components/layout/layout"
 
 const Checkout = () => {
-  const navigate = useNavigate();
+  const [order, setOrder] = useState<Order | null>(null)
+  const { id } = useParams<{ id: string }>()
+  const userID = useUserID()
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (userID) {
+      const loadOrder = async () => {
+        try {
+          const fetchedOrder = await fetchOrderById(Number(id), userID)
+          setOrder(fetchedOrder)
+        } catch (err) {
+          console.error("Failed to load orders", err)
+        }
+      }
+      loadOrder().catch((err) => {
+        console.error("Error loading the order details:", err)
+      })
+    }
+  }, [id, userID])
 
   const handleBackToHome = () => {
-    navigate("/"); 
-  };
+    navigate("/")
+  }
 
   return (
     <Layout>
-      <Container maxWidth="md" sx={{ mt: 10, textAlign: "center" }}>
-        {/* Success Message */}
-        <Box display="flex" flexDirection="column" alignItems="center">
-          <CheckCircleIcon color="success" sx={{ fontSize: 60 }} />
-          <Typography variant="h4" fontWeight="bold" sx={{ mt: 2 }}>
+      <Container maxWidth='md'>
+        {/* Hero Section */}
+        <Box
+          display='flex'
+          flexDirection='column'
+          alignItems='center'
+          sx={{
+            background: "linear-gradient(135deg, #e0f7fa, #fff)",
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <CheckCircleIcon color='success' sx={{ fontSize: 80 }} />
+          <Typography
+            variant='h4'
+            fontWeight='bold'
+            sx={{ mt: 2, color: "#00796b" }}
+          >
             Thank You for Your Purchase!
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary" sx={{ mt: 1 }}>
+          <Typography variant='subtitle1' color='text.secondary' sx={{ mt: 1 }}>
             Your order has been successfully placed. We hope you enjoy your new
             books!
           </Typography>
         </Box>
 
-        {/* Order Summary Card */}
-        <Card variant="outlined" sx={{ mt: 4, p: 2 }}>
-          <CardContent>
-            <Typography
-              variant="h5"
-              fontWeight="bold"
-              align="center"
-              gutterBottom
-            >
-              Order Summary
-            </Typography>
+        {/* Order Summary Table */}
+        <Box sx={{ mt: 4 }}>
+          <Typography
+            variant='h5'
+            fontWeight='bold'
+            align='center'
+            gutterBottom
+            sx={{
+              background: "linear-gradient(135deg, #00796b, #004d40)",
+              color: "white",
+              p: 1,
+              borderRadius: 1,
+            }}
+          >
+            Order Summary
+          </Typography>
 
-            {/* Dummy Book List */}
-            <Stack spacing={2} mt={3}>
-              <Box display="flex" alignItems="center">
-                <CardMedia
-                  component="img"
-                  alt="Book Cover"
-                  height="60"
-                  image="https://via.placeholder.com/60x90.png" // Dummy image
-                  sx={{ borderRadius: 1, mr: 2 }}
-                />
-                <Box textAlign="left">
-                  <Typography variant="body1" fontWeight="bold">
-                    The Great Gatsby
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Quantity: 1
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    ₹ 299.00
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box display="flex" alignItems="center">
-                <CardMedia
-                  component="img"
-                  alt="Book Cover"
-                  height="60"
-                  image="https://via.placeholder.com/60x90.png" // Dummy image
-                  sx={{ borderRadius: 1, mr: 2 }}
-                />
-                <Box textAlign="left">
-                  <Typography variant="body1" fontWeight="bold">
-                    To Kill a Mockingbird
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Quantity: 2
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    ₹ 499.00
-                  </Typography>
-                </Box>
-              </Box>
-            </Stack>
-
-            {/* Divider */}
-            <Divider sx={{ my: 2 }} />
-
-            {/* Total Price */}
-            <Box display="flex" justifyContent="space-between" mb={2}>
-              <Typography variant="body1" fontWeight="bold">
-                Total
-              </Typography>
-              <Typography variant="body1" fontWeight="bold">
-                ₹ 1297.00
-              </Typography>
-            </Box>
-          </CardContent>
-        </Card>
+          <TableContainer component={Paper} sx={{ mt: 2, borderRadius: 2 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <strong>Book Title</strong>
+                  </TableCell>
+                  <TableCell align='center'>
+                    <strong>Quantity</strong>
+                  </TableCell>
+                  <TableCell align='right'>
+                    <strong>Price (₹)</strong>
+                  </TableCell>
+                  <TableCell align='right'>
+                    <strong>Subtotal (₹)</strong>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {order?.items.map((item) => {
+                  const { id: bookID, title, quantity, price } = item
+                  const subtotal = quantity * price
+                  return (
+                    <TableRow key={bookID}>
+                      <TableCell>{title}</TableCell>
+                      <TableCell align='center'>{quantity}</TableCell>
+                      <TableCell align='right'>₹ {price}</TableCell>
+                      <TableCell align='right'>₹ {subtotal}</TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+              <TableRow>
+                <TableCell
+                  colSpan={3}
+                  align='right'
+                  sx={{ fontWeight: "bold" }}
+                >
+                  Total
+                </TableCell>
+                <TableCell align='right' sx={{ fontWeight: "bold" }}>
+                  ₹ {order?.totalAmount}
+                </TableCell>
+              </TableRow>
+            </Table>
+          </TableContainer>
+        </Box>
 
         {/* Footer Buttons */}
-        <Box mt={4}>
+        <Box mt={4} textAlign='center'>
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             onClick={handleBackToHome}
-            sx={{ mr: 2 }}
+            sx={{ marginTop: 2, bgcolor: "#001F3F" }}
           >
             Continue Shopping
-          </Button>
-          <Button variant="outlined" color="secondary">
-            View Order Details
           </Button>
         </Box>
       </Container>
     </Layout>
-  );
-};
+  )
+}
 
-export default Checkout;
+export default Checkout

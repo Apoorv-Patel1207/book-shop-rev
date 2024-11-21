@@ -1,12 +1,22 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
-import { Typography, Button, Container, Paper, Box } from "@mui/material"
+import {
+  Typography,
+  Button,
+  Container,
+  Paper,
+  Box,
+  AlertColor,
+} from "@mui/material"
 
 import { useUserID } from "src/components/auth/userID"
-import { getUserProfile } from "src/service/user-profie-service"
+import { getUserProfile } from "src/service/user-profile-service"
 
 import ClearCartDialog from "src/components/cart/clear-cart-dialog"
 import CartConfirmPurchaseDailog from "src/components/cart/cart-confirm-purchase-dailog"
+import Loading from "src/components/layout/utility-components/loading"
+import SnackbarAlert from "src/components/layout/utility-components/snackbar"
+import { useNavigate } from "react-router-dom"
 import CartItem from "../components/cart/cart-item"
 import Layout from "../components/layout/layout"
 import {
@@ -29,26 +39,25 @@ const Cart = () => {
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
   const [isClearCartModalOpen, setIsClearCartModalOpen] = useState(false)
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false)
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const userID = useUserID()
 
-  const getCartItems = useCallback(async () => {
-    if (!userID) {
-      alert("Please login to continue")
-      return
-    }
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    type: "success" as AlertColor,
+  })
 
-    try {
-      const items = await fetchCartItems(userID)
-      setCartItems(items)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred")
-    } finally {
-      setLoading(false)
-    }
-  }, [userID])
+  const handleSnackbarClose = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }))
+  }
+
+  const showSnackbar = (message: string, type: AlertColor = "success") => {
+    setSnackbar({ open: true, message, type })
+  }
 
   useEffect(() => {
     const getProfile = async () => {
@@ -60,25 +69,38 @@ const Cart = () => {
         console.error("Failed to fetch user profile:", err)
       }
     }
-    getCartItems().catch((err) => {
-      console.error("Error loading book details:", err)
-    })
+
     getProfile().catch((err) => {
       console.error("Error loading the profile details:", err)
     })
-  }, [getCartItems, userID])
 
-  const totalCost = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0,
-  )
+    const getCartItems = async () => {
+      if (!userID) {
+        showSnackbar("Please login to continue", "error")
+        return
+      }
 
-  const handleRemove = async (id: number) => {
-    if (!userID) {
-      alert("Please login to continue")
-      return
+      try {
+        const items = await fetchCartItems(userID)
+        setCartItems(items)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred")
+      } finally {
+        setLoading(false)
+      }
     }
 
+    getCartItems().catch((err) => {
+      console.error("Error loading book details:", err)
+    })
+  }, [userID])
+
+  if (!userID) {
+    showSnackbar("Redirecting as user is not logged in", "error")
+    return null // Or redirect to a login page if needed
+  }
+
+  const handleRemove = async (id: number) => {
     try {
       await removeFromCart(userID, id)
       setCartItems((prevItems) => prevItems.filter((item) => item.id !== id))
@@ -88,11 +110,6 @@ const Cart = () => {
   }
 
   const updateCartQuantity = async (id: number, quantity: number) => {
-    if (!userID) {
-      alert("Please login to continue")
-      return
-    }
-
     try {
       await updateCartQuantityService(userID, id, quantity)
       setCartItems((prevItems) =>
@@ -106,11 +123,6 @@ const Cart = () => {
   }
 
   const handleClearCart = async () => {
-    if (!userID) {
-      alert("Please login to continue")
-      return
-    }
-
     try {
       await clearCart(userID)
       setCartItems([])
@@ -121,15 +133,20 @@ const Cart = () => {
 
   const handleOpenCheckoutModal = () => setIsCheckoutModalOpen(true)
   const handleCloseCheckoutModal = () => setIsCheckoutModalOpen(false)
-
   const handleOpenClearCartModal = () => setIsClearCartModalOpen(true)
   const handleCloseClearCartModal = () => setIsClearCartModalOpen(false)
 
-  const [isPlacingOrder, setIsPlacingOrder] = useState(false)
+  const totalCost = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  )
 
   const handleConfirmBuy = async () => {
-    if (!userID || !userProfile) {
-      alert("Please login and complete your profile to continue.")
+    if (!userProfile) {
+      showSnackbar(
+        "Please login and complete your profile to continue.",
+        "error",
+      )
       return
     }
 
@@ -145,14 +162,15 @@ const Cart = () => {
     }
 
     try {
-      await placeOrder(order, userID)
-      alert("Order placed successfully!")
+      const response = await placeOrder(order, userID)
+      showSnackbar("Order placed successfully!", "success")
       handleCloseCheckoutModal()
       handleClearCart().catch((err) => {
         console.error("Error clearing the cart:", err)
       })
+      if (response.orderId) navigate(`/checkout/${response.orderId}`)
     } catch (err) {
-      alert("Failed to place order. Please try again.")
+      showSnackbar("Failed to place order. Please try again.", "error")
       console.error(err)
     } finally {
       setIsPlacingOrder(false)
@@ -166,17 +184,11 @@ const Cart = () => {
     handleCloseClearCartModal()
   }
 
-  useEffect(() => {
-    getCartItems().catch((err) => {
-      console.error("Error loading book details:", err)
-    })
-  }, [getCartItems])
-
   if (loading) {
     return (
       <Layout>
         <Container maxWidth='lg' sx={{ marginTop: 4 }}>
-          <Typography textAlign='center'>Loading...</Typography>
+          <Loading />
         </Container>
       </Layout>
     )
@@ -268,6 +280,13 @@ const Cart = () => {
           isClearCartModalOpen={isClearCartModalOpen}
           handleCloseClearCartModal={handleCloseClearCartModal}
           handleConfirmClearCart={handleConfirmClearCart}
+        />
+
+        <SnackbarAlert
+          open={snackbar.open}
+          message={snackbar.message}
+          type={snackbar.type}
+          onClose={handleSnackbarClose}
         />
       </Container>
     </Layout>

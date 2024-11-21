@@ -15,7 +15,7 @@ import { useParams, useNavigate } from "react-router-dom"
 
 import { useUserID } from "src/components/auth/userID"
 import ConfirmPurchaseDialog from "src/components/book-details/confirm-purchase-dialog"
-import { getUserProfile } from "src/service/user-profie-service"
+import { getUserProfile } from "src/service/user-profile-service"
 
 import Layout from "../components/layout/layout"
 import { addToCart } from "../service/cart-service"

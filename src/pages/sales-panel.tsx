@@ -268,7 +268,7 @@ import { useState } from "react";
 import { Container, Typography } from "@mui/material";
 
 import BookForm from "src/components/admin-sales-panel/add-book-form";
-import SnackbarAlert from "src/components/layout/reuseable-components/snackbar";
+import SnackbarAlert from "src/components/layout/utility-components/snackbar";
 
 import Layout from "../components/layout/layout";
 

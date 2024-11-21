@@ -46,7 +46,7 @@ const App = () => (
         <Route path='/add-book' element={<AdminPanel />} />
         <Route path='/sales-panel' element={<SalesPanel />} />
         <Route path='/profile' element={<Profile />} />
-        <Route path='/checkout' element={<Checkout />} />
+        <Route path='/checkout/:id' element={<Checkout />} />
       </Route>
     </Routes>
   </Router>

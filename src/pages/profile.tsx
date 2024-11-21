@@ -16,7 +16,7 @@ import { useUserID } from "src/components/auth/userID"
 import {
   getUserProfile,
   updateUserProfile,
-} from "src/service/user-profie-service"
+} from "src/service/user-profile-service"
 import { UserProfile } from "src/types/data-types"
 
 import Layout from "../components/layout/layout"
