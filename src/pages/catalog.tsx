@@ -54,9 +54,8 @@ const Catalog = () => {
       const data = (await response.json()) as PaginatedBook
       const { books: paginatedBooks, pagination } = data
 
-      // Update the pagination state
       setHasMore(pagination.currentPage < pagination.totalPages)
-      setBooks((prevBooks) => [...prevBooks, ...paginatedBooks]) // Add new books to the list
+      setBooks((prevBooks) => [...prevBooks, ...paginatedBooks])
     } catch (error) {
       console.error("Error fetching books:", error)
     } finally {
@@ -72,19 +71,14 @@ const Catalog = () => {
     }
   }, [inView, hasMore])
 
-  // useEffect(() => {
-  //   fetchBooks()
-  //   setIsFetchingMore(false)
-  // }, [fetchBooks])
-
   useEffect(() => {
     const loadBooks = async () => {
-      await fetchBooks() // Await the fetchBooks call to ensure proper handling
+      await fetchBooks()
       setIsFetchingMore(false)
     }
 
     loadBooks().catch((error) => {
-      console.error("Error loading books:", error) // Catch any errors
+      console.error("Error loading books:", error)
     })
   }, [fetchBooks])
 

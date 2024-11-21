@@ -1,9 +1,9 @@
-import { UserProfile } from "src/types/data-types";
+import { UserProfile } from "src/types/data-types"
 
-const API_BASE_URL = "http://localhost:5000/api/users/profile";
+const API_BASE_URL = "http://localhost:5000/api/users/profile"
 
 export const getUserProfile = async (
-  userId: string
+  userId: string,
 ): Promise<UserProfile | null> => {
   try {
     const response = await fetch(`${API_BASE_URL}`, {
@@ -11,22 +11,22 @@ export const getUserProfile = async (
       headers: {
         "x-user-id": userId,
       },
-    });
+    })
 
     if (response.ok) {
-      return await response.json();
+      return (await response.json()) as UserProfile
     }
-    console.error("Failed to fetch user profile");
-    return null;
+    console.error("Failed to fetch user profile")
+    return null
   } catch (error) {
-    console.error("Error fetching user profile:", error);
-    return null;
+    console.error("Error fetching user profile:", error)
+    return null
   }
-};
+}
 
 export const updateUserProfile = async (
   userId: string,
-  profileData: UserProfile
+  profileData: UserProfile,
 ): Promise<UserProfile | null> => {
   try {
     const response = await fetch(`${API_BASE_URL}/${userId}`, {
@@ -36,15 +36,15 @@ export const updateUserProfile = async (
         "x-user-id": userId,
       },
       body: JSON.stringify(profileData),
-    });
+    })
 
     if (response.ok) {
-      return await response.json();
+      return (await response.json()) as UserProfile
     }
-    console.error("Failed to update user profile");
-    return null;
+    console.error("Failed to update user profile")
+    return null
   } catch (error) {
-    console.error("Error updating user profile:", error);
-    return null;
+    console.error("Error updating user profile:", error)
+    return null
   }
-};
+}

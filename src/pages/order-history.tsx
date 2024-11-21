@@ -39,7 +39,9 @@ const OrderHistoryPage = () => {
           console.error("Failed to load orders", error);
         }
       };
-      loadOrders();
+      loadOrders().catch((err) => {
+        console.error("Error loading the order details:", err)
+      })
     }
   }, [userID]);
 

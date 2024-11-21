@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState } from "react"
 
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
+import MenuIcon from "@mui/icons-material/Menu"
 import {
   AppBar,
   Box,
@@ -12,12 +11,12 @@ import {
   IconButton,
   useTheme,
   useMediaQuery,
-} from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+} from "@mui/material"
+import { Link, useLocation } from "react-router-dom"
 
-import MobileSearch from "./mobileSearch";
-import Search from "./search";
-import Login from "../auth/login";
+import MobileSearch from "./mobileSearch"
+import Search from "./search"
+import Login from "../auth/login"
 
 const navLinks = [
   { label: "Catalog", path: "/catalog" },
@@ -25,21 +24,21 @@ const navLinks = [
   { label: "Cart", path: "/cart" },
   { label: "Admin", path: "/add-book" },
   { label: "Sales", path: "/sales-panel" },
-];
+]
 
 const Header = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
-  const toggleDrawer = (open: boolean) => () => setDrawerOpen(open);
+  const toggleDrawer = (open: boolean) => () => setDrawerOpen(open)
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
-  const location = useLocation();
+  const location = useLocation()
 
   return (
     <AppBar
-      position="fixed"
+      position='fixed'
       sx={{
         backgroundColor: "#1F2937",
         paddingX: { xs: 1, sm: 4, md: 8, lg: 10, xl: 12 },
@@ -54,7 +53,7 @@ const Header = () => {
       >
         <Typography
           component={Link}
-          to="/"
+          to='/'
           sx={{
             color: "white",
             textDecoration: "none",
@@ -65,7 +64,7 @@ const Header = () => {
         </Typography>
 
         {isMobile ? (
-          <Box display="flex" justifyContent="end">
+          <Box display='flex' justifyContent='end'>
             <MobileSearch />
           </Box>
         ) : (
@@ -92,15 +91,15 @@ const Header = () => {
         <Login />
 
         <IconButton
-          color="inherit"
-          edge="end"
+          color='inherit'
+          edge='end'
           onClick={toggleDrawer(true)}
           sx={{ display: { xs: "block", md: "none" } }}
         >
           <MenuIcon />
         </IconButton>
 
-        <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <Drawer anchor='left' open={drawerOpen} onClose={toggleDrawer(false)}>
           <Box
             sx={{
               width: 200,
@@ -109,8 +108,8 @@ const Header = () => {
             }}
             onClick={toggleDrawer(false)}
             onKeyDown={toggleDrawer(false)}
-            display="flex"
-            flexDirection="column"
+            display='flex'
+            flexDirection='column'
             pt={7}
           >
             {navLinks.map((link) => (
@@ -135,7 +134,7 @@ const Header = () => {
         </Drawer>
       </Toolbar>
     </AppBar>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

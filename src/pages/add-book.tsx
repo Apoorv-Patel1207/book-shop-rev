@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState } from "react"
 
-import { Container, Button, Typography } from "@mui/material";
+import { Container, Button, Typography } from "@mui/material"
 
-import BookForm from "src/components/admin-sales-panel/add-book-form";
-import AdminApproval from "src/components/admin-sales-panel/admin-approval";
+import BookForm from "src/components/admin-sales-panel/add-book-form"
+import AdminApproval from "src/components/admin-sales-panel/admin-approval"
 
-import Layout from "../components/layout/layout";
+import Layout from "../components/layout/layout"
 
 const AdminPanel = () => {
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(false)
 
   const handleFormSubmit = async (data: any) => {
     try {
@@ -18,25 +18,25 @@ const AdminPanel = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      });
+      })
 
       if (response.ok) {
-        console.log("Book approved:", data);
+        console.log("Book approved:", data)
       } else {
-        console.error("Failed to approve book:", response.statusText);
+        console.error("Failed to approve book:", response.statusText)
       }
     } catch (error) {
-      console.error("Error approving book:", error);
+      console.error("Error approving book:", error)
     }
-  };
+  }
 
   return (
     <Layout>
-      <Container maxWidth="md" sx={{ padding: 4 }}>
+      <Container maxWidth='md' sx={{ padding: 4 }}>
         <Typography
-          textAlign="center"
-          color="#1F2937"
-          fontWeight="bold"
+          textAlign='center'
+          color='#1F2937'
+          fontWeight='bold'
           sx={{ mb: { xs: 2, md: 4 } }}
           fontSize={{ xs: 20, md: 26 }}
         >
@@ -44,9 +44,8 @@ const AdminPanel = () => {
         </Typography>
 
         {!showForm ? (
-          // Render Add Book button if form is not visible
           <Button
-            variant="contained"
+            variant='contained'
             onClick={() => setShowForm(true)}
             sx={{ bgcolor: "#1F2937" }}
           >
@@ -58,7 +57,7 @@ const AdminPanel = () => {
         <AdminApproval />
       </Container>
     </Layout>
-  );
-};
+  )
+}
 
-export default AdminPanel;
+export default AdminPanel

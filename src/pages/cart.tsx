@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react"
 
 import {
   Typography,
@@ -11,135 +11,139 @@ import {
   DialogActions,
   Box,
   TextField,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+} from "@mui/material"
+// import { useNavigate } from "react-router-dom"
 
-import { useUserID } from "src/components/auth/userID";
-import { getUserProfile } from "src/service/user-profie-service";
+import { useUserID } from "src/components/auth/userID"
+import { getUserProfile } from "src/service/user-profie-service"
 
-import CartItem from "../components/cart/cart-item";
-import Layout from "../components/layout/layout";
+import CartItem from "../components/cart/cart-item"
+import Layout from "../components/layout/layout"
 import {
   fetchCartItems,
   removeFromCart,
   clearCart,
   updateCartQuantityService,
-} from "../service/cart-service";
-import { placeOrder } from "../service/order-service";
+} from "../service/cart-service"
+import { placeOrder } from "../service/order-service"
 import {
   CartItem as CartItemType,
   Order,
   UserProfile,
-} from "../types/data-types";
+} from "../types/data-types"
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState<CartItemType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
-  const [isClearCartModalOpen, setIsClearCartModalOpen] = useState(false);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [cartItems, setCartItems] = useState<CartItemType[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
+  const [isClearCartModalOpen, setIsClearCartModalOpen] = useState(false)
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const userID = useUserID();
+  const userID = useUserID()
+
+  const getCartItems = useCallback(async () => {
+    if (!userID) {
+      alert("Please login to continue")
+      return
+    }
+
+    try {
+      const items = await fetchCartItems(userID)
+      setCartItems(items)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred")
+    } finally {
+      setLoading(false)
+    }
+  }, [userID])
 
   useEffect(() => {
     const getProfile = async () => {
-      if (!userID) return;
+      if (!userID) return
       try {
-        const profile = await getUserProfile(userID);
-        setUserProfile(profile);
+        const profile = await getUserProfile(userID)
+        setUserProfile(profile)
       } catch (err) {
-        console.error("Failed to fetch user profile:", err);
+        console.error("Failed to fetch user profile:", err)
       }
-    };
-    getCartItems();
-    getProfile();
-  }, []);
+    }
+    getCartItems().catch((err) => {
+      console.error("Error loading book details:", err)
+    })
+    getProfile().catch((err) => {
+      console.error("Error loading the profile details:", err)
+    })
+  }, [getCartItems, userID])
 
   const totalCost = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
-    0
-  );
-
-  const getCartItems = async () => {
-    if (!userID) {
-      alert("Please login to continue");
-      return;
-    }
-
-    try {
-      const items = await fetchCartItems(userID);
-      setCartItems(items);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
-    }
-  };
+    0,
+  )
 
   const handleRemove = async (id: number) => {
     if (!userID) {
-      alert("Please login to continue");
-      return;
+      alert("Please login to continue")
+      return
     }
 
     try {
-      await removeFromCart(userID, id);
-      setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+      await removeFromCart(userID, id)
+      setCartItems((prevItems) => prevItems.filter((item) => item.id !== id))
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to remove item");
+      setError(err instanceof Error ? err.message : "Failed to remove item")
     }
-  };
+  }
 
   const updateCartQuantity = async (id: number, quantity: number) => {
     if (!userID) {
-      alert("Please login to continue");
-      return;
+      alert("Please login to continue")
+      return
     }
 
     try {
-      await updateCartQuantityService(userID, id, quantity);
+      await updateCartQuantityService(userID, id, quantity)
       setCartItems((prevItems) =>
-        prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
-      );
+        prevItems.map((item) =>
+          item.id === id ? { ...item, quantity } : item,
+        ),
+      )
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to update quantity"
-      );
+      setError(err instanceof Error ? err.message : "Failed to update quantity")
     }
-  };
+  }
 
   const handleClearCart = async () => {
     if (!userID) {
-      alert("Please login to continue");
-      return;
+      alert("Please login to continue")
+      return
     }
 
     try {
-      await clearCart(userID);
-      setCartItems([]);
+      await clearCart(userID)
+      setCartItems([])
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to clear cart");
+      setError(err instanceof Error ? err.message : "Failed to clear cart")
     }
-  };
+  }
 
-  const handleOpenCheckoutModal = () => setIsCheckoutModalOpen(true);
-  const handleCloseCheckoutModal = () => setIsCheckoutModalOpen(false);
+  const handleOpenCheckoutModal = () => setIsCheckoutModalOpen(true)
+  const handleCloseCheckoutModal = () => setIsCheckoutModalOpen(false)
 
-  const handleOpenClearCartModal = () => setIsClearCartModalOpen(true);
-  const handleCloseClearCartModal = () => setIsClearCartModalOpen(false);
+  const handleOpenClearCartModal = () => setIsClearCartModalOpen(true)
+  const handleCloseClearCartModal = () => setIsClearCartModalOpen(false)
 
-  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false)
 
   const handleConfirmBuy = async () => {
     if (!userID || !userProfile) {
-      alert("Please login and complete your profile to continue.");
-      return;
+      alert("Please login and complete your profile to continue.")
+      return
     }
 
-    setIsPlacingOrder(true);
+    setIsPlacingOrder(true)
 
     const order: Order = {
       userId: userID,
@@ -148,59 +152,65 @@ const Cart = () => {
       orderDate: new Date().toISOString(),
       status: "Processing",
       userProfile,
-    };
+    }
 
     try {
-      await placeOrder(order, userID);
-      alert("Order placed successfully!");
-      handleCloseCheckoutModal();
-      handleClearCart();
-    } catch (error) {
-      alert("Failed to place order. Please try again.");
-      console.error(error);
+      await placeOrder(order, userID)
+      alert("Order placed successfully!")
+      handleCloseCheckoutModal()
+      handleClearCart().catch((err) => {
+        console.error("Error clearing the cart:", err)
+      })
+    } catch (err) {
+      alert("Failed to place order. Please try again.")
+      console.error(err)
     } finally {
-      setIsPlacingOrder(false);
+      setIsPlacingOrder(false)
     }
-  };
+  }
 
   const handleConfirmClearCart = () => {
-    handleClearCart();
-    handleCloseClearCartModal();
-  };
+    handleClearCart().catch((err) => {
+      console.error("Error clearing the cart:", err)
+    })
+    handleCloseClearCartModal()
+  }
 
   useEffect(() => {
-    getCartItems();
-  }, []);
+    getCartItems().catch((err) => {
+      console.error("Error loading book details:", err)
+    })
+  }, [getCartItems])
 
   if (loading) {
     return (
       <Layout>
-        <Container maxWidth="lg" sx={{ marginTop: 4 }}>
-          <Typography textAlign="center">Loading...</Typography>
+        <Container maxWidth='lg' sx={{ marginTop: 4 }}>
+          <Typography textAlign='center'>Loading...</Typography>
         </Container>
       </Layout>
-    );
+    )
   }
 
   if (error) {
     return (
       <Layout>
-        <Container maxWidth="lg" sx={{ marginTop: 4 }}>
-          <Typography textAlign="center" color="error">
+        <Container maxWidth='lg' sx={{ marginTop: 4 }}>
+          <Typography textAlign='center' color='error'>
             {error}
           </Typography>
         </Container>
       </Layout>
-    );
+    )
   }
 
   return (
     <Layout>
-      <Container maxWidth="lg" sx={{ marginTop: 4 }}>
+      <Container maxWidth='lg' sx={{ marginTop: 4 }}>
         <Typography
-          textAlign="center"
-          color="#1F2937"
-          fontWeight="bold"
+          textAlign='center'
+          color='#1F2937'
+          fontWeight='bold'
           sx={{ mb: { xs: 2, md: 4 } }}
           fontSize={{ xs: 20, md: 26 }}
         >
@@ -219,7 +229,7 @@ const Cart = () => {
                 />
               ))
             ) : (
-              <Typography textAlign="center">Your cart is empty.</Typography>
+              <Typography textAlign='center'>Your cart is empty.</Typography>
             )}
           </Box>
           <Box
@@ -229,21 +239,21 @@ const Cart = () => {
               alignItems: "center",
             }}
           >
-            <Typography variant="h6" component="h2">
+            <Typography variant='h6' component='h2'>
               Total: Rs {totalCost.toFixed(2)}
             </Typography>
             <Box>
               <Button
-                variant="contained"
-                color="secondary"
+                variant='contained'
+                color='secondary'
                 onClick={handleOpenClearCartModal}
                 disabled={cartItems.length === 0}
               >
                 Clear Cart
               </Button>
               <Button
-                variant="contained"
-                color="primary"
+                variant='contained'
+                color='primary'
                 style={{ marginLeft: "8px" }}
                 onClick={handleOpenCheckoutModal}
                 disabled={cartItems.length === 0}
@@ -262,7 +272,7 @@ const Cart = () => {
               {totalCost.toFixed(2)}.
             </Typography>
             <Box
-              component="form"
+              component='form'
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -271,50 +281,50 @@ const Cart = () => {
               }}
             >
               <TextField
-                label="Name"
-                variant="outlined"
+                label='Name'
+                variant='outlined'
                 fullWidth
                 value={userProfile?.name || ""}
                 onChange={(e) =>
                   setUserProfile((prev) =>
-                    prev ? { ...prev, name: e.target.value } : null
+                    prev ? { ...prev, name: e.target.value } : null,
                   )
                 }
               />
               <TextField
-                label="Mobile Number"
-                variant="outlined"
+                label='Mobile Number'
+                variant='outlined'
                 fullWidth
                 value={userProfile?.phone || ""}
                 onChange={(e) =>
                   setUserProfile((prev) =>
-                    prev ? { ...prev, phone: e.target.value } : null
+                    prev ? { ...prev, phone: e.target.value } : null,
                   )
                 }
               />
               <TextField
-                label="Address"
-                variant="outlined"
+                label='Address'
+                variant='outlined'
                 fullWidth
                 multiline
                 rows={3}
                 value={userProfile?.address || ""}
                 onChange={(e) =>
                   setUserProfile((prev) =>
-                    prev ? { ...prev, address: e.target.value } : null
+                    prev ? { ...prev, address: e.target.value } : null,
                   )
                 }
               />
             </Box>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseCheckoutModal} color="primary">
+            <Button onClick={handleCloseCheckoutModal} color='primary'>
               Cancel
             </Button>
             <Button
               onClick={handleConfirmBuy}
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               sx={{ ml: 1 }}
               disabled={isPlacingOrder}
             >
@@ -329,17 +339,17 @@ const Cart = () => {
             <Typography>Are you sure you want to clear the cart?</Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseClearCartModal} color="primary">
+            <Button onClick={handleCloseClearCartModal} color='primary'>
               Cancel
             </Button>
-            <Button onClick={handleConfirmClearCart} color="secondary">
+            <Button onClick={handleConfirmClearCart} color='secondary'>
               Clear
             </Button>
           </DialogActions>
         </Dialog>
       </Container>
     </Layout>
-  );
-};
+  )
+}
 
-export default Cart;
+export default Cart

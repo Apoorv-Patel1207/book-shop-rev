@@ -58,22 +58,22 @@
 
 // export default LoginButton;
 
-import { useEffect } from "react";
+import { useEffect } from "react"
 
-import { useAuth0 } from "@auth0/auth0-react";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { Button, Typography, Box, IconButton } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react"
+import AccountCircleIcon from "@mui/icons-material/AccountCircle"
+import LogoutIcon from "@mui/icons-material/Logout"
+import { Button, Typography, Box, IconButton } from "@mui/material"
+import { useNavigate } from "react-router-dom"
 
 const LoginButton = () => {
   const { user, isAuthenticated, isLoading, loginWithRedirect, logout } =
-    useAuth0();
-  const navigate = useNavigate();
+    useAuth0()
+  const navigate = useNavigate()
 
   const navigateToProfile = () => {
-    navigate("/profile");
-  };
+    navigate("/profile")
+  }
 
   useEffect(() => {
     const checkOrCreateUser = async () => {
@@ -86,8 +86,8 @@ const LoginButton = () => {
               headers: {
                 "x-user-id": user.sub, // Ensure user.sub is defined
               } as HeadersInit,
-            }
-          );
+            },
+          )
 
           if (response.status === 404) {
             // User doesn't exist, create a new one
@@ -101,35 +101,37 @@ const LoginButton = () => {
                 name: user.name,
                 email: user.email,
               }),
-            });
+            })
           }
         } catch (error) {
-          console.error("Failed to check or create user:", error);
+          console.error("Failed to check or create user:", error)
         }
       }
-    };
+    }
 
     if (isAuthenticated) {
-      checkOrCreateUser();
+      checkOrCreateUser().catch((err) => {
+        console.error("Error while creating the user:", err)
+      })
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user])
 
   if (isLoading) {
-    return <Typography>Loading...</Typography>;
+    return <Typography>Loading...</Typography>
   }
 
   return (
-    <Box display="flex" alignItems="center" gap={1}>
+    <Box display='flex' alignItems='center' gap={1}>
       {isAuthenticated ? (
         <>
-          <IconButton color="inherit" onClick={navigateToProfile}>
+          <IconButton color='inherit' onClick={navigateToProfile}>
             <AccountCircleIcon sx={{ width: 30, height: 30 }} />
           </IconButton>
 
           <Typography fontSize={14}>{user?.given_name}</Typography>
 
           <IconButton
-            color="inherit"
+            color='inherit'
             onClick={() =>
               logout({ logoutParams: { returnTo: window.location.origin } })
             }
@@ -139,7 +141,7 @@ const LoginButton = () => {
         </>
       ) : (
         <Button
-          variant="text"
+          variant='text'
           sx={{ color: "white", textTransform: "none" }}
           onClick={() => loginWithRedirect()}
         >
@@ -147,7 +149,7 @@ const LoginButton = () => {
         </Button>
       )}
     </Box>
-  );
-};
+  )
+}
 
-export default LoginButton;
+export default LoginButton
