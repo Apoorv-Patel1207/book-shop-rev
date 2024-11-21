@@ -84,7 +84,7 @@ const LoginButton = () => {
             {
               method: "GET",
               headers: {
-                "x-user-id": user.sub, // Ensure user.sub is defined
+                "x-user-id": user.sub,
               } as HeadersInit,
             },
           )
@@ -128,7 +128,9 @@ const LoginButton = () => {
             <AccountCircleIcon sx={{ width: 30, height: 30 }} />
           </IconButton>
 
-          <Typography fontSize={14}>{user?.given_name}</Typography>
+          <Typography fontSize={14}>
+            {user?.given_name || user?.email}
+          </Typography>
 
           <IconButton
             color='inherit'

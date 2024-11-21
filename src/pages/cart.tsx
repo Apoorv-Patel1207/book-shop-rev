@@ -17,6 +17,7 @@ import {
 import { useUserID } from "src/components/auth/userID"
 import { getUserProfile } from "src/service/user-profie-service"
 
+import ClearCartDialog from "src/components/cart/clear-cart-dialog"
 import CartItem from "../components/cart/cart-item"
 import Layout from "../components/layout/layout"
 import {
@@ -333,7 +334,13 @@ const Cart = () => {
           </DialogActions>
         </Dialog>
 
-        <Dialog open={isClearCartModalOpen} onClose={handleCloseClearCartModal}>
+        <ClearCartDialog
+          isClearCartModalOpen={isClearCartModalOpen}
+          handleCloseClearCartModal={handleCloseClearCartModal}
+          handleConfirmClearCart={handleConfirmClearCart}
+        />
+
+        {/* <Dialog open={isClearCartModalOpen} onClose={handleCloseClearCartModal}>
           <DialogTitle>Clear Cart</DialogTitle>
           <DialogContent>
             <Typography>Are you sure you want to clear the cart?</Typography>
@@ -346,7 +353,7 @@ const Cart = () => {
               Clear
             </Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
       </Container>
     </Layout>
   )
