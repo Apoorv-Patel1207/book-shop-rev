@@ -1,10 +1,11 @@
 import { useState } from "react"
 
-import { Container, Button, Typography } from "@mui/material"
+import { Container, Button } from "@mui/material"
 
 import BookForm from "src/components/admin-sales-panel/add-book-form"
 import AdminApproval from "src/components/admin-sales-panel/admin-approval"
 
+import PageHeading from "src/components/utility-components/page-headings"
 import Layout from "../components/layout/layout"
 
 const AdminPanel = () => {
@@ -32,16 +33,10 @@ const AdminPanel = () => {
 
   return (
     <Layout>
-      <Container maxWidth='md' sx={{ padding: 4 }}>
-        <Typography
-          textAlign='center'
-          color='#1F2937'
-          fontWeight='bold'
-          sx={{ mb: { xs: 2, md: 4 } }}
-          fontSize={{ xs: 20, md: 26 }}
-        >
-          Admin Panel - Add a New Book
-        </Typography>
+      <Container maxWidth='md'>
+   
+
+        <PageHeading>Admin Panel</PageHeading>
 
         {!showForm ? (
           <Button

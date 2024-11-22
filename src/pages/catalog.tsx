@@ -6,7 +6,6 @@ import {
   CircularProgress,
   Drawer,
   IconButton,
-  LinearProgress,
   Typography,
 } from "@mui/material"
 import Grid from "@mui/material/Grid2"
@@ -15,6 +14,8 @@ import { useInView } from "react-intersection-observer"
 import { deleteBook } from "src/service/book-service"
 import { Book, PaginatedBook } from "src/types/data-types"
 
+import Loading from "src/components/utility-components/loading"
+import PageHeading from "src/components/utility-components/page-headings"
 import BookCard from "../components/book/book-card"
 import Filters from "../components/catalog/filters"
 import Layout from "../components/layout/layout"
@@ -129,15 +130,9 @@ const Catalog = () => {
 
   return (
     <Layout>
-      <Typography
-        textAlign='center'
-        color='#1F2937'
-        fontWeight='bold'
-        sx={{ mb: { xs: 2, md: 4 } }}
-        fontSize={{ xs: 20, md: 26 }}
-      >
-        Discover Your Next Read
-      </Typography>
+
+
+      <PageHeading>Discover Your Next Read</PageHeading>
 
       <Box display='flex' justifyContent='end'>
         <IconButton
@@ -204,7 +199,7 @@ const Catalog = () => {
 
       {isFetchingMore && (
         <Box sx={{ width: "100%" }}>
-          <LinearProgress />
+          <Loading />
         </Box>
       )}
 

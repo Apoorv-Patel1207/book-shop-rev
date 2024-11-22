@@ -50,7 +50,7 @@ const Checkout = () => {
   return (
     <Layout>
       <Container maxWidth='md'>
-        {/* Hero Section */}
+       
         <Box
           display='flex'
           flexDirection='column'
@@ -141,7 +141,7 @@ const Checkout = () => {
         </Box>
 
         {/* Footer Buttons */}
-        <Box mt={4} textAlign='center'>
+        <Box mt={4}>
           <Button
             variant='contained'
             color='primary'
@@ -149,6 +149,15 @@ const Checkout = () => {
             sx={{ marginTop: 2, bgcolor: "#001F3F" }}
           >
             Continue Shopping
+          </Button>
+
+          <Button
+            variant='contained'
+            color='primary'
+            href='/order-history'
+            sx={{ marginTop: 2, bgcolor: "#001F3F" }}
+          >
+            View All Orders
           </Button>
         </Box>
       </Container>

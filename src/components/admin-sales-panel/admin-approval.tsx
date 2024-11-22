@@ -19,6 +19,7 @@ import {
   rejectBook,
 } from "src/service/pending-book-service"
 import { Book } from "src/types/data-types"
+import NoDataFound from "../utility-components/no-data"
 
 const AdminApproval = () => {
   const [pendingBooks, setPendingBooks] = useState<Book[]>([])
@@ -68,7 +69,7 @@ const AdminApproval = () => {
         {title}
       </Typography>
       {books.length === 0 ? (
-        <Typography color='textSecondary'>No books in this list.</Typography>
+        <NoDataFound description={`No books in ${title} list.`} />
       ) : (
         <TableContainer component={Paper}>
           <Table>

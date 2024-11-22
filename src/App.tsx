@@ -14,23 +14,6 @@ import Profile from "./pages/profile"
 import SalesPanel from "./pages/sales-panel"
 
 const App = () => (
-  // <Router>
-  //   <Routes>
-  //     <Route path='/' element={<Home />} />
-  //     <Route path='/catalog' element={<Catalog />} />
-  //     <Route path='/not-logged-in' element={<NotLoggedIn />} />
-  //     <Route path='/order-history' element={<OrderHistoryPage />} />
-  //     <Route path='/cart' element={<Cart />} />
-  //     <Route path='/add-book' element={<AdminPanel />} />
-  //     <Route path='/sales-panel' element={<SalesPanel />} />
-  //     <Route path='/profile' element={<Profile />} />
-
-  //     <Route path='/book-details/:id' element={<BookDetails />} />
-  //     <Route path='/learning' element={<Learning />} />
-  //     <Route path='/checkout' element={<Checkout />} />
-  //   </Routes>
-  // </Router>
-
   <Router>
     <Routes>
       <Route path='/' element={<Home />} />
@@ -39,7 +22,6 @@ const App = () => (
       <Route path='/book-details/:id' element={<BookDetails />} />
       <Route path='/learning' element={<Learning />} />
 
-      {/* Group Protected Routes */}
       <Route element={<ProtectedRoutes />}>
         <Route path='/order-history' element={<OrderHistoryPage />} />
         <Route path='/cart' element={<Cart />} />

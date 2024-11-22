@@ -10,6 +10,7 @@ import {
   Grid,
   CircularProgress,
   Box,
+  AlertColor,
 } from "@mui/material"
 import { useParams, useNavigate } from "react-router-dom"
 
@@ -17,6 +18,7 @@ import { useUserID } from "src/components/auth/userID"
 import ConfirmPurchaseDialog from "src/components/book-details/confirm-purchase-dialog"
 import { getUserProfile } from "src/service/user-profile-service"
 
+import SnackbarAlert from "src/components/utility-components/snackbar"
 import Layout from "../components/layout/layout"
 import { addToCart } from "../service/cart-service"
 import { placeOrder } from "../service/order-service"
@@ -33,6 +35,20 @@ const BookDetails = () => {
 
   const navigate = useNavigate()
   const userID = useUserID()
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    type: "success" as AlertColor,
+  })
+
+  const handleSnackbarClose = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }))
+  }
+
+  const showSnackbar = (message: string, type: AlertColor = "success") => {
+    setSnackbar({ open: true, message, type })
+  }
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -92,7 +108,10 @@ const BookDetails = () => {
     }
 
     if (!userID || !userProfile) {
-      alert("Please login and complete your profile to continue.")
+      showSnackbar(
+        "Please login and complete your profile to continue.",
+        "error",
+      )
       return
     }
 
@@ -108,11 +127,12 @@ const BookDetails = () => {
     }
 
     try {
-      await placeOrder(order, userID)
-      alert("Order placed successfully!")
+      const response = await placeOrder(order, userID)
+      showSnackbar("Order placed successfully!", "success")
       handleCloseModal()
+      if (response.orderId) navigate(`/checkout/${response.orderId}`)
     } catch (err) {
-      alert("Failed to place order. Please try again.")
+      showSnackbar("Failed to place order. Please try again.", "error")
       console.error(err)
     } finally {
       setIsPlacingOrder(false)
@@ -123,7 +143,10 @@ const BookDetails = () => {
     if (!book) return
 
     if (!userID) {
-      alert("Please login to continue")
+      showSnackbar(
+        "Please login and complete your profile to continue.",
+        "error",
+      )
       return
     }
 
@@ -282,11 +305,15 @@ const BookDetails = () => {
 
               {userID && book.stockQuantity > 0 && (
                 <Box style={{ display: "flex", gap: "8px" }}>
-                  <Button variant='contained' onClick={handleAddToCart}>
+                  <Button
+                    variant='contained'
+                    onClick={handleAddToCart}
+                    sx={{ bgcolor: "#001F3F" }}
+                  >
                     Add to Cart
                   </Button>
                   <Button
-                    variant='contained'
+                    variant='outlined'
                     color='success'
                     onClick={handleBuyNow}
                   >
@@ -307,6 +334,13 @@ const BookDetails = () => {
           handleCloseModal={handleCloseModal}
           handleConfirmBuy={handleConfirmBuy}
           setUserProfile={setUserProfile}
+        />
+
+        <SnackbarAlert
+          open={snackbar.open}
+          message={snackbar.message}
+          type={snackbar.type}
+          onClose={handleSnackbarClose}
         />
       </Box>
     </Layout>

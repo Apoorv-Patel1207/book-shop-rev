@@ -19,6 +19,7 @@ import {
 } from "src/service/user-profile-service"
 import { UserProfile } from "src/types/data-types"
 
+import PageHeading from "src/components/utility-components/page-headings"
 import Layout from "../components/layout/layout"
 
 // Form value types
@@ -130,16 +131,10 @@ const Profile = () => {
 
   return (
     <Layout>
-      <Container maxWidth='md' sx={{ padding: 4 }}>
-        <Typography
-          textAlign='center'
-          color='#1F2937'
-          fontWeight='bold'
-          sx={{ mb: { xs: 2, md: 4 } }}
-          fontSize={{ xs: 20, md: 26 }}
-        >
-          {editing ? "Edit Profile" : "User Profile"}
-        </Typography>
+      <Container maxWidth='md'>
+     
+
+        <PageHeading>{editing ? "Edit Profile" : "User Profile"}</PageHeading>
 
         {error && <Typography color='error'>{error}</Typography>}
 

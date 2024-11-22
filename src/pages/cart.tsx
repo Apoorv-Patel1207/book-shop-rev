@@ -14,9 +14,11 @@ import { getUserProfile } from "src/service/user-profile-service"
 
 import ClearCartDialog from "src/components/cart/clear-cart-dialog"
 import CartConfirmPurchaseDailog from "src/components/cart/cart-confirm-purchase-dailog"
-import Loading from "src/components/layout/utility-components/loading"
-import SnackbarAlert from "src/components/layout/utility-components/snackbar"
+import Loading from "src/components/utility-components/loading"
+import SnackbarAlert from "src/components/utility-components/snackbar"
 import { useNavigate } from "react-router-dom"
+import PageHeading from "src/components/utility-components/page-headings"
+import NoDataFound from "src/components/utility-components/no-data"
 import CartItem from "../components/cart/cart-item"
 import Layout from "../components/layout/layout"
 import {
@@ -208,63 +210,55 @@ const Cart = () => {
 
   return (
     <Layout>
-      <Container maxWidth='lg' sx={{ marginTop: 4 }}>
-        <Typography
-          textAlign='center'
-          color='#1F2937'
-          fontWeight='bold'
-          sx={{ mb: { xs: 2, md: 4 } }}
-          fontSize={{ xs: 20, md: 26 }}
-        >
-          Shopping Cart
-        </Typography>
+      <Container maxWidth='lg'>
+        <PageHeading>Shopping Cart</PageHeading>
 
-        <Paper elevation={3} sx={{ padding: 2 }}>
-          <Box style={{ marginBottom: "16px" }}>
-            {cartItems.length > 0 ? (
-              cartItems.map((item) => (
+        {cartItems.length === 0 ? (
+          <NoDataFound description=' You have not added anything on card yet.' />
+        ) : (
+          <Paper elevation={3} sx={{ padding: 2 }}>
+            <Box style={{ marginBottom: "16px" }}>
+              {cartItems.map((item) => (
                 <CartItem
                   key={item.id}
                   {...item}
                   handleRemove={handleRemove}
                   updateCartQuantity={updateCartQuantity}
                 />
-              ))
-            ) : (
-              <Typography textAlign='center'>Your cart is empty.</Typography>
-            )}
-          </Box>
-          <Box
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant='h6' component='h2'>
-              Total: Rs {totalCost.toFixed(2)}
-            </Typography>
-            <Box>
-              <Button
-                variant='contained'
-                color='secondary'
-                onClick={handleOpenClearCartModal}
-                disabled={cartItems.length === 0}
-              >
-                Clear Cart
-              </Button>
-              <Button
-                variant='contained'
-                color='primary'
-                style={{ marginLeft: "8px" }}
-                onClick={handleOpenCheckoutModal}
-                disabled={cartItems.length === 0}
-              >
-                Proceed to Checkout
-              </Button>
+              ))}
             </Box>
-          </Box>
-        </Paper>
+            <Box
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant='h6' component='h2'>
+                Total: Rs {totalCost.toFixed(2)}
+              </Typography>
+              <Box>
+                <Button
+                  variant='outlined'
+                  color='primary'
+                  onClick={handleOpenClearCartModal}
+                  disabled={cartItems.length === 0}
+                >
+                  Clear Cart
+                </Button>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  sx={{ marginLeft: "8px", bgcolor: "#001F3F" }}
+                  onClick={handleOpenCheckoutModal}
+                  disabled={cartItems.length === 0}
+                >
+                  Proceed to Checkout
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
+        )}
 
         <CartConfirmPurchaseDailog
           isCheckoutModalOpen={isCheckoutModalOpen}
