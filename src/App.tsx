@@ -12,25 +12,28 @@ import NotLoggedIn from "./pages/not-logged-in"
 import OrderHistoryPage from "./pages/order-history"
 import Profile from "./pages/profile"
 import SalesPanel from "./pages/sales-panel"
+import { UserProvider } from "./components/context/user-context"
 
 const App = () => (
   <Router>
-    <Routes>
-      <Route path='/' element={<Home />} />
-      <Route path='/catalog' element={<Catalog />} />
-      <Route path='/not-logged-in' element={<NotLoggedIn />} />
-      <Route path='/book-details/:id' element={<BookDetails />} />
-      <Route path='/learning' element={<Learning />} />
+    <UserProvider>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/catalog' element={<Catalog />} />
+        <Route path='/not-logged-in' element={<NotLoggedIn />} />
+        <Route path='/book-details/:id' element={<BookDetails />} />
+        <Route path='/learning' element={<Learning />} />
 
-      <Route element={<ProtectedRoutes />}>
-        <Route path='/order-history' element={<OrderHistoryPage />} />
-        <Route path='/cart' element={<Cart />} />
-        <Route path='/add-book' element={<AdminPanel />} />
-        <Route path='/sales-panel' element={<SalesPanel />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/checkout/:id' element={<Checkout />} />
-      </Route>
-    </Routes>
+        <Route element={<ProtectedRoutes />}>
+          <Route path='/order-history' element={<OrderHistoryPage />} />
+          <Route path='/cart' element={<Cart />} />
+          <Route path='/add-book' element={<AdminPanel />} />
+          <Route path='/sales-panel' element={<SalesPanel />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/checkout/:id' element={<Checkout />} />
+        </Route>
+      </Routes>
+    </UserProvider>
   </Router>
 )
 

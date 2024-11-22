@@ -14,10 +14,10 @@ import {
 } from "@mui/material"
 import { Link, useLocation } from "react-router-dom"
 
-import { UserProfile } from "src/types/data-types"
 import MobileSearch from "./mobileSearch"
 import Search from "./search"
 import Login from "../auth/login"
+import { useUser } from "../context/user-context"
 
 const navLinks = [
   { label: "Catalog", path: "/catalog" },
@@ -36,8 +36,68 @@ const Header = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
   const location = useLocation()
-  const [userData, setUserData] = useState<UserProfile | null>(null)
-  console.log("userData: ", userData)
+  const { userData } = useUser()
+
+  if (!userData) {
+    return <div>Loading user data...</div>
+  }
+
+  // const [userData, setUserData] = useState<UserProfile | null>(null)
+  // console.log("userData: ", userData)
+
+  // const { user, isAuthenticated } = useAuth0()
+
+  // useEffect(() => {
+  //   const checkOrCreateUser = async () => {
+  //     if (isAuthenticated && user?.sub) {
+  //       try {
+  //         const response = await fetch(
+  //           "http://localhost:5000/api/users/profile",
+  //           {
+  //             method: "GET",
+  //             headers: {
+  //               "x-user-id": user.sub,
+  //             } as HeadersInit,
+  //           },
+  //         )
+
+  //         if (response.status === 404) {
+  //           // User doesn't exist, create a new one
+  //           const createResponse = await fetch(
+  //             "http://localhost:5000/api/users/profile",
+  //             {
+  //               method: "POST",
+  //               headers: {
+  //                 "Content-Type": "application/json",
+  //                 "x-user-id": user.sub,
+  //               } as HeadersInit,
+  //               body: JSON.stringify({
+  //                 name: user.name,
+  //                 email: user.email,
+  //               }),
+  //             },
+  //           )
+
+  //           if (createResponse.ok) {
+  //             const newUser = (await createResponse.json()) as UserProfile
+  //             setUserData(newUser) // Set the newly created user
+  //           }
+  //         } else if (response.ok) {
+  //           const existingUser = (await response.json()) as UserProfile
+  //           setUserData(existingUser) // Set the fetched user data
+  //         }
+  //       } catch (error) {
+  //         console.error("Failed to check or create user:", error)
+  //       }
+  //     }
+  //   }
+
+  //   if (isAuthenticated) {
+  //     checkOrCreateUser().catch((err) => {
+  //       console.error("Error while creating the user:", err)
+  //     })
+  //   }
+  // }, [isAuthenticated, user])
 
   return (
     <AppBar
@@ -103,7 +163,7 @@ const Header = () => {
           })}
         </Box>
 
-        <Login setUserData={setUserData} />
+        <Login />
 
         <IconButton
           color='inherit'

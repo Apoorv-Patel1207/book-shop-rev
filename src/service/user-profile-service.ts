@@ -48,3 +48,24 @@ export const updateUserProfile = async (
     return null
   }
 }
+
+export const createUserProfile = async (
+  userId: string,
+  name: string,
+  email: string,
+) => {
+  const response = await fetch("http://localhost:5000/api/users/profile", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-user-id": userId,
+    },
+    body: JSON.stringify({ name, email }),
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to create user profile")
+  }
+
+  return (await response.json()) as UserProfile
+}

@@ -46,6 +46,7 @@ function Learning() {
   // Tech and libraries : react router DOM, react intersection observer, react hook form,
   // Handle the hover effect in mobile
   // integrated auth 0 authentication
+  // use context for catching of user profile data
 
   // ----------Doubts--------
   // Search Functionality backend?
@@ -59,6 +60,7 @@ function Learning() {
   // recreate the project using the MUI and remove the shad cn and tailwind
   // Issue while handling the search, filter functionality with the pagination
   // Its was difficult to find out the bug caused by the routing order for creation of the header search functionality
+  // Profile API calling multiple times
 
   // ---------Bugs----------
   // showing up 2 cards of the same book when searched
