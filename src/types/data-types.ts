@@ -39,8 +39,7 @@ export interface UserProfile {
   dob: string
   // gender: "male" | "female" | "other"
   gender: string
-
-  role?: "admin" | "salesman" | "guest"
+  role?: "admin" | "salesman" | "customer"
   createdAt?: string // ISO date string for account creation
 }
 

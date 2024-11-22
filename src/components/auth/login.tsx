@@ -65,8 +65,13 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle"
 import LogoutIcon from "@mui/icons-material/Logout"
 import { Button, Typography, Box, IconButton } from "@mui/material"
 import { useNavigate } from "react-router-dom"
+import { UserProfile } from "src/types/data-types"
 
-const LoginButton = () => {
+interface LoginButtonProps {
+  setUserData: (userData: UserProfile | null) => void
+}
+const LoginButton = (props: LoginButtonProps) => {
+  const { setUserData } = props
   const { user, isAuthenticated, isLoading, loginWithRedirect, logout } =
     useAuth0()
   const navigate = useNavigate()
@@ -74,6 +79,40 @@ const LoginButton = () => {
   const navigateToProfile = () => {
     navigate("/profile")
   }
+
+  // useEffect(() => {
+  //   const checkOrCreateUser = async () => {
+  //     if (isAuthenticated && user?.sub) {
+  //       try {
+  //         const response = await fetch(
+  //           "http://localhost:5000/api/users/profile",
+  //           {
+  //             method: "GET",
+  //             headers: {
+  //               "x-user-id": user.sub,
+  //             } as HeadersInit,
+  //           },
+  //         )
+
+  //         if (response.status === 404) {
+  //           // User doesn't exist, create a new one
+  //           await fetch("http://localhost:5000/api/users/profile", {
+  //             method: "POST",
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //               "x-user-id": user.sub,
+  //             } as HeadersInit,
+  //             body: JSON.stringify({
+  //               name: user.name,
+  //               email: user.email,
+  //             }),
+  //           })
+  //         }
+  //       } catch (error) {
+  //         console.error("Failed to check or create user:", error)
+  //       }
+  //     }
+  //   }
 
   useEffect(() => {
     const checkOrCreateUser = async () => {
@@ -91,17 +130,28 @@ const LoginButton = () => {
 
           if (response.status === 404) {
             // User doesn't exist, create a new one
-            await fetch("http://localhost:5000/api/users/profile", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "x-user-id": user.sub,
-              } as HeadersInit,
-              body: JSON.stringify({
-                name: user.name,
-                email: user.email,
-              }),
-            })
+            const createResponse = await fetch(
+              "http://localhost:5000/api/users/profile",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-user-id": user.sub,
+                } as HeadersInit,
+                body: JSON.stringify({
+                  name: user.name,
+                  email: user.email,
+                }),
+              },
+            )
+
+            if (createResponse.ok) {
+              const newUser = (await createResponse.json()) as UserProfile
+              setUserData(newUser) // Set the newly created user
+            }
+          } else if (response.ok) {
+            const existingUser = (await response.json()) as UserProfile
+            setUserData(existingUser) // Set the fetched user data
           }
         } catch (error) {
           console.error("Failed to check or create user:", error)

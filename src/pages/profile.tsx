@@ -115,6 +115,7 @@ const Profile = () => {
         profileImage: data.profileImage || "",
         dob: data.dob || "",
         gender: data.gender || "",
+        
       })
       if (updatedProfile) {
         setProfile(updatedProfile)

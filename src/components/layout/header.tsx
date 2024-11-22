@@ -14,6 +14,7 @@ import {
 } from "@mui/material"
 import { Link, useLocation } from "react-router-dom"
 
+import { UserProfile } from "src/types/data-types"
 import MobileSearch from "./mobileSearch"
 import Search from "./search"
 import Login from "../auth/login"
@@ -35,6 +36,8 @@ const Header = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
   const location = useLocation()
+  const [userData, setUserData] = useState<UserProfile | null>(null)
+  console.log("userData: ", userData)
 
   return (
     <AppBar
@@ -72,23 +75,35 @@ const Header = () => {
         )}
 
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          {navLinks.map((link) => (
-            <Button
-              key={link.path}
-              component={Link}
-              to={link.path}
-              sx={{
-                color: "white",
-                textTransform: "none",
-                "&:hover": { color: "grey.400" },
-              }}
-            >
-              {link.label}
-            </Button>
-          ))}
+          {navLinks.map((link) => {
+            if (userData?.role === "salesman" && link.label === "Admin") {
+              return null
+            }
+
+            if (
+              userData?.role === "customer" &&
+              (link.label === "Admin" || link.label === "Sales")
+            ) {
+              return null
+            }
+            return (
+              <Button
+                key={link.path}
+                component={Link}
+                to={link.path}
+                sx={{
+                  color: "white",
+                  textTransform: "none",
+                  "&:hover": { color: "grey.400" },
+                }}
+              >
+                {link.label}
+              </Button>
+            )
+          })}
         </Box>
 
-        <Login />
+        <Login setUserData={setUserData} />
 
         <IconButton
           color='inherit'
@@ -112,24 +127,36 @@ const Header = () => {
             flexDirection='column'
             pt={7}
           >
-            {navLinks.map((link) => (
-              <Button
-                key={link.path}
-                component={Link}
-                to={link.path}
-                sx={{
-                  fontWeight: "semibold",
-                  color: location.pathname === link.path ? "black" : "white", // Active color
+            {navLinks.map((link) => {
+              if (userData?.role === "salesman" && link.label === "Admin") {
+                return null
+              }
 
-                  bgcolor: location.pathname === link.path ? "white" : "none", // Active color
-                  textTransform: "none",
-                  mb: 1,
-                  borderRadius: 0,
-                }}
-              >
-                {link.label}
-              </Button>
-            ))}
+              if (
+                userData?.role === "customer" &&
+                (link.label === "Admin" || link.label === "Sales")
+              ) {
+                return null
+              }
+              return (
+                <Button
+                  key={link.path}
+                  component={Link}
+                  to={link.path}
+                  sx={{
+                    fontWeight: "semibold",
+                    color: location.pathname === link.path ? "black" : "white", // Active color
+
+                    bgcolor: location.pathname === link.path ? "white" : "none", // Active color
+                    textTransform: "none",
+                    mb: 1,
+                    borderRadius: 0,
+                  }}
+                >
+                  {link.label}
+                </Button>
+              )
+            })}
           </Box>
         </Drawer>
       </Toolbar>
