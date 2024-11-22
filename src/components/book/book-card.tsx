@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState } from "react"
 
-import EditIcon from "@mui/icons-material/Edit";
-import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import EditIcon from "@mui/icons-material/Edit"
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle"
 import {
   Box,
   Card,
@@ -11,56 +11,61 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+} from "@mui/material"
+import { useNavigate } from "react-router-dom"
 
-import { Book } from "src/types/data-types";
+import { Book } from "src/types/data-types"
 
-import DeleteConfirmationDialog from "./delete-book-modal";
-import UpdateBookModal from "./update-book-modal";
+import DeleteConfirmationDialog from "./delete-book-modal"
+import UpdateBookModal from "./update-book-modal"
+import { useUser } from "../context/user-context"
 
 interface BookCardProps {
-  book: Book;
-  handleDelete: (id: number) => void;
-  handleUpdateBook: (updatedBook: Book) => void;
+  book: Book
+  handleDelete: (id: number) => void
+  handleUpdateBook: (updatedBook: Book) => void
 }
 
 const BookCard = (props: BookCardProps) => {
-  const { book, handleDelete, handleUpdateBook } = props;
-  const navigate = useNavigate();
-  const [openDialog, setOpenDialog] = useState(false);
-  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const { userData } = useUser()
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isAdmin = userData?.role === "admin"
+
+  const { book, handleDelete, handleUpdateBook } = props
+  const navigate = useNavigate()
+  const [openDialog, setOpenDialog] = useState(false)
+  const [openUpdateModal, setOpenUpdateModal] = useState(false)
+
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 
   const handleCardClick = () => {
-    navigate(`/book-details/${book.id}`);
-  };
+    navigate(`/book-details/${book.id}`)
+  }
 
   const openDeleteDialog = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setOpenDialog(true);
-  };
+    e.stopPropagation()
+    setOpenDialog(true)
+  }
 
   const closeDeleteDialog = () => {
-    setOpenDialog(false);
-  };
+    setOpenDialog(false)
+  }
 
   const confirmDelete = () => {
-    handleDelete(book.id);
-    setOpenDialog(false);
-  };
+    handleDelete(book.id)
+    setOpenDialog(false)
+  }
 
   const openUpdateModalHandler = (e: React.MouseEvent) => {
-    e.stopPropagation();
+    e.stopPropagation()
 
-    setOpenUpdateModal(true);
-  };
+    setOpenUpdateModal(true)
+  }
 
   const closeUpdateModalHandler = () => {
-    setOpenUpdateModal(false);
-  };
+    setOpenUpdateModal(false)
+  }
 
   return (
     <>
@@ -104,57 +109,59 @@ const BookCard = (props: BookCardProps) => {
             }}
           >
             <img
-              src="/images/sold out.png"
-              alt="Sold Out"
+              src='/images/sold out.png'
+              alt='Sold Out'
               style={{ maxWidth: "80%" }}
             />
           </Box>
         )}
 
-        <IconButton
-          className="delete-icon-btn"
-          onClick={openDeleteDialog}
-          sx={{
-            position: "absolute",
-            zIndex: 10,
-            top: 8,
-            right: 8,
-            backgroundColor: "rgba(255, 255, 255, 0.8)",
-            opacity: isMobile ? 1 : 0,
-            transform: isMobile ? "translateY(0)" : "translateY(-20px)",
-            transition: "0.3s ease",
-            "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 1)",
-            },
-          }}
-        >
-          <RemoveCircleIcon sx={{ color: "crimson" }} />
-        </IconButton>
-
-        <IconButton
-          className="edit-icon-btn"
-          onClick={openUpdateModalHandler}
-          sx={{
-            position: "absolute",
-            top: 50,
-            right: 8,
-            zIndex: 10,
-            backgroundColor: "rgba(255, 255, 255, 0.8)",
-            opacity: isMobile ? 1 : 0,
-            transform: isMobile ? "translateY(0)" : "translateY(-20px)",
-            transition: "0.3s ease",
-            "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 1)",
-            },
-          }}
-        >
-          <EditIcon sx={{ color: "primary.main" }} />
-        </IconButton>
-
+        {isAdmin && (
+          <>
+            <IconButton
+              className='delete-icon-btn'
+              onClick={openDeleteDialog}
+              sx={{
+                position: "absolute",
+                zIndex: 10,
+                top: 8,
+                right: 8,
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                opacity: isMobile ? 1 : 0,
+                transform: isMobile ? "translateY(0)" : "translateY(-20px)",
+                transition: "0.3s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 1)",
+                },
+              }}
+            >
+              <RemoveCircleIcon sx={{ color: "crimson" }} />
+            </IconButton>
+            <IconButton
+              className='edit-icon-btn'
+              onClick={openUpdateModalHandler}
+              sx={{
+                position: "absolute",
+                top: 50,
+                right: 8,
+                zIndex: 10,
+                backgroundColor: "rgba(255, 255, 255, 0.8)",
+                opacity: isMobile ? 1 : 0,
+                transform: isMobile ? "translateY(0)" : "translateY(-20px)",
+                transition: "0.3s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 1)",
+                },
+              }}
+            >
+              <EditIcon sx={{ color: "primary.main" }} />
+            </IconButton>
+          </>
+        )}
         <Box paddingX={4} paddingTop={4} paddingBottom={0}>
           <CardMedia
-            component="img"
-            height="200"
+            component='img'
+            height='200'
             image={book.coverImage}
             alt={book.title}
             sx={{
@@ -181,8 +188,8 @@ const BookCard = (props: BookCardProps) => {
             </Typography>
           )}
           <Typography
-            fontWeight="bold"
-            color="#1F2937"
+            fontWeight='bold'
+            color='#1F2937'
             sx={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -195,8 +202,8 @@ const BookCard = (props: BookCardProps) => {
           </Typography>
 
           <Typography
-            variant="body2"
-            color="text.secondary"
+            variant='body2'
+            color='text.secondary'
             sx={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -208,8 +215,8 @@ const BookCard = (props: BookCardProps) => {
           </Typography>
 
           <Typography
-            variant="body2"
-            color="text.secondary"
+            variant='body2'
+            color='text.secondary'
             sx={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -219,7 +226,7 @@ const BookCard = (props: BookCardProps) => {
           >
             Genre: {book.genre}
           </Typography>
-          <Typography color="success.main" fontWeight="bold">
+          <Typography color='success.main' fontWeight='bold'>
             ₹ {book.price.toFixed(2)}
           </Typography>
         </CardContent>
@@ -238,7 +245,7 @@ const BookCard = (props: BookCardProps) => {
         onConfirm={confirmDelete}
       />
     </>
-  );
-};
+  )
+}
 
-export default BookCard;
+export default BookCard

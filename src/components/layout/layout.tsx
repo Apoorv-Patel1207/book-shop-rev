@@ -1,53 +1,48 @@
-import React, { useEffect } from "react"
+import React from "react"
 
 import { Box } from "@mui/material"
 
-import { useAuth0 } from "@auth0/auth0-react"
-import {
-  getUserProfile,
-  createUserProfile,
-} from "src/service/user-profile-service"
 import Footer from "./footer"
 import Header from "./header"
-import { useUser } from "../context/user-context"
 
 interface LayoutProps {
   children: React.ReactNode
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const { user, isAuthenticated } = useAuth0()
-  const { userData, setUserData } = useUser()
-  console.log("userData: ", userData)
+  console.log("layout")
+  // const { user, isAuthenticated } = useAuth0()
+  // const { userData, setUserData } = useUser()
+  // console.log("userData: ", userData)
 
-  useEffect(() => {
-    const checkOrCreateUser = async () => {
-      if (isAuthenticated && user?.sub && !userData) {
-        try {
-          const existingUser = await getUserProfile(user.sub)
-          setUserData(existingUser)
-        } catch (error) {
-          console.error("Error fetching user profile:", error)
-          try {
-            const newUser = await createUserProfile(
-              user.sub,
-              user.name || "",
-              user.email || "",
-            )
-            setUserData(newUser)
-          } catch (err) {
-            console.error("Error creating user profile:", err)
-          }
-        }
-      }
-    }
+  // useEffect(() => {
+  //   const checkOrCreateUser = async () => {
+  //     if (isAuthenticated && user?.sub && !userData) {
+  //       try {
+  //         const existingUser = await getUserProfile(user.sub)
+  //         setUserData(existingUser)
+  //       } catch (error) {
+  //         console.error("Error fetching user profile:", error)
+  //         try {
+  //           const newUser = await createUserProfile(
+  //             user.sub,
+  //             user.name || "",
+  //             user.email || "",
+  //           )
+  //           setUserData(newUser)
+  //         } catch (err) {
+  //           console.error("Error creating user profile:", err)
+  //         }
+  //       }
+  //     }
+  //   }
 
-    if (isAuthenticated) {
-      checkOrCreateUser().catch((err) =>
-        console.error("Error while creating or fetching the user:", err),
-      )
-    }
-  }, [isAuthenticated, user, userData, setUserData])
+  //   if (isAuthenticated) {
+  //     checkOrCreateUser().catch((err) =>
+  //       console.error("Error while creating or fetching the user:", err),
+  //     )
+  //   }
+  // }, [isAuthenticated, user, userData, setUserData])
 
   return (
     <Box

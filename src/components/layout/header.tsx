@@ -37,67 +37,23 @@ const Header = () => {
 
   const location = useLocation()
   const { userData } = useUser()
+  console.log("userData: ", userData)
 
-  if (!userData) {
-    return <div>Loading user data...</div>
+  const shouldRenderLink = (
+    label: string,
+    role: string | undefined,
+  ): boolean => {
+    if (!role) {
+      return label === "Catalog"
+    }
+    if (role === "salesman" && label === "Admin") {
+      return false
+    }
+    if (role === "customer" && (label === "Admin" || label === "Sales")) {
+      return false
+    }
+    return true
   }
-
-  // const [userData, setUserData] = useState<UserProfile | null>(null)
-  // console.log("userData: ", userData)
-
-  // const { user, isAuthenticated } = useAuth0()
-
-  // useEffect(() => {
-  //   const checkOrCreateUser = async () => {
-  //     if (isAuthenticated && user?.sub) {
-  //       try {
-  //         const response = await fetch(
-  //           "http://localhost:5000/api/users/profile",
-  //           {
-  //             method: "GET",
-  //             headers: {
-  //               "x-user-id": user.sub,
-  //             } as HeadersInit,
-  //           },
-  //         )
-
-  //         if (response.status === 404) {
-  //           // User doesn't exist, create a new one
-  //           const createResponse = await fetch(
-  //             "http://localhost:5000/api/users/profile",
-  //             {
-  //               method: "POST",
-  //               headers: {
-  //                 "Content-Type": "application/json",
-  //                 "x-user-id": user.sub,
-  //               } as HeadersInit,
-  //               body: JSON.stringify({
-  //                 name: user.name,
-  //                 email: user.email,
-  //               }),
-  //             },
-  //           )
-
-  //           if (createResponse.ok) {
-  //             const newUser = (await createResponse.json()) as UserProfile
-  //             setUserData(newUser) // Set the newly created user
-  //           }
-  //         } else if (response.ok) {
-  //           const existingUser = (await response.json()) as UserProfile
-  //           setUserData(existingUser) // Set the fetched user data
-  //         }
-  //       } catch (error) {
-  //         console.error("Failed to check or create user:", error)
-  //       }
-  //     }
-  //   }
-
-  //   if (isAuthenticated) {
-  //     checkOrCreateUser().catch((err) => {
-  //       console.error("Error while creating the user:", err)
-  //     })
-  //   }
-  // }, [isAuthenticated, user])
 
   return (
     <AppBar
@@ -134,8 +90,25 @@ const Header = () => {
           <Search isMobile={false} />
         )}
 
-        <Box sx={{ display: { xs: "none", md: "flex" } }}>
+        {/* <Box sx={{ display: { xs: "none", md: "flex" } }}>
           {navLinks.map((link) => {
+            if (!userData?.role) {
+              return link.label === "Catalog" ? (
+                <Button
+                  key={link.path}
+                  component={Link}
+                  to={link.path}
+                  sx={{
+                    color: "white",
+                    textTransform: "none",
+                    "&:hover": { color: "grey.400" },
+                  }}
+                >
+                  {link.label}
+                </Button>
+              ) : null
+            }
+
             if (userData?.role === "salesman" && link.label === "Admin") {
               return null
             }
@@ -161,6 +134,25 @@ const Header = () => {
               </Button>
             )
           })}
+        </Box> */}
+
+        <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          {navLinks
+            .filter((link) => shouldRenderLink(link.label, userData?.role))
+            .map((link) => (
+              <Button
+                key={link.path}
+                component={Link}
+                to={link.path}
+                sx={{
+                  color: "white",
+                  textTransform: "none",
+                  "&:hover": { color: "grey.400" },
+                }}
+              >
+                {link.label}
+              </Button>
+            ))}
         </Box>
 
         <Login />

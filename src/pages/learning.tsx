@@ -72,6 +72,7 @@ function Learning() {
   // Handle the available stock and should show up the valid purchase quantity before making an order
   // At the time ordering make the phone number validation
   // Admin should have all the order details within its Panel
+  // Fix the issue with accessing the tabs with the direct providing the URL
 
   return (
     <Layout>

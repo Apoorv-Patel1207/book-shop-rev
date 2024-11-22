@@ -9,9 +9,6 @@ import {
   AlertColor,
 } from "@mui/material"
 
-import { useUserID } from "src/components/auth/userID"
-import { getUserProfile } from "src/service/user-profile-service"
-
 import ClearCartDialog from "src/components/cart/clear-cart-dialog"
 import CartConfirmPurchaseDailog from "src/components/cart/cart-confirm-purchase-dailog"
 import Loading from "src/components/utility-components/loading"
@@ -19,6 +16,7 @@ import SnackbarAlert from "src/components/utility-components/snackbar"
 import { useNavigate } from "react-router-dom"
 import PageHeading from "src/components/utility-components/page-headings"
 import NoDataFound from "src/components/utility-components/no-data"
+import { useUser } from "src/components/context/user-context"
 import CartItem from "../components/cart/cart-item"
 import Layout from "../components/layout/layout"
 import {
@@ -32,6 +30,7 @@ import {
   CartItem as CartItemType,
   Order,
   UserProfile,
+  // UserProfile,
 } from "../types/data-types"
 
 const Cart = () => {
@@ -45,7 +44,8 @@ const Cart = () => {
 
   const navigate = useNavigate()
 
-  const userID = useUserID()
+  const { userData } = useUser()
+  const userID = userData?.userId
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -62,19 +62,7 @@ const Cart = () => {
   }
 
   useEffect(() => {
-    const getProfile = async () => {
-      if (!userID) return
-      try {
-        const profile = await getUserProfile(userID)
-        setUserProfile(profile)
-      } catch (err) {
-        console.error("Failed to fetch user profile:", err)
-      }
-    }
-
-    getProfile().catch((err) => {
-      console.error("Error loading the profile details:", err)
-    })
+    setUserProfile(userData)
 
     const getCartItems = async () => {
       if (!userID) {
