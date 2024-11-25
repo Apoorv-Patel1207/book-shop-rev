@@ -4,12 +4,12 @@ import FilterListIcon from "@mui/icons-material/FilterList"
 import {
   Box,
   CircularProgress,
+  debounce,
   Drawer,
   IconButton,
   Typography,
 } from "@mui/material"
 import Grid from "@mui/material/Grid2"
-import { useInView } from "react-intersection-observer"
 import Loading from "src/components/utility-components/loading"
 import PageHeading from "src/components/utility-components/page-headings"
 import { deleteBook } from "src/service/book-service"
@@ -29,7 +29,6 @@ const Catalog = () => {
   const [tempPriceValue, setTempPriceValue] = useState<number[]>([0, 100])
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
-  const { ref, inView } = useInView()
   const [isLoading, setIsLoading] = useState(true)
   const [isFetchingMore, setIsFetchingMore] = useState(false)
 
@@ -65,22 +64,34 @@ const Catalog = () => {
   }, [page, searchQuery, filterGenre, priceValue])
 
   useEffect(() => {
-    if (inView && hasMore) {
-      setIsFetchingMore(true)
-      setPage((prevPage) => prevPage + 1)
-    }
-  }, [inView, hasMore])
-
-  useEffect(() => {
     const loadBooks = async () => {
       await fetchBooks()
-      setIsFetchingMore(false)
     }
 
     loadBooks().catch((error) => {
       console.error("Error loading books:", error)
     })
   }, [fetchBooks])
+
+  useEffect(() => {
+    const handleScroll = debounce(() => {
+      if (isFetchingMore || !hasMore) return
+
+      const scrollPosition = window.innerHeight + window.scrollY
+      const threshold = document.body.offsetHeight - 200
+
+      if (scrollPosition >= threshold) {
+        setPage((prevPage) => prevPage + 1)
+        setIsFetchingMore(true)
+      }
+    }, 300)
+
+    window.addEventListener("scroll", handleScroll)
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [isFetchingMore, hasMore])
 
   const handleDelete = async (id: number) => {
     try {
@@ -129,8 +140,6 @@ const Catalog = () => {
 
   return (
     <Layout>
-
-
       <PageHeading>Discover Your Next Read</PageHeading>
 
       <Box display='flex' justifyContent='end'>
@@ -201,8 +210,6 @@ const Catalog = () => {
           <Loading />
         </Box>
       )}
-
-      {hasMore && <Box ref={ref} style={{ height: "1px" }} />}
     </Layout>
   )
 }
