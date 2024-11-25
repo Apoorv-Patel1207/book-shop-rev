@@ -24,7 +24,6 @@
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import { Box, Typography, Button, Container, Stack } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-
 import Layout from "src/components/layout/layout"
 
 const NotLoggedIn = () => {
@@ -42,7 +41,7 @@ const NotLoggedIn = () => {
           boxShadow: 3,
         }}
       >
-        <Stack direction='column' alignItems='center' spacing={3}>
+        <Stack alignItems='center' direction='column' spacing={3}>
           <Box
             sx={{
               width: 80,
@@ -56,24 +55,24 @@ const NotLoggedIn = () => {
           >
             <LockOutlinedIcon sx={{ fontSize: 40, color: "#F44336" }} />
           </Box>
-          <Typography variant='h4' fontWeight='bold' color='text.primary'>
+          <Typography color='text.primary' fontWeight='bold' variant='h4'>
             Access Denied
           </Typography>
-          <Typography variant='body1' color='text.secondary'>
+          <Typography color='text.secondary' variant='body1'>
             You need to log in to access this page. Please log in or return to
             the catalog.
           </Typography>
           <Button
-            variant='contained'
-            size='large'
             color='primary'
             onClick={() => navigate("/catalog")}
+            size='large'
             sx={{
               backgroundColor: "#1F2937",
               "&:hover": {
                 backgroundColor: "#374151",
               },
             }}
+            variant='contained'
           >
             Go Back to Browse Books
           </Button>

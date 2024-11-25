@@ -77,10 +77,10 @@ function Learning() {
   return (
     <Layout>
       <Box sx={{ padding: 4 }}>
-        <Typography variant='h4' gutterBottom>
+        <Typography gutterBottom variant='h4'>
           Challenges and Learning from Bookstore App Development
         </Typography>
-        <Typography variant='body1' gutterBottom>
+        <Typography gutterBottom variant='body1'>
           During the development of the online bookstore application, I faced
           several challenges that helped me develop key skills in frontend and
           full-stack development. Below are the main challenges and the skills I

@@ -10,16 +10,15 @@ import {
   SubmitHandler,
   UseFormProps,
 } from "react-hook-form"
-import * as Yup from "yup"
-
 import { useUserID } from "src/components/auth/userID"
+import PageHeading from "src/components/utility-components/page-headings"
 import {
   getUserProfile,
   updateUserProfile,
 } from "src/service/user-profile-service"
 import { UserProfile } from "src/types/data-types"
+import * as Yup from "yup"
 
-import PageHeading from "src/components/utility-components/page-headings"
 import Layout from "../components/layout/layout"
 
 // Form value types
@@ -92,6 +91,7 @@ const Profile = () => {
         }
       } catch (err) {
         setError("Failed to load user profile.")
+        console.log(err)
       } finally {
         setLoading(false)
       }
@@ -115,7 +115,6 @@ const Profile = () => {
         profileImage: data.profileImage || "",
         dob: data.dob || "",
         gender: data.gender || "",
-        
       })
       if (updatedProfile) {
         setProfile(updatedProfile)
@@ -133,8 +132,6 @@ const Profile = () => {
   return (
     <Layout>
       <Container maxWidth='md'>
-     
-
         <PageHeading>{editing ? "Edit Profile" : "User Profile"}</PageHeading>
 
         {error && <Typography color='error'>{error}</Typography>}
@@ -150,7 +147,7 @@ const Profile = () => {
                 { label: "DOB", value: profile?.dob },
                 { label: "Gender", value: profile?.gender },
               ].map((item) => (
-                <Grid item xs={12} key={item.value}>
+                <Grid item key={item.value} xs={12}>
                   <Typography variant='h6'>
                     {item.label}: {item.value || "N/A"}
                   </Typography>
@@ -160,24 +157,24 @@ const Profile = () => {
                 <Typography variant='h6'>Profile Image:</Typography>
                 {profile?.profileImage && (
                   <img
-                    src={profile.profileImage}
                     alt='profile'
+                    src={profile.profileImage}
                     style={{ maxWidth: "100px" }}
                   />
                 )}
               </Grid>
             </Grid>
             <Button
-              variant='contained'
               color='primary'
               onClick={() => setEditing(true)}
               sx={{ mt: 2 }}
+              variant='contained'
             >
               Edit Profile
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               {[
                 { name: "name", label: "Name", type: "text" },
@@ -192,20 +189,20 @@ const Profile = () => {
                 { name: "dob", label: "Date of Birth", type: "date" },
                 { name: "gender", label: "Gender", type: "text" },
               ].map((field) => (
-                <Grid item xs={12} key={field.name}>
+                <Grid item key={field.name} xs={12}>
                   <Controller
-                    name={field.name as keyof ProfileFormValues}
                     control={control}
+                    name={field.name as keyof ProfileFormValues}
                     render={({ field: controllerField }) => (
                       <TextField
                         {...controllerField}
-                        fullWidth
-                        label={field.label}
-                        type={field.type}
                         error={!!errors[field.name as keyof ProfileFormValues]}
+                        fullWidth
                         helperText={
                           errors[field.name as keyof ProfileFormValues]?.message
                         }
+                        label={field.label}
+                        type={field.type}
                       />
                     )}
                   />
@@ -213,18 +210,18 @@ const Profile = () => {
               ))}
               <Grid item xs={12}>
                 <Button
-                  type='submit'
-                  variant='contained'
                   color='primary'
                   disabled={isSubmitting}
                   sx={{ mt: 2 }}
+                  type='submit'
+                  variant='contained'
                 >
                   Save Changes
                 </Button>
                 <Button
-                  variant='outlined'
                   onClick={() => setEditing(false)}
                   sx={{ mt: 2, ml: 2 }}
+                  variant='outlined'
                 >
                   Cancel
                 </Button>

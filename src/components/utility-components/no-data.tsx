@@ -9,20 +9,20 @@ const NoDataFound = (props: NoDataFoundProps) => {
   const { message = "No Data Found", description } = props
   return (
     <Box
-      textAlign='center'
-      p={4}
+      alignItems='center'
       display='flex'
       flexDirection='column'
-      alignItems='center'
       justifyContent='center'
+      p={4}
+      textAlign='center'
     >
       <Box
+        alt='No Data found'
         component='img'
         src='/images/no-data.png'
-        alt='No Data found'
         sx={{ width: "150px", height: "150px", mb: 2 }}
       />
-      <Typography variant='h6' color='text.secondary'>
+      <Typography color='text.secondary' variant='h6'>
         {message}
       </Typography>
       <Typography color='text.secondary' sx={{ mb: 2 }}>

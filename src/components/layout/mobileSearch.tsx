@@ -22,13 +22,13 @@ const MobileSearch = () => {
         <SearchIcon />
       </IconButton>
       <Popover
-        open={Boolean(anchorEl)}
         anchorEl={anchorEl}
-        onClose={handleClosePopover}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "center",
         }}
+        onClose={handleClosePopover}
+        open={Boolean(anchorEl)}
         transformOrigin={{
           vertical: "top",
           horizontal: "center",

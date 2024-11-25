@@ -19,7 +19,7 @@ const ThemeDemo = () => {
 
   return (
     <Container sx={{ padding: 4 }}>
-      <Typography variant="h4" gutterBottom textAlign="center">
+      <Typography gutterBottom textAlign="center" variant="h4">
         Themed Bookstore Elements
       </Typography>
 
@@ -46,34 +46,34 @@ const ThemeDemo = () => {
 
       {/* Secondary Button */}
       <Box display="flex" justifyContent="center" marginBottom={2}>
-        <Button variant="contained" color="secondary">
+        <Button color="secondary" variant="contained">
           Secondary Button
         </Button>
       </Box>
 
       {/* Drawer Toggle Button */}
       <Box display="flex" justifyContent="center" marginBottom={2}>
-        <Button variant="contained" onClick={toggleDrawer(true)}>
+        <Button onClick={toggleDrawer(true)} variant="contained">
           Open Themed Drawer
         </Button>
       </Box>
 
       {/* Themed Drawer */}
-      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+      <Drawer anchor="right" onClose={toggleDrawer(false)} open={drawerOpen}>
         <Box
           sx={{
             width: 250,
             padding: 2,
           }}
         >
-          <Typography variant="h4" color="primary" gutterBottom>
+          <Typography color="primary" gutterBottom variant="h4">
             Filter Options
           </Typography>
-          <Typography variant="body1" color="text.secondary" paragraph>
+          <Typography color="text.secondary" paragraph variant="body1">
             Customize your book search with the options below.
           </Typography>
           <Divider sx={{ marginBottom: 2 }} />
-          <Button variant="contained" color="primary" fullWidth>
+          <Button color="primary" fullWidth variant="contained">
             Apply Filters
           </Button>
         </Box>
@@ -88,10 +88,10 @@ const ThemeDemo = () => {
           marginTop: 2,
         }}
       >
-        <Typography variant="h6" color="primary" gutterBottom>
+        <Typography color="primary" gutterBottom variant="h6">
           Themed Card
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography color="text.secondary" variant="body1">
           This is an example of a card or Paper component styled according to
           the theme. It has a white background and uses custom typography and
           text colors.

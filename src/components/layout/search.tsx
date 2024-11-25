@@ -11,7 +11,6 @@ import {
   Button,
 } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-
 import { Book } from "src/types/data-types"
 
 interface SearchProps {
@@ -69,10 +68,8 @@ const Search = (props: SearchProps) => {
     <Box style={{ position: "relative" }}>
       <TextField
         autoComplete='off'
-        variant='outlined'
-        placeholder='Search by title or author'
-        value={searchQuery}
         onChange={handleSearchChange}
+        placeholder='Search by title or author'
         sx={{
           backgroundColor: "white",
           width: { md: "250px", lg: "500px" },
@@ -85,6 +82,8 @@ const Search = (props: SearchProps) => {
             },
           },
         }}
+        value={searchQuery}
+        variant='outlined'
       />
       {filteredBooks.length > 0 && (
         <Paper

@@ -1,6 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react"
-import { Outlet, Navigate } from "react-router-dom"
 import { Box } from "@mui/material"
+import { Outlet, Navigate } from "react-router-dom"
+
 import Loading from "../utility-components/loading"
 
 const ProtectedRoutes = () => {
@@ -9,11 +10,11 @@ const ProtectedRoutes = () => {
   if (isLoading) {
     return (
       <Box
-        width='100vw'
-        height='100vh'
-        display='flex'
-        justifyContent='center'
         alignItems='center'
+        display='flex'
+        height='100vh'
+        justifyContent='center'
+        width='100vw'
       >
         <Loading />
       </Box>

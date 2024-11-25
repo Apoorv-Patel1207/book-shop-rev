@@ -10,12 +10,11 @@ import {
 } from "@mui/material"
 import Grid from "@mui/material/Grid2"
 import { useInView } from "react-intersection-observer"
-
+import Loading from "src/components/utility-components/loading"
+import PageHeading from "src/components/utility-components/page-headings"
 import { deleteBook } from "src/service/book-service"
 import { Book, PaginatedBook } from "src/types/data-types"
 
-import Loading from "src/components/utility-components/loading"
-import PageHeading from "src/components/utility-components/page-headings"
 import BookCard from "../components/book/book-card"
 import Filters from "../components/catalog/filters"
 import Layout from "../components/layout/layout"
@@ -150,16 +149,16 @@ const Catalog = () => {
         </IconButton>
       </Box>
 
-      <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer(false)}>
+      <Drawer anchor='right' onClose={toggleDrawer(false)} open={drawerOpen}>
         <Filters
-          tempSearchQuery={tempSearchQuery}
-          setTempSearchQuery={setTempSearchQuery}
-          tempFilterGenre={tempFilterGenre}
-          setTempFilterGenre={setTempFilterGenre}
-          tempPriceValue={tempPriceValue}
-          setTempPriceValue={setTempPriceValue}
           handleApplyFilters={handleApplyFilters}
           handleResetFilters={handleResetFilters}
+          setTempFilterGenre={setTempFilterGenre}
+          setTempPriceValue={setTempPriceValue}
+          setTempSearchQuery={setTempSearchQuery}
+          tempFilterGenre={tempFilterGenre}
+          tempPriceValue={tempPriceValue}
+          tempSearchQuery={tempSearchQuery}
         />
       </Drawer>
 
@@ -186,10 +185,10 @@ const Catalog = () => {
           : !isLoading && (
               <Grid>
                 <Typography
-                  variant='h6'
                   component='p'
-                  textAlign='center'
                   sx={{ width: "100%", padding: 2 }}
+                  textAlign='center'
+                  variant='h6'
                 >
                   No books found.
                 </Typography>

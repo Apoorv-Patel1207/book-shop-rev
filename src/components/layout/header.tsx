@@ -72,12 +72,12 @@ const Header = () => {
       >
         <Typography
           component={Link}
-          to='/'
           sx={{
             color: "white",
             textDecoration: "none",
             fontSize: { xs: "20px", md: "24px" },
           }}
+          to='/'
         >
           Readify
         </Typography>
@@ -141,14 +141,14 @@ const Header = () => {
             .filter((link) => shouldRenderLink(link.label, userData?.role))
             .map((link) => (
               <Button
-                key={link.path}
                 component={Link}
-                to={link.path}
+                key={link.path}
                 sx={{
                   color: "white",
                   textTransform: "none",
                   "&:hover": { color: "grey.400" },
                 }}
+                to={link.path}
               >
                 {link.label}
               </Button>
@@ -166,18 +166,18 @@ const Header = () => {
           <MenuIcon />
         </IconButton>
 
-        <Drawer anchor='left' open={drawerOpen} onClose={toggleDrawer(false)}>
+        <Drawer anchor='left' onClose={toggleDrawer(false)} open={drawerOpen}>
           <Box
+            display='flex'
+            flexDirection='column'
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+            pt={7}
             sx={{
               width: 200,
               height: "100vh",
               backgroundColor: "#1F2937",
             }}
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-            display='flex'
-            flexDirection='column'
-            pt={7}
           >
             {navLinks.map((link) => {
               if (userData?.role === "salesman" && link.label === "Admin") {
@@ -192,9 +192,8 @@ const Header = () => {
               }
               return (
                 <Button
-                  key={link.path}
                   component={Link}
-                  to={link.path}
+                  key={link.path}
                   sx={{
                     fontWeight: "semibold",
                     color: location.pathname === link.path ? "black" : "white", // Active color
@@ -204,6 +203,7 @@ const Header = () => {
                     mb: 1,
                     borderRadius: 0,
                   }}
+                  to={link.path}
                 >
                   {link.label}
                 </Button>

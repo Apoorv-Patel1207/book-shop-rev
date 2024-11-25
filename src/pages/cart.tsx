@@ -8,15 +8,15 @@ import {
   Box,
   AlertColor,
 } from "@mui/material"
-
-import ClearCartDialog from "src/components/cart/clear-cart-dialog"
-import CartConfirmPurchaseDailog from "src/components/cart/cart-confirm-purchase-dailog"
-import Loading from "src/components/utility-components/loading"
-import SnackbarAlert from "src/components/utility-components/snackbar"
 import { useNavigate } from "react-router-dom"
-import PageHeading from "src/components/utility-components/page-headings"
-import NoDataFound from "src/components/utility-components/no-data"
+import CartConfirmPurchaseDailog from "src/components/cart/cart-confirm-purchase-dailog"
+import ClearCartDialog from "src/components/cart/clear-cart-dialog"
 import { useUser } from "src/components/context/user-context"
+import Loading from "src/components/utility-components/loading"
+import NoDataFound from "src/components/utility-components/no-data"
+import PageHeading from "src/components/utility-components/page-headings"
+import SnackbarAlert from "src/components/utility-components/snackbar"
+
 import CartItem from "../components/cart/cart-item"
 import Layout from "../components/layout/layout"
 import {
@@ -83,7 +83,7 @@ const Cart = () => {
     getCartItems().catch((err) => {
       console.error("Error loading book details:", err)
     })
-  }, [userID])
+  }, [userData, userID])
 
   if (!userID) {
     showSnackbar("Redirecting as user is not logged in", "error")
@@ -188,7 +188,7 @@ const Cart = () => {
     return (
       <Layout>
         <Container maxWidth='lg' sx={{ marginTop: 4 }}>
-          <Typography textAlign='center' color='error'>
+          <Typography color='error' textAlign='center'>
             {error}
           </Typography>
         </Container>
@@ -222,24 +222,24 @@ const Cart = () => {
                 alignItems: "center",
               }}
             >
-              <Typography variant='h6' component='h2'>
+              <Typography component='h2' variant='h6'>
                 Total: Rs {totalCost.toFixed(2)}
               </Typography>
               <Box>
                 <Button
-                  variant='outlined'
                   color='primary'
-                  onClick={handleOpenClearCartModal}
                   disabled={cartItems.length === 0}
+                  onClick={handleOpenClearCartModal}
+                  variant='outlined'
                 >
                   Clear Cart
                 </Button>
                 <Button
-                  variant='contained'
                   color='primary'
-                  sx={{ marginLeft: "8px", bgcolor: "#001F3F" }}
-                  onClick={handleOpenCheckoutModal}
                   disabled={cartItems.length === 0}
+                  onClick={handleOpenCheckoutModal}
+                  sx={{ marginLeft: "8px", bgcolor: "#001F3F" }}
+                  variant='contained'
                 >
                   Proceed to Checkout
                 </Button>
@@ -249,26 +249,26 @@ const Cart = () => {
         )}
 
         <CartConfirmPurchaseDailog
-          isCheckoutModalOpen={isCheckoutModalOpen}
           handleCloseCheckoutModal={handleCloseCheckoutModal}
+          handleConfirmBuy={handleConfirmBuy}
+          isCheckoutModalOpen={isCheckoutModalOpen}
+          isPlacingOrder={isPlacingOrder}
+          setUserProfile={setUserProfile}
           totalCost={totalCost}
           userProfile={userProfile}
-          setUserProfile={setUserProfile}
-          handleConfirmBuy={handleConfirmBuy}
-          isPlacingOrder={isPlacingOrder}
         />
 
         <ClearCartDialog
-          isClearCartModalOpen={isClearCartModalOpen}
           handleCloseClearCartModal={handleCloseClearCartModal}
           handleConfirmClearCart={handleConfirmClearCart}
+          isClearCartModalOpen={isClearCartModalOpen}
         />
 
         <SnackbarAlert
-          open={snackbar.open}
           message={snackbar.message}
-          type={snackbar.type}
           onClose={handleSnackbarClose}
+          open={snackbar.open}
+          type={snackbar.type}
         />
       </Container>
     </Layout>

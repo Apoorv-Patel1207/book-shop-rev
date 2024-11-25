@@ -2,6 +2,7 @@ import { Box, Link, Typography, Stack } from "@mui/material";
 
 const Footer = () => (
     <Box
+      component="footer"
       sx={{
         backgroundColor: "#1F2937",
         color: "white",
@@ -9,14 +10,13 @@ const Footer = () => (
         marginTop: 4,
         paddingX: { xs: 1, sm: 4, md: 8, lg: 10, xl: 12 },
       }}
-      component="footer"
     >
-      <Stack direction="column" alignItems="center" spacing={1}>
-        <Typography variant="body2" align="center">
+      <Stack alignItems="center" direction="column" spacing={1}>
+        <Typography align="center" variant="body2">
           &copy; 2024 Online Bookstore. All rights reserved.
         </Typography>
 
-        <Typography variant="body2" align="center" sx={{ color: "grey.400" }}>
+        <Typography align="center" sx={{ color: "grey.400" }} variant="body2">
           <Link
             href="/learning"
             sx={{

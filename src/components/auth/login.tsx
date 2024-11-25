@@ -1,13 +1,15 @@
+import { useEffect } from "react"
+
 import { useAuth0 } from "@auth0/auth0-react"
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"
 import LogoutIcon from "@mui/icons-material/Logout"
 import { Button, Typography, Box, IconButton } from "@mui/material"
-import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   getUserProfile,
   createUserProfile,
 } from "src/service/user-profile-service"
+
 import { useUser } from "../context/user-context"
 
 const LoginButton = () => {
@@ -82,7 +84,7 @@ const LoginButton = () => {
   }
 
   return (
-    <Box display='flex' alignItems='center' gap={1}>
+    <Box alignItems='center' display='flex' gap={1}>
       {isAuthenticated ? (
         <>
           <IconButton color='inherit' onClick={navigateToProfile}>
@@ -104,9 +106,9 @@ const LoginButton = () => {
         </>
       ) : (
         <Button
-          variant='text'
-          sx={{ color: "white", textTransform: "none" }}
           onClick={() => loginWithRedirect()}
+          sx={{ color: "white", textTransform: "none" }}
+          variant='text'
         >
           Log In
         </Button>

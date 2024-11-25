@@ -12,13 +12,13 @@ import {
   Paper,
   Button,
 } from "@mui/material"
-
 import {
   approveBook,
   fetchPendingBooks,
   rejectBook,
 } from "src/service/pending-book-service"
 import { Book } from "src/types/data-types"
+
 import NoDataFound from "../utility-components/no-data"
 
 const AdminApproval = () => {
@@ -65,7 +65,7 @@ const AdminApproval = () => {
 
   const renderTable = (title: string, books: Book[], actions = false) => (
     <Container maxWidth='lg' sx={{ mt: 4 }}>
-      <Typography variant='h6' gutterBottom>
+      <Typography gutterBottom variant='h6'>
         {title}
       </Typography>
       {books.length === 0 ? (
@@ -104,17 +104,17 @@ const AdminApproval = () => {
                   {actions && (
                     <TableCell align='center'>
                       <Button
-                        variant='contained'
                         color='success'
-                        sx={{ mr: 1 }}
                         onClick={() => handleApprove(book.id)}
+                        sx={{ mr: 1 }}
+                        variant='contained'
                       >
                         Approve
                       </Button>
                       <Button
-                        variant='outlined'
                         color='error'
                         onClick={() => handleReject(book.id)}
+                        variant='outlined'
                       >
                         Reject
                       </Button>
@@ -131,7 +131,7 @@ const AdminApproval = () => {
 
   return (
     <Container maxWidth='lg' sx={{ mt: 4 }}>
-      <Typography variant='h5' textAlign='center' gutterBottom>
+      <Typography gutterBottom textAlign='center' variant='h5'>
         Admin Book Approval
       </Typography>
 

@@ -13,11 +13,11 @@ if (rootElement) {
  
   root.render(
     <Auth0Provider
-      domain="dev-sd7w6s5507kp55cz.us.auth0.com"
-      clientId="7yTDOOG1oolu6EaSijcWHtChqM4VDnqH"
       authorizationParams={{
         redirect_uri: window.location.origin,
       }}
+      clientId="7yTDOOG1oolu6EaSijcWHtChqM4VDnqH"
+      domain="dev-sd7w6s5507kp55cz.us.auth0.com"
     >
       <ThemeProvider theme={theme}>
         <CssBaseline />

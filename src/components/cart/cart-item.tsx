@@ -55,7 +55,6 @@ const CartItem = ({
 
   return (
     <Card
-      variant="outlined"
       sx={{
         display: "flex",
         justifyContent: "space-between",
@@ -63,9 +62,10 @@ const CartItem = ({
         padding: 2,
         marginBottom: 2,
       }}
+      variant="outlined"
     >
       <CardContent sx={{ flexGrow: 1 }}>
-        <Typography variant="h6" fontWeight="bold">
+        <Typography fontWeight="bold" variant="h6">
           {title}
         </Typography>
         <Typography variant="body2">Author: {author}</Typography>
@@ -76,21 +76,21 @@ const CartItem = ({
           <RemoveIcon />
         </IconButton>
         <TextField
-          type="number"
           inputProps={{ min: 1 }}
-          value={itemQuantity}
           onChange={handleQuantityChange}
-          variant="outlined"
           size="small"
           sx={{ width: "80px" }}
+          type="number"
+          value={itemQuantity}
+          variant="outlined"
         />
         <IconButton onClick={handleIncrement}>
           <AddIcon />
         </IconButton>
         <Button
-          variant="contained"
           color="error"
           onClick={() => handleRemove(id)}
+          variant="contained"
         >
           Remove
         </Button>

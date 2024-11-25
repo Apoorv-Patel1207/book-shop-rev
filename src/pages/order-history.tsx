@@ -16,11 +16,10 @@ import {
   Box,
   Grid,
 } from "@mui/material"
-
 import { useUserID } from "src/components/auth/userID"
-
-import PageHeading from "src/components/utility-components/page-headings"
 import NoDataFound from "src/components/utility-components/no-data"
+import PageHeading from "src/components/utility-components/page-headings"
+
 import Layout from "../components/layout/layout"
 import { fetchOrders } from "../service/order-service"
 import { Order } from "../types/data-types"
@@ -58,16 +57,16 @@ const OrderHistoryPage = () => {
           <NoDataFound description=' You have not placed any orders yet.' />
         ) : (
           orders.map((order) => (
-            <Card key={order.orderId} variant='outlined' sx={{ mb: 3 }}>
+            <Card key={order.orderId} sx={{ mb: 3 }} variant='outlined'>
               <CardContent>
                 <Box sx={{ mb: 2 }}>
                   <Typography fontWeight='bold'>
                     Order ID: {order.orderId}
                   </Typography>
-                  <Typography variant='body2' color='text.secondary'>
+                  <Typography color='text.secondary' variant='body2'>
                     Order Date: {order.orderDate}
                   </Typography>
-                  <Typography variant='body2' color='text.secondary'>
+                  <Typography color='text.secondary' variant='body2'>
                     Status: {order.status}
                   </Typography>
 
@@ -77,7 +76,7 @@ const OrderHistoryPage = () => {
                         Shipping Details:
                       </Typography>
 
-                      <Typography variant='body2' color='text.secondary'>
+                      <Typography color='text.secondary' variant='body2'>
                         Name: {order.userProfile.name}
                       </Typography>
                       <Typography variant='body2'>
@@ -110,10 +109,10 @@ const OrderHistoryPage = () => {
                         <TableRow key={book.id}>
                           <TableCell>
                             <Avatar
-                              src={book.coverImage}
                               alt={book.title}
-                              variant='rounded'
+                              src={book.coverImage}
                               sx={{ width: 56, height: 56 }}
+                              variant='rounded'
                             />
                           </TableCell>
                           <TableCell>{book.title}</TableCell>

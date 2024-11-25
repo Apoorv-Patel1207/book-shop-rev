@@ -10,7 +10,6 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material"
-
 import { updateBook } from "src/service/book-service"
 import { Book } from "src/types/data-types"
 
@@ -40,15 +39,16 @@ const UpdateBookModal: React.FC<UpdateBookModalProps> = ({
       })) as Book
       handleUpdateBook(updatedBook)
       onClose() // Close the modal
-    } catch (error) {
+    } catch (err) {
       alert("Failed to update book.")
+      console.log(err)
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog onClose={onClose} open={open}>
       <DialogTitle>Update Book</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -56,28 +56,28 @@ const UpdateBookModal: React.FC<UpdateBookModalProps> = ({
         </DialogContentText>
         <Box display='flex' flexDirection='column' gap={2} marginTop={2}>
           <TextField
+            fullWidth
             label='Price'
-            value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
             type='number'
+            value={price}
             variant='outlined'
-            fullWidth
           />
           <TextField
+            fullWidth
             label='Stock Quantity'
-            value={stockQuantity}
             onChange={(e) => setStockQuantity(Number(e.target.value))}
             type='number'
+            value={stockQuantity}
             variant='outlined'
-            fullWidth
           />
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color='primary'>
+        <Button color='primary' onClick={onClose}>
           Cancel
         </Button>
-        <Button onClick={handleUpdate} color='primary' disabled={loading}>
+        <Button color='primary' disabled={loading} onClick={handleUpdate}>
           {loading ? "Updating..." : "Update"}
         </Button>
       </DialogActions>

@@ -13,12 +13,11 @@ import {
   AlertColor,
 } from "@mui/material"
 import { useParams, useNavigate } from "react-router-dom"
-
 import { useUserID } from "src/components/auth/userID"
 import ConfirmPurchaseDialog from "src/components/book-details/confirm-purchase-dialog"
+import SnackbarAlert from "src/components/utility-components/snackbar"
 import { getUserProfile } from "src/service/user-profile-service"
 
-import SnackbarAlert from "src/components/utility-components/snackbar"
 import Layout from "../components/layout/layout"
 import { addToCart } from "../service/cart-service"
 import { placeOrder } from "../service/order-service"
@@ -179,7 +178,7 @@ const BookDetails = () => {
     return (
       <Layout>
         <Box className='container mx-auto my-10 text-center'>
-          <Typography variant='h4' fontWeight='bold'>
+          <Typography fontWeight='bold' variant='h4'>
             {error}
           </Typography>
         </Box>
@@ -191,7 +190,7 @@ const BookDetails = () => {
     return (
       <Layout>
         <Box className='container mx-auto my-10 text-center'>
-          <Typography variant='h4' fontWeight='bold'>
+          <Typography fontWeight='bold' variant='h4'>
             Book not found
           </Typography>
         </Box>
@@ -204,7 +203,7 @@ const BookDetails = () => {
       <Box className='container mx-auto my-10 p-4'>
         <Card variant='outlined'>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={4}>
+            <Grid item md={4} xs={12}>
               <Box sx={{ position: "relative" }}>
                 {book.stockQuantity < 1 && (
                   <Box
@@ -221,8 +220,8 @@ const BookDetails = () => {
                     }}
                   >
                     <img
-                      src='/images/sold out.png'
                       alt='Sold Out'
+                      src='/images/sold out.png'
                       style={{
                         maxWidth: "100%",
                         height: "auto",
@@ -231,8 +230,8 @@ const BookDetails = () => {
                   </Box>
                 )}
                 <CardMedia
-                  component='img'
                   alt={book.title}
+                  component='img'
                   height='300'
                   image={book.coverImage}
                   sx={{
@@ -243,38 +242,38 @@ const BookDetails = () => {
               </Box>
             </Grid>
 
-            <Grid item xs={12} md={8}>
+            <Grid item md={8} xs={12}>
               <CardContent>
-                <Typography variant='h4' fontWeight='bold'>
+                <Typography fontWeight='bold' variant='h4'>
                   {book.title}
                 </Typography>
-                <Typography variant='h6' color='text.secondary'>
+                <Typography color='text.secondary' variant='h6'>
                   by {book.author}
                 </Typography>
-                <Typography variant='body2' color='text.secondary'>
+                <Typography color='text.secondary' variant='body2'>
                   Genre: {book.genre}
                 </Typography>
-                <Typography variant='h6' fontWeight='bold' marginTop={2}>
+                <Typography fontWeight='bold' marginTop={2} variant='h6'>
                   Description
                 </Typography>
-                <Typography variant='body1' color='text.secondary'>
+                <Typography color='text.secondary' variant='body1'>
                   {book.description}
                 </Typography>
-                <Typography variant='h5' fontWeight='bold' marginTop={2}>
+                <Typography fontWeight='bold' marginTop={2} variant='h5'>
                   Price: ₹ {book.price.toFixed(2)}
                 </Typography>
                 <TextField
                   id='quantity'
-                  type='number'
-                  value={quantity}
+                  inputProps={{ min: 1 }}
+                  label='Quantity'
                   onChange={(e: { target: { value: string } }) =>
                     setQuantity(parseInt(e.target.value, 10))
                   }
-                  label='Quantity'
-                  inputProps={{ min: 1 }}
-                  variant='outlined'
                   size='small'
                   sx={{ marginTop: 2 }}
+                  type='number'
+                  value={quantity}
+                  variant='outlined'
                 />
               </CardContent>
             </Grid>
@@ -287,7 +286,7 @@ const BookDetails = () => {
                 marginTop: "16px",
               }}
             >
-              <Button variant='outlined' onClick={() => navigate("/catalog")}>
+              <Button onClick={() => navigate("/catalog")} variant='outlined'>
                 Back to Books
               </Button>
 
@@ -306,16 +305,16 @@ const BookDetails = () => {
               {userID && book.stockQuantity > 0 && (
                 <Box style={{ display: "flex", gap: "8px" }}>
                   <Button
-                    variant='contained'
                     onClick={handleAddToCart}
                     sx={{ bgcolor: "#001F3F" }}
+                    variant='contained'
                   >
                     Add to Cart
                   </Button>
                   <Button
-                    variant='outlined'
                     color='success'
                     onClick={handleBuyNow}
+                    variant='outlined'
                   >
                     Buy Now
                   </Button>
@@ -326,21 +325,21 @@ const BookDetails = () => {
         </Card>
 
         <ConfirmPurchaseDialog
-          isModalOpen={isModalOpen}
           book={book}
-          quantity={quantity}
-          userProfile={userProfile}
-          isPlacingOrder={isPlacingOrder}
           handleCloseModal={handleCloseModal}
           handleConfirmBuy={handleConfirmBuy}
+          isModalOpen={isModalOpen}
+          isPlacingOrder={isPlacingOrder}
+          quantity={quantity}
           setUserProfile={setUserProfile}
+          userProfile={userProfile}
         />
 
         <SnackbarAlert
-          open={snackbar.open}
           message={snackbar.message}
-          type={snackbar.type}
           onClose={handleSnackbarClose}
+          open={snackbar.open}
+          type={snackbar.type}
         />
       </Box>
     </Layout>
