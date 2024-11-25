@@ -8,8 +8,8 @@ import {
   FormControl,
   InputLabel,
   Button,
-} from "@mui/material";
-import { SelectChangeEvent } from "@mui/material";
+ SelectChangeEvent } from "@mui/material";
+
 import { GENRES } from "src/constant/genres";
 
 interface BookFilterProps {

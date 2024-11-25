@@ -1,7 +1,7 @@
-import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
+import { Box, Typography, List, ListItem, ListItemText } from "@mui/material"
 
-import Layout from "../components/layout/layout";
-import ThemeDemo from "../components/theme-demo";
+import Layout from "../components/layout/layout"
+import ThemeDemo from "../components/theme-demo"
 
 function Learning() {
   const challenges = [
@@ -30,7 +30,7 @@ function Learning() {
       description:
         "Setting up the backend with Node.js and PostgreSQL, designing database schemas, and integrating the frontend with the API for book data and orders provided valuable experience in full-stack development.",
     },
-  ];
+  ]
 
   // ---------- To Do ---------
   // Remove nodemodules in backend github
@@ -46,6 +46,7 @@ function Learning() {
   // Tech and libraries : react router DOM, react intersection observer, react hook form,
   // Handle the hover effect in mobile
   // integrated auth 0 authentication
+  // use context for catching of user profile data
 
   // ----------Doubts--------
   // Search Functionality backend?
@@ -59,31 +60,38 @@ function Learning() {
   // recreate the project using the MUI and remove the shad cn and tailwind
   // Issue while handling the search, filter functionality with the pagination
   // Its was difficult to find out the bug caused by the routing order for creation of the header search functionality
+  // Profile API calling multiple times
 
   // ---------Bugs----------
   // showing up 2 cards of the same book when searched
   // calling 2 pages at the very fast call
   // mobile view header search bar height to be fixed or separate search to be made
   // Fix the data base id to string and accordingly match in the getBookbyID
+  // Admin panel should not be visible without login and should only be visible to admin same for sales
+  // Cart option should not be visible without login
+  // Handle the available stock and should show up the valid purchase quantity before making an order
+  // At the time ordering make the phone number validation
+  // Admin should have all the order details within its Panel
+  // Fix the issue with accessing the tabs with the direct providing the URL
 
   return (
     <Layout>
       <Box sx={{ padding: 4 }}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Challenges and Learning from Bookstore App Development
         </Typography>
-        <Typography variant="body1" gutterBottom>
+        <Typography variant='body1' gutterBottom>
           During the development of the online bookstore application, I faced
           several challenges that helped me develop key skills in frontend and
           full-stack development. Below are the main challenges and the skills I
           acquired:
         </Typography>
         <List>
-          {challenges.map((challenge, index) => (
-            <ListItem key={index} sx={{ paddingBottom: 2 }}>
+          {challenges.map((challenge) => (
+            <ListItem key={challenge.title} sx={{ paddingBottom: 2 }}>
               <ListItemText
                 primary={
-                  <Typography variant="h6">{challenge.title}</Typography>
+                  <Typography variant='h6'>{challenge.title}</Typography>
                 }
                 secondary={challenge.description}
               />
@@ -94,7 +102,7 @@ function Learning() {
         <ThemeDemo />
       </Box>
     </Layout>
-  );
+  )
 }
 
-export default Learning;
+export default Learning

@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react"
+
 import {
   Container,
   Typography,
@@ -9,62 +11,65 @@ import {
   TableRow,
   Paper,
   Button,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+} from "@mui/material"
+
 import {
   approveBook,
   fetchPendingBooks,
   rejectBook,
-} from "src/service/pending-book-service";
-import { Book } from "src/types/data-types";
+} from "src/service/pending-book-service"
+import { Book } from "src/types/data-types"
+import NoDataFound from "../utility-components/no-data"
 
 const AdminApproval = () => {
-  const [pendingBooks, setPendingBooks] = useState<Book[]>([]);
-  const [approvedBooks, setApprovedBooks] = useState<Book[]>([]);
-  const [rejectedBooks, setRejectedBooks] = useState<Book[]>([]);
-
-  useEffect(() => {
-    loadPendingBooks();
-  }, []);
+  const [pendingBooks, setPendingBooks] = useState<Book[]>([])
+  const [approvedBooks, setApprovedBooks] = useState<Book[]>([])
+  const [rejectedBooks, setRejectedBooks] = useState<Book[]>([])
 
   const loadPendingBooks = async () => {
-    const books = await fetchPendingBooks();
-    setPendingBooks(books.filter((book: Book) => book.status === "pending"));
-    setApprovedBooks(books.filter((book: Book) => book.status === "approved"));
-    setRejectedBooks(books.filter((book: Book) => book.status === "rejected"));
-  };
+    const books = (await fetchPendingBooks()) as Book[]
+    setPendingBooks(books.filter((book: Book) => book.status === "pending"))
+    setApprovedBooks(books.filter((book: Book) => book.status === "approved"))
+    setRejectedBooks(books.filter((book: Book) => book.status === "rejected"))
+  }
+
+  useEffect(() => {
+    loadPendingBooks().catch((err) => {
+      console.error("Error loading pending book details:", err)
+    })
+  }, [])
 
   const handleApprove = async (bookId: number) => {
-    await approveBook(bookId);
-    setPendingBooks(pendingBooks.filter((book) => book.id !== bookId));
-    const approvedBook = pendingBooks.find((book) => book.id === bookId);
+    await approveBook(bookId)
+    setPendingBooks(pendingBooks.filter((book) => book.id !== bookId))
+    const approvedBook = pendingBooks.find((book) => book.id === bookId)
     if (approvedBook) {
       setApprovedBooks([
         ...approvedBooks,
         { ...approvedBook, status: "approved" },
-      ]);
+      ])
     }
-  };
+  }
 
   const handleReject = async (bookId: number) => {
-    await rejectBook(bookId);
-    setPendingBooks(pendingBooks.filter((book) => book.id !== bookId));
-    const rejectedBook = pendingBooks.find((book) => book.id === bookId);
+    await rejectBook(bookId)
+    setPendingBooks(pendingBooks.filter((book) => book.id !== bookId))
+    const rejectedBook = pendingBooks.find((book) => book.id === bookId)
     if (rejectedBook) {
       setRejectedBooks([
         ...rejectedBooks,
         { ...rejectedBook, status: "rejected" },
-      ]);
+      ])
     }
-  };
+  }
 
   const renderTable = (title: string, books: Book[], actions = false) => (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Typography variant="h6" gutterBottom>
+    <Container maxWidth='lg' sx={{ mt: 4 }}>
+      <Typography variant='h6' gutterBottom>
         {title}
       </Typography>
       {books.length === 0 ? (
-        <Typography color="textSecondary">No books in this list.</Typography>
+        <NoDataFound description={`No books in ${title} list.`} />
       ) : (
         <TableContainer component={Paper}>
           <Table>
@@ -83,7 +88,7 @@ const AdminApproval = () => {
                   <strong>Price (₹)</strong>
                 </TableCell>
                 {actions && (
-                  <TableCell align="center">
+                  <TableCell align='center'>
                     <strong>Actions</strong>
                   </TableCell>
                 )}
@@ -97,18 +102,18 @@ const AdminApproval = () => {
                   <TableCell>{book.genre}</TableCell>
                   <TableCell>{book.price}</TableCell>
                   {actions && (
-                    <TableCell align="center">
+                    <TableCell align='center'>
                       <Button
-                        variant="contained"
-                        color="success"
+                        variant='contained'
+                        color='success'
                         sx={{ mr: 1 }}
                         onClick={() => handleApprove(book.id)}
                       >
                         Approve
                       </Button>
                       <Button
-                        variant="outlined"
-                        color="error"
+                        variant='outlined'
+                        color='error'
                         onClick={() => handleReject(book.id)}
                       >
                         Reject
@@ -122,11 +127,11 @@ const AdminApproval = () => {
         </TableContainer>
       )}
     </Container>
-  );
+  )
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Typography variant="h5" textAlign="center" gutterBottom>
+    <Container maxWidth='lg' sx={{ mt: 4 }}>
+      <Typography variant='h5' textAlign='center' gutterBottom>
         Admin Book Approval
       </Typography>
 
@@ -134,7 +139,7 @@ const AdminApproval = () => {
       {renderTable("Approved Books", approvedBooks)}
       {renderTable("Rejected Books", rejectedBooks)}
     </Container>
-  );
-};
+  )
+}
 
-export default AdminApproval;
+export default AdminApproval
