@@ -1,10 +1,9 @@
-import React, { useState } from "react"
+import { useState, useCallback } from "react"
 
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
 import {
   Button,
-  TextField,
   Card,
   CardContent,
   Typography,
@@ -12,6 +11,7 @@ import {
   Box,
   FormHelperText,
 } from "@mui/material"
+import debounce from "lodash.debounce"
 
 interface CartItemProps {
   id: number
@@ -34,38 +34,38 @@ const CartItem = ({
   handleRemove,
   updateCartQuantity,
 }: CartItemProps) => {
-  const [itemQuantity, setItemQuantity] = useState(quantity)
+  const [itemQuantity, setItemQuantity] = useState(quantity) // Local UI state
   const [error, setError] = useState<string>("")
 
+  // Function to handle API call for updating quantity
+  const debouncedUpdateQuantity = useCallback(
+    debounce((id: number, newQuantity: number) => {
+      updateCartQuantity(id, newQuantity)
+    }, 500),
+    [updateCartQuantity],
+  )
+
+  // Handle increment action
   const handleIncrement = () => {
     if (itemQuantity < stockQuantity) {
       const newQuantity = itemQuantity + 1
-      setItemQuantity(newQuantity)
-      updateCartQuantity(id, newQuantity)
+      setItemQuantity(newQuantity) // Update UI immediately
+      debouncedUpdateQuantity(id, newQuantity) // Debounced API call
       setError("")
     } else {
       setError(`Maximum available stock is ${stockQuantity}`)
     }
   }
 
+  // Handle decrement action
   const handleDecrement = () => {
     if (itemQuantity > 1) {
       const newQuantity = itemQuantity - 1
-      setItemQuantity(newQuantity)
-      updateCartQuantity(id, newQuantity)
-      setError("")
-    }
-  }
-
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newQuantity = Math.max(1, parseInt(e.target.value, 10) || 1)
-
-    if (newQuantity <= stockQuantity) {
-      setItemQuantity(newQuantity)
-      updateCartQuantity(id, newQuantity)
+      setItemQuantity(newQuantity) // Update UI immediately
+      debouncedUpdateQuantity(id, newQuantity) // Debounced API call
       setError("")
     } else {
-      setError(`Maximum available stock is ${stockQuantity}`)
+      setError("Minimum quantity is 1.")
     }
   }
 
@@ -92,15 +92,7 @@ const CartItem = ({
           <IconButton disabled={itemQuantity <= 1} onClick={handleDecrement}>
             <RemoveIcon />
           </IconButton>
-          <TextField
-            inputProps={{ min: 1 }}
-            onChange={handleQuantityChange}
-            size='small'
-            sx={{ width: "80px" }}
-            // type='number'
-            value={itemQuantity}
-            variant='outlined'
-          />
+          <Typography>{itemQuantity}</Typography>
           <IconButton
             disabled={itemQuantity >= stockQuantity}
             onClick={handleIncrement}

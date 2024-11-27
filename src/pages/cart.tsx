@@ -60,9 +60,14 @@ const Cart = () => {
     setSnackbar({ open: true, message, type })
   }
 
+  // Update user profile when userData changes
   useEffect(() => {
-    setUserProfile(userData)
+    if (userData) {
+      setUserProfile(userData)
+    }
+  }, [userData])
 
+  useEffect(() => {
     const getCartItems = async () => {
       if (!userID) {
         showSnackbar("Please login to continue", "error")
@@ -79,17 +84,21 @@ const Cart = () => {
       }
     }
 
-    getCartItems().catch((err) => {
-      console.error("Error loading book details:", err)
-    })
-  }, [userData, userID])
+    if (userID) {
+      getCartItems().catch((err) => {
+        console.error("Error loading book details:", err)
+      })
+    }
+  }, [userID])
 
-  if (!userID) {
-    showSnackbar("Redirecting as user is not logged in", "error")
-    return null // Or redirect to a login page if needed
-  }
+  // if (!userID) {
+  //   showSnackbar("Redirecting as user is not logged in", "error")
+  //   navigate("/not-logged-in")
+  //   return
+  // }
 
   const handleRemove = async (id: number) => {
+    if (!userID) return
     try {
       await removeFromCart(userID, id)
       setCartItems((prevItems) => prevItems.filter((item) => item.id !== id))
@@ -99,6 +108,8 @@ const Cart = () => {
   }
 
   const updateCartQuantity = async (id: number, quantity: number) => {
+    if (!userID) return
+
     try {
       await updateCartQuantityService(userID, id, quantity)
       setCartItems((prevItems) =>
@@ -112,6 +123,8 @@ const Cart = () => {
   }
 
   const handleClearCart = async () => {
+    if (!userID) return
+
     try {
       await clearCart(userID)
       setCartItems([])
@@ -140,6 +153,7 @@ const Cart = () => {
     }
 
     setIsPlacingOrder(true)
+    if (!userID) return
 
     const order: Order = {
       userId: userID,
