@@ -1,17 +1,3 @@
-// import globals from "globals";
-// import pluginJs from "@eslint/js";
-// import tseslint from "typescript-eslint";
-// import pluginReact from "eslint-plugin-react";
-
-// /** @type {import('eslint').Linter.Config[]} */
-// export default [
-//   {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
-//   {languageOptions: { globals: globals.browser }},
-//   pluginJs.configs.recommended,
-//   ...tseslint.configs.recommended,
-//   pluginReact.configs.flat.recommended,
-// ];
-
 import pluginJs from "@eslint/js"
 import importOrder from "eslint-plugin-import"
 import jsxA11y from "eslint-plugin-jsx-a11y"
@@ -34,6 +20,13 @@ export default [
       "react-hooks": reactHook,
       import: importOrder,
       "jsx-a11y": jsxA11y,
+    },
+  },
+  {
+    settings: {
+      react: {
+        version: "detect",
+      },
     },
   },
   {

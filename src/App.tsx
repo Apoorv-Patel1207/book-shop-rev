@@ -7,7 +7,6 @@ import BookDetails from "./pages/book-details"
 import Cart from "./pages/cart"
 import Catalog from "./pages/catalog"
 import Checkout from "./pages/checkout"
-import Home from "./pages/home"
 import Learning from "./pages/learning"
 import NotLoggedIn from "./pages/not-logged-in"
 import OrderHistoryPage from "./pages/order-history"
@@ -18,8 +17,8 @@ const App = () => (
   <Router>
     <UserProvider>
       <Routes>
-        <Route element={<Home />} path='/' />
-        <Route element={<Catalog />} path='/catalog' />
+        {/* <Route element={<Home />} path='/' /> */}
+        <Route element={<Catalog />} path='/' />
         <Route element={<NotLoggedIn />} path='/not-logged-in' />
         <Route element={<BookDetails />} path='/book-details/:id' />
         <Route element={<Learning />} path='/learning' />

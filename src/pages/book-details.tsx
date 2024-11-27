@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import {
   Button,
   Card,
@@ -7,14 +8,15 @@ import {
   CardMedia,
   Typography,
   TextField,
-  Grid,
   CircularProgress,
   Box,
   AlertColor,
 } from "@mui/material"
+import Grid from "@mui/material/Grid2"
 import { useParams, useNavigate } from "react-router-dom"
 import { useUserID } from "src/components/auth/userID"
 import ConfirmPurchaseDialog from "src/components/book-details/confirm-purchase-dialog"
+import { useIsMobile } from "src/components/utility-components/screen-size"
 import SnackbarAlert from "src/components/utility-components/snackbar"
 import { getUserProfile } from "src/service/user-profile-service"
 
@@ -35,11 +37,15 @@ const BookDetails = () => {
   const navigate = useNavigate()
   const userID = useUserID()
 
+  const isMobile = useIsMobile()
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     type: "success" as AlertColor,
   })
+
+  const [quantityError, setQuantityError] = useState<string | null>(null)
 
   const handleSnackbarClose = () => {
     setSnackbar((prev) => ({ ...prev, open: false }))
@@ -164,6 +170,28 @@ const BookDetails = () => {
     }
   }
 
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value
+    const newQuantity = parseInt(inputValue, 10)
+
+    if (inputValue === "" || newQuantity < 1) {
+      setQuantity(0)
+      setQuantityError("Quantity is required and must be at least 1.")
+      return
+    }
+
+    if (book && newQuantity > book?.stockQuantity) {
+      setQuantityError(
+        `Quantity exceeds the available stock of ${book?.stockQuantity}.`,
+      )
+      setQuantity(newQuantity)
+      return
+    }
+
+    setQuantityError(null)
+    setQuantity(newQuantity)
+  }
+
   if (loading) {
     return (
       <Layout>
@@ -200,148 +228,191 @@ const BookDetails = () => {
 
   return (
     <Layout>
-      <Box className='container mx-auto my-10 p-4'>
-        <Card variant='outlined'>
-          <Grid container spacing={2}>
-            <Grid item md={4} xs={12}>
-              <Box sx={{ position: "relative" }}>
-                {book.stockQuantity < 1 && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      zIndex: 1,
-                    }}
-                  >
-                    <img
-                      alt='Sold Out'
-                      src='/images/sold out.png'
-                      style={{
-                        maxWidth: "100%",
-                        height: "auto",
-                      }}
-                    />
-                  </Box>
-                )}
-                <CardMedia
-                  alt={book.title}
-                  component='img'
-                  height='300'
-                  image={book.coverImage}
-                  sx={{
-                    objectFit: "cover",
-                    zIndex: 0,
-                  }}
-                />
-              </Box>
-            </Grid>
-
-            <Grid item md={8} xs={12}>
-              <CardContent>
-                <Typography fontWeight='bold' variant='h4'>
-                  {book.title}
-                </Typography>
-                <Typography color='text.secondary' variant='h6'>
-                  by {book.author}
-                </Typography>
-                <Typography color='text.secondary' variant='body2'>
-                  Genre: {book.genre}
-                </Typography>
-                <Typography fontWeight='bold' marginTop={2} variant='h6'>
-                  Description
-                </Typography>
-                <Typography color='text.secondary' variant='body1'>
-                  {book.description}
-                </Typography>
-                <Typography fontWeight='bold' marginTop={2} variant='h5'>
-                  Price: ₹ {book.price.toFixed(2)}
-                </Typography>
-                <TextField
-                  id='quantity'
-                  inputProps={{ min: 1 }}
-                  label='Quantity'
-                  onChange={(e: { target: { value: string } }) =>
-                    setQuantity(parseInt(e.target.value, 10))
-                  }
-                  size='small'
-                  sx={{ marginTop: 2 }}
-                  type='number'
-                  value={quantity}
-                  variant='outlined'
-                />
-              </CardContent>
-            </Grid>
-          </Grid>
-          <CardContent>
-            <Box
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: "16px",
-              }}
-            >
-              <Button onClick={() => navigate("/catalog")} variant='outlined'>
-                Back to Books
-              </Button>
-
+      <Card variant='outlined'>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Box sx={{ position: "relative" }}>
               {book.stockQuantity < 1 && (
-                <Typography color='red'>
-                  The book is not available currently
-                </Typography>
-              )}
-
-              {!userID && book.stockQuantity > 1 && (
-                <Typography color='red'>
-                  Please log in to proceed with the purchase.
-                </Typography>
-              )}
-
-              {userID && book.stockQuantity > 0 && (
-                <Box style={{ display: "flex", gap: "8px" }}>
-                  <Button
-                    onClick={handleAddToCart}
-                    sx={{ bgcolor: "#001F3F" }}
-                    variant='contained'
-                  >
-                    Add to Cart
-                  </Button>
-                  <Button
-                    color='success'
-                    onClick={handleBuyNow}
-                    variant='outlined'
-                  >
-                    Buy Now
-                  </Button>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    zIndex: 1,
+                  }}
+                >
+                  <img
+                    alt='Sold Out'
+                    src='/images/sold out.png'
+                    style={{
+                      maxWidth: "100%",
+                      height: "auto",
+                    }}
+                  />
                 </Box>
               )}
+              <CardMedia
+                alt={book.title}
+                component='img'
+                height='300'
+                image={book.coverImage}
+                sx={{
+                  objectFit: "cover",
+                  zIndex: 0,
+                }}
+              />
             </Box>
-          </CardContent>
-        </Card>
+          </Grid>
 
-        <ConfirmPurchaseDialog
-          book={book}
-          handleCloseModal={handleCloseModal}
-          handleConfirmBuy={handleConfirmBuy}
-          isModalOpen={isModalOpen}
-          isPlacingOrder={isPlacingOrder}
-          quantity={quantity}
-          setUserProfile={setUserProfile}
-          userProfile={userProfile}
-        />
+          <Grid size={{ xs: 12, md: 8 }}>
+            <CardContent>
+              <Typography fontWeight='bold' variant={isMobile ? "h5" : "h4"}>
+                {book.title}
+              </Typography>
+              <Typography
+                color='text.secondary'
+                variant={isMobile ? "body1" : "h6"}
+              >
+                by {book.author}
+              </Typography>
+              <Typography color='text.secondary' variant='body2'>
+                Genre: {book.genre}
+              </Typography>
+              <Typography fontWeight='bold' marginTop={2} variant='h6'>
+                Description
+              </Typography>
+              <Typography
+                color='text.secondary'
+                variant={isMobile ? "body2" : "body1"}
+              >
+                {book.description}
+              </Typography>
+              <Typography
+                fontWeight='bold'
+                marginTop={2}
+                variant={isMobile ? "h6" : "h5"}
+              >
+                Price: ₹ {book.price.toFixed(2)}
+              </Typography>
 
-        <SnackbarAlert
-          message={snackbar.message}
-          onClose={handleSnackbarClose}
-          open={snackbar.open}
-          type={snackbar.type}
-        />
-      </Box>
+              {book.stockQuantity < 11 && book.stockQuantity > 0 && (
+                <Typography
+                  sx={{
+                    color: "error.main",
+                    fontWeight: "bold",
+                    borderRadius: "8px",
+                    fontSize: "12px",
+                  }}
+                >
+                  Only {book.stockQuantity} left in stock!
+                </Typography>
+              )}
+
+              <TextField
+                error={!!quantityError}
+                helperText={quantityError}
+                id='quantity'
+                label='Quantity'
+                onChange={handleQuantityChange}
+                sx={{ mt: 2 }}
+                value={quantity}
+              />
+            </CardContent>
+          </Grid>
+        </Grid>
+        <CardContent>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              justifyContent: "end",
+              alignItems: isMobile ? "stretch" : "center",
+            }}
+          >
+            {book.stockQuantity < 1 && (
+              <Typography color='red'>
+                The book is not available currently
+              </Typography>
+            )}
+
+            {!userID && book.stockQuantity > 1 && (
+              <Typography color='red'>
+                Please log in to proceed with the purchase.
+              </Typography>
+            )}
+
+            {userID && book.stockQuantity > 0 && (
+              <Box
+                sx={{
+                  display: "flex",
+                  mb: 3,
+                  gap: 1,
+                }}
+              >
+                <Button
+                  disabled={!!quantityError}
+                  onClick={handleAddToCart}
+                  sx={{ bgcolor: "#001F3F" }}
+                  variant='contained'
+                >
+                  Add to Cart
+                </Button>
+                <Button
+                  color='success'
+                  disabled={!!quantityError}
+                  onClick={handleBuyNow}
+                  variant='outlined'
+                >
+                  Buy Now
+                </Button>
+              </Box>
+            )}
+          </Box>
+          {/* <Button onClick={() => navigate("/")} variant='text'>
+            Back to Books
+          </Button> */}
+
+          <Button
+            onClick={() => navigate("/")}
+            startIcon={<ArrowBackIcon />}
+            sx={{
+              color: "#001F3F",
+              textTransform: "none",
+              fontWeight: "bold",
+              fontSize: "14px",
+              "&:hover": {
+                backgroundColor: "#f5f5f5",
+              },
+            }}
+            variant='text'
+          >
+            Back to Books
+          </Button>
+        </CardContent>
+      </Card>
+
+      <ConfirmPurchaseDialog
+        book={book}
+        handleCloseModal={handleCloseModal}
+        handleConfirmBuy={handleConfirmBuy}
+        isModalOpen={isModalOpen}
+        isPlacingOrder={isPlacingOrder}
+        quantity={quantity}
+        setUserProfile={setUserProfile}
+        userProfile={userProfile}
+      />
+
+      <SnackbarAlert
+        message={snackbar.message}
+        onClose={handleSnackbarClose}
+        open={snackbar.open}
+        type={snackbar.type}
+      />
     </Layout>
   )
 }

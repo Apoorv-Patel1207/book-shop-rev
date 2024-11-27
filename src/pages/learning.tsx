@@ -61,6 +61,8 @@ function Learning() {
   // Issue while handling the search, filter functionality with the pagination
   // Its was difficult to find out the bug caused by the routing order for creation of the header search functionality
   // Profile API calling multiple times
+  // Cart page rerendering infinite Loop
+  // Text field quantity Validation
 
   // ---------Bugs----------
   // showing up 2 cards of the same book when searched

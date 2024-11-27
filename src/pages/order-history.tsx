@@ -17,6 +17,7 @@ import {
   Grid,
 } from "@mui/material"
 import { useUserID } from "src/components/auth/userID"
+import Loading from "src/components/utility-components/loading"
 import NoDataFound from "src/components/utility-components/no-data"
 import PageHeading from "src/components/utility-components/page-headings"
 
@@ -26,6 +27,7 @@ import { Order } from "../types/data-types"
 
 const OrderHistoryPage = () => {
   const [orders, setOrders] = useState<Order[]>([])
+  const [loading, setLoading] = useState(true)
 
   const userID = useUserID()
 
@@ -37,6 +39,8 @@ const OrderHistoryPage = () => {
           setOrders(fetchedOrders)
         } catch (error) {
           console.error("Failed to load orders", error)
+        } finally {
+          setLoading(false)
         }
       }
       loadOrders().catch((err) => {
@@ -45,15 +49,21 @@ const OrderHistoryPage = () => {
     }
   }, [userID])
 
+  if (loading) {
+    return (
+      <Layout>
+        <Box className='container mx-auto my-10 text-center'>
+          <Loading />
+        </Box>
+      </Layout>
+    )
+  }
+
   return (
     <Layout>
       <Container maxWidth='lg'>
         <PageHeading>Order History</PageHeading>
-
         {orders.length === 0 ? (
-          // <Typography variant='body1' color='text.secondary'>
-          //   You have not placed any orders yet.
-          // </Typography>
           <NoDataFound description=' You have not placed any orders yet.' />
         ) : (
           orders.map((order) => (

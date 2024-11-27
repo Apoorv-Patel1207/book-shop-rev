@@ -64,7 +64,7 @@ const NotLoggedIn = () => {
           </Typography>
           <Button
             color='primary'
-            onClick={() => navigate("/catalog")}
+            onClick={() => navigate("/")}
             size='large'
             sx={{
               backgroundColor: "#1F2937",

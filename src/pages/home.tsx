@@ -13,7 +13,7 @@ const Home = () => (
       </Typography>
       <Button
         color='primary'
-        href='/catalog'
+        href='/'
         sx={{ marginTop: 2, bgcolor: "#001F3F" }}
         variant='contained'
       >

@@ -30,7 +30,6 @@ import {
   CartItem as CartItemType,
   Order,
   UserProfile,
-  // UserProfile,
 } from "../types/data-types"
 
 const Cart = () => {

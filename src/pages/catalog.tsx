@@ -140,7 +140,9 @@ const Catalog = () => {
 
   return (
     <Layout>
-      <PageHeading>Discover Your Next Read</PageHeading>
+      <PageHeading sx={{ mb: -1 }}>
+        Turn the Page to Endless Possibilities
+      </PageHeading>
 
       <Box display='flex' justifyContent='end'>
         <IconButton

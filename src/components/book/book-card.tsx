@@ -173,7 +173,7 @@ const BookCard = (props: BookCardProps) => {
         </Box>
 
         <CardContent>
-          {book.stockQuantity < 6 && book.stockQuantity > 0 && (
+          {book.stockQuantity < 11 && book.stockQuantity > 0 && (
             <Typography
               sx={{
                 color: "error.main",
