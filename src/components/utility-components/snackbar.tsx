@@ -10,7 +10,7 @@ interface SnackbarAlertProps {
 const SnackbarAlert = (props: SnackbarAlertProps) => {
   const { open, message, type, onClose } = props;
   return (
-    <Snackbar open={open} autoHideDuration={6000} onClose={onClose}>
+    <Snackbar autoHideDuration={6000} onClose={onClose} open={open}>
       <Alert onClose={onClose} severity={type} sx={{ width: "100%" }}>
         {message}
       </Alert>

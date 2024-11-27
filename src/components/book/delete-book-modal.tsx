@@ -20,10 +20,10 @@ const DeleteConfirmationDialog = ({
   onConfirm,
 }: DeleteConfirmationDialogProps) => (
     <Dialog
-      open={open}
-      onClose={onClose}
-      aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      aria-labelledby="alert-dialog-title"
+      onClose={onClose}
+      open={open}
     >
       <DialogTitle id="alert-dialog-title">Delete Book?</DialogTitle>
       <DialogContent>
@@ -33,10 +33,10 @@ const DeleteConfirmationDialog = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button color="primary" onClick={onClose}>
           Cancel
         </Button>
-        <Button onClick={onConfirm} color="error">
+        <Button color="error" onClick={onConfirm}>
           Confirm
         </Button>
       </DialogActions>

@@ -9,7 +9,6 @@ import {
   InputLabel,
   Button,
  SelectChangeEvent } from "@mui/material";
-
 import { GENRES } from "src/constant/genres";
 
 interface BookFilterProps {
@@ -38,21 +37,21 @@ const BookFilter = (props: BookFilterProps) => {
   return (
     <Box sx={{ p: 2, width: 300 }}>
       <TextField
-        variant="outlined"
+        fullWidth
+        onChange={(e) => setTempSearchQuery(e.target.value.toLowerCase())}
         placeholder="Search by title or author"
         value={tempSearchQuery}
-        onChange={(e) => setTempSearchQuery(e.target.value.toLowerCase())}
-        fullWidth
+        variant="outlined"
       />
 
       <FormControl fullWidth sx={{ mt: 2 }}>
         <InputLabel>Genre</InputLabel>
         <Select
-          value={tempFilterGenre}
           label="Genre"
           onChange={(e: SelectChangeEvent) =>
             setTempFilterGenre(e.target.value)
           }
+          value={tempFilterGenre}
         >
           {GENRES.map((genre) => (
             <MenuItem key={genre.value} value={genre.value}>
@@ -63,14 +62,14 @@ const BookFilter = (props: BookFilterProps) => {
       </FormControl>
 
       <Box sx={{ mt: 2, px: 1 }}>
-        <Typography variant="subtitle2" gutterBottom>
+        <Typography gutterBottom variant="subtitle2">
           Price
         </Typography>
         <Slider
-          value={tempPriceValue}
-          onChange={(_, newValue) => setTempPriceValue(newValue as number[])}
-          valueLabelDisplay="auto"
           max={100}
+          onChange={(_, newValue) => setTempPriceValue(newValue as number[])}
+          value={tempPriceValue}
+          valueLabelDisplay="auto"
         />
 
         <Box display="flex" justifyContent="space-between">
@@ -80,10 +79,10 @@ const BookFilter = (props: BookFilterProps) => {
       </Box>
 
       <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-        <Button variant="contained" onClick={handleApplyFilters} fullWidth>
+        <Button fullWidth onClick={handleApplyFilters} variant="contained">
           Apply
         </Button>
-        <Button variant="outlined" onClick={handleResetFilters} fullWidth>
+        <Button fullWidth onClick={handleResetFilters} variant="outlined">
           Reset
         </Button>
       </Box>

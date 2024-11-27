@@ -20,16 +20,16 @@ const ClearCartDialog = (props: ConfirmPurchaseDialogProps) => {
     handleConfirmClearCart,
   } = props
   return (
-    <Dialog open={isClearCartModalOpen} onClose={handleCloseClearCartModal}>
+    <Dialog onClose={handleCloseClearCartModal} open={isClearCartModalOpen}>
       <DialogTitle>Clear Cart</DialogTitle>
       <DialogContent>
         <Typography>Are you sure you want to clear the cart?</Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseClearCartModal} color='primary'>
+        <Button color='primary' onClick={handleCloseClearCartModal}>
           Cancel
         </Button>
-        <Button onClick={handleConfirmClearCart} color='secondary'>
+        <Button color='secondary' onClick={handleConfirmClearCart}>
           Clear
         </Button>
       </DialogActions>

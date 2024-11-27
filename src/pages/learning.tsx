@@ -61,6 +61,8 @@ function Learning() {
   // Issue while handling the search, filter functionality with the pagination
   // Its was difficult to find out the bug caused by the routing order for creation of the header search functionality
   // Profile API calling multiple times
+  // Cart page rerendering infinite Loop
+  // Text field quantity Validation
 
   // ---------Bugs----------
   // showing up 2 cards of the same book when searched
@@ -77,10 +79,10 @@ function Learning() {
   return (
     <Layout>
       <Box sx={{ padding: 4 }}>
-        <Typography variant='h4' gutterBottom>
+        <Typography gutterBottom variant='h4'>
           Challenges and Learning from Bookstore App Development
         </Typography>
-        <Typography variant='body1' gutterBottom>
+        <Typography gutterBottom variant='body1'>
           During the development of the online bookstore application, I faced
           several challenges that helped me develop key skills in frontend and
           full-stack development. Below are the main challenges and the skills I

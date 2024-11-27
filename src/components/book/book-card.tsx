@@ -13,7 +13,6 @@ import {
   useTheme,
 } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-
 import { Book } from "src/types/data-types"
 
 import DeleteConfirmationDialog from "./delete-book-modal"
@@ -70,6 +69,7 @@ const BookCard = (props: BookCardProps) => {
   return (
     <>
       <Card
+        onClick={handleCardClick}
         sx={{
           position: "relative",
           transition: "0.3s",
@@ -91,7 +91,6 @@ const BookCard = (props: BookCardProps) => {
             transform: "translateY(0)",
           },
         }}
-        onClick={handleCardClick}
       >
         {book.stockQuantity < 1 && (
           <Box
@@ -109,8 +108,8 @@ const BookCard = (props: BookCardProps) => {
             }}
           >
             <img
-              src='/images/sold out.png'
               alt='Sold Out'
+              src='/images/sold out.png'
               style={{ maxWidth: "80%" }}
             />
           </Box>
@@ -158,12 +157,12 @@ const BookCard = (props: BookCardProps) => {
             </IconButton>
           </>
         )}
-        <Box paddingX={4} paddingTop={4} paddingBottom={0}>
+        <Box paddingBottom={0} paddingTop={4} paddingX={4}>
           <CardMedia
+            alt={book.title}
             component='img'
             height='200'
             image={book.coverImage}
-            alt={book.title}
             sx={{
               transition: "transform 0.3s",
               "&:hover": {
@@ -174,7 +173,7 @@ const BookCard = (props: BookCardProps) => {
         </Box>
 
         <CardContent>
-          {book.stockQuantity < 6 && book.stockQuantity > 0 && (
+          {book.stockQuantity < 11 && book.stockQuantity > 0 && (
             <Typography
               sx={{
                 color: "error.main",
@@ -188,8 +187,8 @@ const BookCard = (props: BookCardProps) => {
             </Typography>
           )}
           <Typography
-            fontWeight='bold'
             color='#1F2937'
+            fontWeight='bold'
             sx={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -202,7 +201,6 @@ const BookCard = (props: BookCardProps) => {
           </Typography>
 
           <Typography
-            variant='body2'
             color='text.secondary'
             sx={{
               overflow: "hidden",
@@ -210,12 +208,12 @@ const BookCard = (props: BookCardProps) => {
               whiteSpace: "nowrap",
               fontSize: isMobile ? "0.875rem" : "1rem",
             }}
+            variant='body2'
           >
             by {book.author}
           </Typography>
 
           <Typography
-            variant='body2'
             color='text.secondary'
             sx={{
               overflow: "hidden",
@@ -223,6 +221,7 @@ const BookCard = (props: BookCardProps) => {
               whiteSpace: "nowrap",
               fontSize: isMobile ? "0.875rem" : "1rem",
             }}
+            variant='body2'
           >
             Genre: {book.genre}
           </Typography>
@@ -234,15 +233,15 @@ const BookCard = (props: BookCardProps) => {
 
       <UpdateBookModal
         book={book}
-        open={openUpdateModal}
-        onClose={closeUpdateModalHandler}
         handleUpdateBook={handleUpdateBook}
+        onClose={closeUpdateModalHandler}
+        open={openUpdateModal}
       />
 
       <DeleteConfirmationDialog
-        open={openDialog}
         onClose={closeDeleteDialog}
         onConfirm={confirmDelete}
+        open={openDialog}
       />
     </>
   )

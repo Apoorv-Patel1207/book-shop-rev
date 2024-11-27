@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react"
+
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import {
   Container,
@@ -13,11 +15,10 @@ import {
   TableRow,
 } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
-
-import { useEffect, useState } from "react"
-import { Order } from "src/types/data-types"
-import { fetchOrderById } from "src/service/order-service"
 import { useUserID } from "src/components/auth/userID"
+import { fetchOrderById } from "src/service/order-service"
+import { Order } from "src/types/data-types"
+
 import Layout from "../components/layout/layout"
 
 const Checkout = () => {
@@ -52,9 +53,9 @@ const Checkout = () => {
       <Container maxWidth='md'>
        
         <Box
+          alignItems='center'
           display='flex'
           flexDirection='column'
-          alignItems='center'
           sx={{
             background: "linear-gradient(135deg, #e0f7fa, #fff)",
             p: 4,
@@ -63,13 +64,13 @@ const Checkout = () => {
         >
           <CheckCircleIcon color='success' sx={{ fontSize: 80 }} />
           <Typography
-            variant='h4'
             fontWeight='bold'
             sx={{ mt: 2, color: "#00796b" }}
+            variant='h4'
           >
             Thank You for Your Purchase!
           </Typography>
-          <Typography variant='subtitle1' color='text.secondary' sx={{ mt: 1 }}>
+          <Typography color='text.secondary' sx={{ mt: 1 }} variant='subtitle1'>
             Your order has been successfully placed. We hope you enjoy your new
             books!
           </Typography>
@@ -78,9 +79,8 @@ const Checkout = () => {
         {/* Order Summary Table */}
         <Box sx={{ mt: 4 }}>
           <Typography
-            variant='h5'
-            fontWeight='bold'
             align='center'
+            fontWeight='bold'
             gutterBottom
             sx={{
               background: "linear-gradient(135deg, #00796b, #004d40)",
@@ -88,6 +88,7 @@ const Checkout = () => {
               p: 1,
               borderRadius: 1,
             }}
+            variant='h5'
           >
             Order Summary
           </Typography>
@@ -126,8 +127,8 @@ const Checkout = () => {
               </TableBody>
               <TableRow>
                 <TableCell
-                  colSpan={3}
                   align='right'
+                  colSpan={3}
                   sx={{ fontWeight: "bold" }}
                 >
                   Total
@@ -143,19 +144,19 @@ const Checkout = () => {
         {/* Footer Buttons */}
         <Box mt={4}>
           <Button
-            variant='contained'
             color='primary'
             onClick={handleBackToHome}
             sx={{ marginTop: 2, bgcolor: "#001F3F" }}
+            variant='contained'
           >
             Continue Shopping
           </Button>
 
           <Button
-            variant='contained'
             color='primary'
             href='/order-history'
             sx={{ marginTop: 2, bgcolor: "#001F3F" }}
+            variant='contained'
           >
             View All Orders
           </Button>

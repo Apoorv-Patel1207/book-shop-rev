@@ -4,7 +4,6 @@ import MenuIcon from "@mui/icons-material/Menu"
 import {
   AppBar,
   Box,
-  Toolbar,
   Typography,
   Button,
   Drawer,
@@ -20,7 +19,6 @@ import Login from "../auth/login"
 import { useUser } from "../context/user-context"
 
 const navLinks = [
-  { label: "Catalog", path: "/catalog" },
   { label: "Orders", path: "/order-history" },
   { label: "Cart", path: "/cart" },
   { label: "Admin", path: "/add-book" },
@@ -37,7 +35,6 @@ const Header = () => {
 
   const location = useLocation()
   const { userData } = useUser()
-  console.log("userData: ", userData)
 
   const shouldRenderLink = (
     label: string,
@@ -60,10 +57,13 @@ const Header = () => {
       position='fixed'
       sx={{
         backgroundColor: "#1F2937",
-        paddingX: { xs: 1, sm: 4, md: 8, lg: 10, xl: 12 },
+        paddingX: { xs: 2, sm: 4, md: 8, lg: 10, xl: 12 },
+        height: "70px",
+        display: "flex",
+        justifyContent: "center",
       }}
     >
-      <Toolbar
+      <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -72,12 +72,12 @@ const Header = () => {
       >
         <Typography
           component={Link}
-          to='/'
           sx={{
             color: "white",
             textDecoration: "none",
             fontSize: { xs: "20px", md: "24px" },
           }}
+          to='/'
         >
           Readify
         </Typography>
@@ -90,65 +90,19 @@ const Header = () => {
           <Search isMobile={false} />
         )}
 
-        {/* <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          {navLinks.map((link) => {
-            if (!userData?.role) {
-              return link.label === "Catalog" ? (
-                <Button
-                  key={link.path}
-                  component={Link}
-                  to={link.path}
-                  sx={{
-                    color: "white",
-                    textTransform: "none",
-                    "&:hover": { color: "grey.400" },
-                  }}
-                >
-                  {link.label}
-                </Button>
-              ) : null
-            }
-
-            if (userData?.role === "salesman" && link.label === "Admin") {
-              return null
-            }
-
-            if (
-              userData?.role === "customer" &&
-              (link.label === "Admin" || link.label === "Sales")
-            ) {
-              return null
-            }
-            return (
-              <Button
-                key={link.path}
-                component={Link}
-                to={link.path}
-                sx={{
-                  color: "white",
-                  textTransform: "none",
-                  "&:hover": { color: "grey.400" },
-                }}
-              >
-                {link.label}
-              </Button>
-            )
-          })}
-        </Box> */}
-
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
           {navLinks
             .filter((link) => shouldRenderLink(link.label, userData?.role))
             .map((link) => (
               <Button
-                key={link.path}
                 component={Link}
-                to={link.path}
+                key={link.path}
                 sx={{
                   color: "white",
                   textTransform: "none",
                   "&:hover": { color: "grey.400" },
                 }}
+                to={link.path}
               >
                 {link.label}
               </Button>
@@ -166,18 +120,18 @@ const Header = () => {
           <MenuIcon />
         </IconButton>
 
-        <Drawer anchor='left' open={drawerOpen} onClose={toggleDrawer(false)}>
+        <Drawer anchor='left' onClose={toggleDrawer(false)} open={drawerOpen}>
           <Box
+            display='flex'
+            flexDirection='column'
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+            pt={7}
             sx={{
               width: 200,
               height: "100vh",
               backgroundColor: "#1F2937",
             }}
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-            display='flex'
-            flexDirection='column'
-            pt={7}
           >
             {navLinks.map((link) => {
               if (userData?.role === "salesman" && link.label === "Admin") {
@@ -192,9 +146,8 @@ const Header = () => {
               }
               return (
                 <Button
-                  key={link.path}
                   component={Link}
-                  to={link.path}
+                  key={link.path}
                   sx={{
                     fontWeight: "semibold",
                     color: location.pathname === link.path ? "black" : "white", // Active color
@@ -204,6 +157,7 @@ const Header = () => {
                     mb: 1,
                     borderRadius: 0,
                   }}
+                  to={link.path}
                 >
                   {link.label}
                 </Button>
@@ -211,7 +165,7 @@ const Header = () => {
             })}
           </Box>
         </Drawer>
-      </Toolbar>
+      </Box>
     </AppBar>
   )
 }

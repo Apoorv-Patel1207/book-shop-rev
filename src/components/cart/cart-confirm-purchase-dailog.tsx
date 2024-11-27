@@ -1,3 +1,5 @@
+import { SetStateAction } from "react"
+
 import {
   Dialog,
   DialogTitle,
@@ -8,7 +10,6 @@ import {
   DialogActions,
   Button,
 } from "@mui/material"
-import { SetStateAction } from "react"
 import { UserProfile } from "src/types/data-types"
 
 interface CartConfirmPurchaseDailogProps {
@@ -32,7 +33,7 @@ const CartConfirmPurchaseDailog = (props: CartConfirmPurchaseDailogProps) => {
     isPlacingOrder,
   } = props
   return (
-    <Dialog open={isCheckoutModalOpen} onClose={handleCloseCheckoutModal}>
+    <Dialog onClose={handleCloseCheckoutModal} open={isCheckoutModalOpen}>
       <DialogTitle>Confirm Checkout</DialogTitle>
       <DialogContent>
         <Typography>
@@ -49,52 +50,52 @@ const CartConfirmPurchaseDailog = (props: CartConfirmPurchaseDailogProps) => {
           }}
         >
           <TextField
-            label='Name'
-            variant='outlined'
             fullWidth
-            value={userProfile?.name || ""}
+            label='Name'
             onChange={(e) =>
               setUserProfile((prev) =>
                 prev ? { ...prev, name: e.target.value } : null,
               )
             }
+            value={userProfile?.name || ""}
+            variant='outlined'
           />
           <TextField
-            label='Mobile Number'
-            variant='outlined'
             fullWidth
-            value={userProfile?.phone || ""}
+            label='Mobile Number'
             onChange={(e) =>
               setUserProfile((prev) =>
                 prev ? { ...prev, phone: e.target.value } : null,
               )
             }
+            value={userProfile?.phone || ""}
+            variant='outlined'
           />
           <TextField
-            label='Address'
-            variant='outlined'
             fullWidth
+            label='Address'
             multiline
-            rows={3}
-            value={userProfile?.address || ""}
             onChange={(e) =>
               setUserProfile((prev) =>
                 prev ? { ...prev, address: e.target.value } : null,
               )
             }
+            rows={3}
+            value={userProfile?.address || ""}
+            variant='outlined'
           />
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseCheckoutModal} color='primary'>
+        <Button color='primary' onClick={handleCloseCheckoutModal}>
           Cancel
         </Button>
         <Button
-          onClick={handleConfirmBuy}
-          variant='contained'
           color='primary'
-          sx={{ ml: 1 }}
           disabled={isPlacingOrder}
+          onClick={handleConfirmBuy}
+          sx={{ ml: 1 }}
+          variant='contained'
         >
           {isPlacingOrder ? "Placing Order..." : "Confirm Buy"}
         </Button>

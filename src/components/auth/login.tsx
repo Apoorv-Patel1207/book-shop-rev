@@ -1,13 +1,14 @@
-import { useAuth0 } from "@auth0/auth0-react"
-import AccountCircleIcon from "@mui/icons-material/AccountCircle"
-import LogoutIcon from "@mui/icons-material/Logout"
-import { Button, Typography, Box, IconButton } from "@mui/material"
 import { useEffect } from "react"
+
+import { useAuth0 } from "@auth0/auth0-react"
+import LogoutIcon from "@mui/icons-material/Logout"
+import { Button, Typography, Box, IconButton, Avatar } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import {
   getUserProfile,
   createUserProfile,
 } from "src/service/user-profile-service"
+
 import { useUser } from "../context/user-context"
 
 const LoginButton = () => {
@@ -15,39 +16,13 @@ const LoginButton = () => {
     useAuth0()
   const navigate = useNavigate()
 
+  console.log("user", user)
+
   const navigateToProfile = () => {
     navigate("/profile")
   }
 
   const { userData, setUserData } = useUser()
-
-  console.log("userData", userData)
-
-  // useEffect(() => {
-  //   const checkOrCreateUser = async () => {
-  //     if (isAuthenticated && user?.sub) {
-  //       try {
-  //         const existingUser = await getUserProfile(user.sub)
-  //         setUserData(existingUser)
-
-  //         if (!existingUser) {
-  //           const newUser = await createUserProfile(
-  //             user.sub,
-  //             user.name || "",
-  //             user.email || "",
-  //           )
-  //           setUserData(newUser)
-  //         }
-  //       } catch (err) {
-  //         console.error("Error creating user profile:", err)
-  //       }
-  //     }
-  //   }
-
-  //   checkOrCreateUser().catch((err) =>
-  //     console.error("Error while creating or fetching the user:", err),
-  //   )
-  // }, [isAuthenticated, user, setUserData])
 
   useEffect(() => {
     const checkOrCreateUser = async () => {
@@ -82,16 +57,22 @@ const LoginButton = () => {
   }
 
   return (
-    <Box display='flex' alignItems='center' gap={1}>
+    <Box alignItems='center' display='flex' gap={1}>
       {isAuthenticated ? (
         <>
           <IconButton color='inherit' onClick={navigateToProfile}>
-            <AccountCircleIcon sx={{ width: 30, height: 30 }} />
+            <Avatar
+              alt={user?.name}
+              src={user?.picture}
+              sx={{ width: 30, height: 30 }}
+            >
+              {user?.name?.[0]}
+            </Avatar>
           </IconButton>
 
-          <Typography fontSize={14}>
+          {/* <Typography fontSize={14}>
             {user?.given_name || user?.email}
-          </Typography>
+          </Typography> */}
 
           <IconButton
             color='inherit'
@@ -104,9 +85,9 @@ const LoginButton = () => {
         </>
       ) : (
         <Button
-          variant='text'
-          sx={{ color: "white", textTransform: "none" }}
           onClick={() => loginWithRedirect()}
+          sx={{ color: "white", textTransform: "none" }}
+          variant='text'
         >
           Log In
         </Button>

@@ -16,17 +16,18 @@ import {
   Box,
   Grid,
 } from "@mui/material"
-
 import { useUserID } from "src/components/auth/userID"
-
-import PageHeading from "src/components/utility-components/page-headings"
+import Loading from "src/components/utility-components/loading"
 import NoDataFound from "src/components/utility-components/no-data"
+import PageHeading from "src/components/utility-components/page-headings"
+
 import Layout from "../components/layout/layout"
 import { fetchOrders } from "../service/order-service"
 import { Order } from "../types/data-types"
 
 const OrderHistoryPage = () => {
   const [orders, setOrders] = useState<Order[]>([])
+  const [loading, setLoading] = useState(true)
 
   const userID = useUserID()
 
@@ -38,6 +39,8 @@ const OrderHistoryPage = () => {
           setOrders(fetchedOrders)
         } catch (error) {
           console.error("Failed to load orders", error)
+        } finally {
+          setLoading(false)
         }
       }
       loadOrders().catch((err) => {
@@ -46,28 +49,34 @@ const OrderHistoryPage = () => {
     }
   }, [userID])
 
+  if (loading) {
+    return (
+      <Layout>
+        <Box className='container mx-auto my-10 text-center'>
+          <Loading />
+        </Box>
+      </Layout>
+    )
+  }
+
   return (
     <Layout>
       <Container maxWidth='lg'>
         <PageHeading>Order History</PageHeading>
-
         {orders.length === 0 ? (
-          // <Typography variant='body1' color='text.secondary'>
-          //   You have not placed any orders yet.
-          // </Typography>
           <NoDataFound description=' You have not placed any orders yet.' />
         ) : (
           orders.map((order) => (
-            <Card key={order.orderId} variant='outlined' sx={{ mb: 3 }}>
+            <Card key={order.orderId} sx={{ mb: 3 }} variant='outlined'>
               <CardContent>
                 <Box sx={{ mb: 2 }}>
                   <Typography fontWeight='bold'>
                     Order ID: {order.orderId}
                   </Typography>
-                  <Typography variant='body2' color='text.secondary'>
+                  <Typography color='text.secondary' variant='body2'>
                     Order Date: {order.orderDate}
                   </Typography>
-                  <Typography variant='body2' color='text.secondary'>
+                  <Typography color='text.secondary' variant='body2'>
                     Status: {order.status}
                   </Typography>
 
@@ -77,7 +86,7 @@ const OrderHistoryPage = () => {
                         Shipping Details:
                       </Typography>
 
-                      <Typography variant='body2' color='text.secondary'>
+                      <Typography color='text.secondary' variant='body2'>
                         Name: {order.userProfile.name}
                       </Typography>
                       <Typography variant='body2'>
@@ -110,10 +119,10 @@ const OrderHistoryPage = () => {
                         <TableRow key={book.id}>
                           <TableCell>
                             <Avatar
-                              src={book.coverImage}
                               alt={book.title}
-                              variant='rounded'
+                              src={book.coverImage}
                               sx={{ width: 56, height: 56 }}
+                              variant='rounded'
                             />
                           </TableCell>
                           <TableCell>{book.title}</TableCell>

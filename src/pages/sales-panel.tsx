@@ -1,11 +1,11 @@
 import { useState } from "react"
 
 import { Container } from "@mui/material"
-
 import BookForm from "src/components/admin-sales-panel/add-book-form"
+import PageHeading from "src/components/utility-components/page-headings"
 import SnackbarAlert from "src/components/utility-components/snackbar"
 
-import PageHeading from "src/components/utility-components/page-headings"
+import { BookFormType } from "./add-book"
 import Layout from "../components/layout/layout"
 
 const SalesPanel = () => {
@@ -15,7 +15,7 @@ const SalesPanel = () => {
     "success",
   )
 
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (data: BookFormType) => {
     try {
       const response = await fetch(
         "http://localhost:5000/api/books/pending-books",
@@ -54,14 +54,14 @@ const SalesPanel = () => {
       <Container maxWidth='md'>
         <PageHeading>Sales Panel - Add a New Book</PageHeading>
 
-        <BookForm onSubmit={handleFormSubmit} isAdmin={false} />
+        <BookForm isAdmin={false} onSubmit={handleFormSubmit} />
       </Container>
 
       <SnackbarAlert
-        open={snackbarOpen}
         message={snackbarMessage}
-        type={snackbarType}
         onClose={handleSnackbarClose}
+        open={snackbarOpen}
+        type={snackbarType}
       />
     </Layout>
   )

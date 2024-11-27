@@ -4,18 +4,17 @@ import FilterListIcon from "@mui/icons-material/FilterList"
 import {
   Box,
   CircularProgress,
+  debounce,
   Drawer,
   IconButton,
   Typography,
 } from "@mui/material"
 import Grid from "@mui/material/Grid2"
-import { useInView } from "react-intersection-observer"
-
+import Loading from "src/components/utility-components/loading"
+import PageHeading from "src/components/utility-components/page-headings"
 import { deleteBook } from "src/service/book-service"
 import { Book, PaginatedBook } from "src/types/data-types"
 
-import Loading from "src/components/utility-components/loading"
-import PageHeading from "src/components/utility-components/page-headings"
 import BookCard from "../components/book/book-card"
 import Filters from "../components/catalog/filters"
 import Layout from "../components/layout/layout"
@@ -30,7 +29,6 @@ const Catalog = () => {
   const [tempPriceValue, setTempPriceValue] = useState<number[]>([0, 100])
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
-  const { ref, inView } = useInView()
   const [isLoading, setIsLoading] = useState(true)
   const [isFetchingMore, setIsFetchingMore] = useState(false)
 
@@ -66,22 +64,34 @@ const Catalog = () => {
   }, [page, searchQuery, filterGenre, priceValue])
 
   useEffect(() => {
-    if (inView && hasMore) {
-      setIsFetchingMore(true)
-      setPage((prevPage) => prevPage + 1)
-    }
-  }, [inView, hasMore])
-
-  useEffect(() => {
     const loadBooks = async () => {
       await fetchBooks()
-      setIsFetchingMore(false)
     }
 
     loadBooks().catch((error) => {
       console.error("Error loading books:", error)
     })
   }, [fetchBooks])
+
+  useEffect(() => {
+    const handleScroll = debounce(() => {
+      if (isFetchingMore || !hasMore) return
+
+      const scrollPosition = window.innerHeight + window.scrollY
+      const threshold = document.body.offsetHeight - 200
+
+      if (scrollPosition >= threshold) {
+        setPage((prevPage) => prevPage + 1)
+        setIsFetchingMore(true)
+      }
+    }, 300)
+
+    window.addEventListener("scroll", handleScroll)
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [isFetchingMore, hasMore])
 
   const handleDelete = async (id: number) => {
     try {
@@ -130,9 +140,9 @@ const Catalog = () => {
 
   return (
     <Layout>
-
-
-      <PageHeading>Discover Your Next Read</PageHeading>
+      <PageHeading sx={{ mb: -1 }}>
+        Turn the Page to Endless Possibilities
+      </PageHeading>
 
       <Box display='flex' justifyContent='end'>
         <IconButton
@@ -150,16 +160,16 @@ const Catalog = () => {
         </IconButton>
       </Box>
 
-      <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer(false)}>
+      <Drawer anchor='right' onClose={toggleDrawer(false)} open={drawerOpen}>
         <Filters
-          tempSearchQuery={tempSearchQuery}
-          setTempSearchQuery={setTempSearchQuery}
-          tempFilterGenre={tempFilterGenre}
-          setTempFilterGenre={setTempFilterGenre}
-          tempPriceValue={tempPriceValue}
-          setTempPriceValue={setTempPriceValue}
           handleApplyFilters={handleApplyFilters}
           handleResetFilters={handleResetFilters}
+          setTempFilterGenre={setTempFilterGenre}
+          setTempPriceValue={setTempPriceValue}
+          setTempSearchQuery={setTempSearchQuery}
+          tempFilterGenre={tempFilterGenre}
+          tempPriceValue={tempPriceValue}
+          tempSearchQuery={tempSearchQuery}
         />
       </Drawer>
 
@@ -186,10 +196,10 @@ const Catalog = () => {
           : !isLoading && (
               <Grid>
                 <Typography
-                  variant='h6'
                   component='p'
-                  textAlign='center'
                   sx={{ width: "100%", padding: 2 }}
+                  textAlign='center'
+                  variant='h6'
                 >
                   No books found.
                 </Typography>
@@ -202,8 +212,6 @@ const Catalog = () => {
           <Loading />
         </Box>
       )}
-
-      {hasMore && <Box ref={ref} style={{ height: "1px" }} />}
     </Layout>
   )
 }

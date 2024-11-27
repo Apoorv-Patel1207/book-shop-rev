@@ -13,7 +13,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
-
 import { Book, UserProfile } from "src/types/data-types"
 
 interface ConfirmPurchaseDialogProps {
@@ -37,7 +36,7 @@ const ConfirmPurchaseDialog = ({
   handleConfirmBuy,
   setUserProfile,
 }: ConfirmPurchaseDialogProps) => (
-  <Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth='xs' fullWidth>
+  <Dialog fullWidth maxWidth='xs' onClose={handleCloseModal} open={isModalOpen}>
     <DialogTitle sx={{ display: "flex", alignItems: "center" }}>
       <CheckCircleOutlineIcon
         color='success'
@@ -46,23 +45,23 @@ const ConfirmPurchaseDialog = ({
       Confirm Purchase
     </DialogTitle>
     <DialogContent>
-      <Box display='flex' flexDirection='column' alignItems='center'>
+      <Box alignItems='center' display='flex' flexDirection='column'>
         <CardMedia
-          component='img'
           alt={book.title}
+          component='img'
           height='150'
           image={book.coverImage}
           sx={{ objectFit: "cover", borderRadius: 2, mb: 2 }}
         />
-        <Typography variant='h6' fontWeight='bold'>
+        <Typography fontWeight='bold' variant='h6'>
           {book.title}
         </Typography>
-        <Typography variant='subtitle1' color='text.secondary'>
+        <Typography color='text.secondary' variant='subtitle1'>
           by {book.author}
         </Typography>
         <Divider sx={{ my: 2, width: "100%" }} />
         <Typography variant='body1'>Quantity: {quantity}</Typography>
-        <Typography variant='body1' gutterBottom>
+        <Typography gutterBottom variant='body1'>
           Total: ₹ {(book.price * quantity).toFixed(2)}
         </Typography>
       </Box>
@@ -76,53 +75,53 @@ const ConfirmPurchaseDialog = ({
         }}
       >
         <TextField
-          label='Name'
-          variant='outlined'
           fullWidth
-          value={userProfile?.name || ""}
+          label='Name'
           onChange={(e) =>
             setUserProfile((prev) =>
               prev ? { ...prev, name: e.target.value } : null,
             )
           }
+          value={userProfile?.name || ""}
+          variant='outlined'
         />
         <TextField
-          label='Mobile Number'
-          variant='outlined'
           fullWidth
-          value={userProfile?.phone || ""}
+          label='Mobile Number'
           onChange={(e) =>
             setUserProfile((prev) =>
               prev ? { ...prev, phone: e.target.value } : null,
             )
           }
+          value={userProfile?.phone || ""}
+          variant='outlined'
         />
         <TextField
-          label='Address'
-          variant='outlined'
           fullWidth
+          label='Address'
           multiline
-          rows={3}
-          value={userProfile?.address || ""}
           onChange={(e) =>
             setUserProfile((prev) =>
               prev ? { ...prev, address: e.target.value } : null,
             )
           }
+          rows={3}
+          value={userProfile?.address || ""}
+          variant='outlined'
         />
       </Box>
     </DialogContent>
     <DialogActions sx={{ justifyContent: "center", mb: 2 }}>
-      <Button onClick={handleCloseModal} variant='outlined' color='error'>
+      <Button color='error' onClick={handleCloseModal} variant='outlined'>
         Cancel
       </Button>
 
       <Button
-        onClick={handleConfirmBuy}
-        variant='contained'
         color='primary'
-        sx={{ ml: 1 }}
         disabled={isPlacingOrder}
+        onClick={handleConfirmBuy}
+        sx={{ ml: 1 }}
+        variant='contained'
       >
         {isPlacingOrder ? "Placing Order..." : "Confirm Buy"}
       </Button>
